@@ -1,0 +1,35 @@
+{
+    "name": "Aglan ABG",
+    "short_name": "aglan app",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#202124",
+    "theme_color": "#202124",
+    "description": "An arterial blood gas analysis (ABG) measures the balance of oxygen and carbon dioxide in your blood to see how well your lungs are working.",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icons/Icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}

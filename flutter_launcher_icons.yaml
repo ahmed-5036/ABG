@@ -1,0 +1,20 @@
+dev_dependencies:
+  flutter_launcher_icons: "^0.10.0"
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  macos:
+    generate: true
+    image_path: "assets/images/app_square_logo.png"
+  
+  web:
+    generate: true
+    image_path: "assets/images/app_square_logo.png"
+    background_color: "#202124"
+    theme_color: "#202124"
+  remove_alpha_ios: true
+  # background_color: "#FFFFFF"
+  image_path: "assets/images/app_square_logo.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+

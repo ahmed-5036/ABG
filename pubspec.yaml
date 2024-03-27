@@ -1,0 +1,38 @@
+name: aai_app
+description: An arterial blood gas analysis (ABG) measures the balance of oxygen and carbon dioxide in your blood to see how well your lungs are working
+publish_to: 'none'
+version: 0.3.0+1
+
+environment:
+  sdk: '>=3.2.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^2.4.4
+  google_fonts: ^6.1.0 
+  adaptive_dialog: ^2.0.0
+  rflutter_alert: ^2.0.7
+  url_launcher: ^6.1.14   
+  mailer: ^6.0.1
+  desktop_window: ^0.4.0
+  universal_platform: ^1.0.0+1
+  
+  # disable html
+  # universal_html: ^2.2.3
+  # webview_flutter: ^4.2.2
+  
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.3.4
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    

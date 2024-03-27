@@ -1,0 +1,12 @@
+flutter_native_splash:
+
+  color: "#212124"
+  image: "assets/images/full_app_square_logo.png"
+  color_dark: "#212124"
+  #background_image_dark: "assets/dark-background.png"
+  image_dark: "assets/images/full_app_square_logo.png"
+  # ios_content_mode: center
+  # android: true
+  # ios: true
+  
+  # web: true
