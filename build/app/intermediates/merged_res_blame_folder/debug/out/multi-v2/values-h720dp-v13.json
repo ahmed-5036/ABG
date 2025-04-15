@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.abg.app-mergeDebugResources-37:/values-h720dp-v13/values-h720dp-v13.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\DellG3\\.gradle\\caches\\transforms-3\\5c4db2c6eff7532f407e112d7b5f1a00\\transformed\\appcompat-1.5.0\\res\\values-h720dp-v13\\values-h720dp-v13.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "66",
+                        "endOffsets": "117"
+                    }
+                }
+            ]
+        }
+    ]
+}
