@@ -62,65 +62,94 @@ class PatientTypeSelectionPage extends ConsumerWidget {
                   firstInput: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Container(
-                      clipBehavior: Clip.hardEdge,
-                      decoration: const BoxDecoration(),
-                      padding: const EdgeInsets.all(10),
-                      child: Banner(
-                        message: "The commonest",
-                        location: BannerLocation.topStart,
-                        child: BorderedButton(
-                          customWidgetLabel: const Text.rich(
-                            TextSpan(
-                              children: <InlineSpan>[
-                                TextSpan(
-                                    text: StringConstants.patientTypeOne,
+                      decoration: BoxDecoration(
+                        color: AppColors.blue,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          BorderedButton(
+                            customWidgetLabel: const Text.rich(
+                              TextSpan(
+                                children: <InlineSpan>[
+                                  TextSpan(
+                                      text: StringConstants.patientTypeOne,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColors.deepRed2,
+                                          fontSize: 18)),
+                                  TextSpan(
+                                      text: "\n",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 14)),
+                                  TextSpan(
+                                    text: StringConstants
+                                        .patientTypeOneDetailsPartOneOfThree,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 14),
+                                  ),
+                                  TextSpan(
+                                    text: StringConstants
+                                        .patientTypeOneDetailsPartTwoOfThree,
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: AppColors.deepRed2,
-                                        fontSize: 18)),
-                                TextSpan(
-                                    text: "\n",
+                                        fontSize: 14),
+                                  ),
+                                  TextSpan(
+                                    text: StringConstants
+                                        .patientTypeOneDetailsPartThreeOfThree,
                                     style: TextStyle(
                                         fontWeight: FontWeight.w300,
-                                        fontSize: 14)),
-                                TextSpan(
-                                  text: StringConstants
-                                      .patientTypeOneDetailsPartOneOfThree,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 14),
-                                ),
-                                TextSpan(
-                                  text: StringConstants
-                                      .patientTypeOneDetailsPartTwoOfThree,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.deepRed2,
-                                      fontSize: 14),
-                                ),
-                                TextSpan(
-                                  text: StringConstants
-                                      .patientTypeOneDetailsPartThreeOfThree,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 14),
-                                ),
-                              ],
+                                        fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-                          color: AppColors.blue,
-                          verticalPadding: 8,
-                          customHeight: 100,
-                          action: () async {
-                            ref.read(patientTypeProvider.notifier).update(
-                                (PatientType? state) =>
-                                    PatientType.patientTypeOne);
+                            color: Colors.transparent,
+                            verticalPadding: 8,
+                            customHeight: 100,
+                            action: () async {
+                              ref.read(patientTypeProvider.notifier).update(
+                                  (PatientType? state) =>
+                                      PatientType.patientTypeOne);
 
-                            context.navigator
-                                .pushReplacementNamed(RouteNames.inputData);
-                          },
-                        ),
+                              context.navigator
+                                  .pushReplacementNamed(RouteNames.inputData);
+                            },
+                          ),
+                          Positioned(
+                            top: -10,
+                            right: 10,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: AppColors.deepRed2,
+                                borderRadius: BorderRadius.circular(4),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: const Text(
+                                "The commonest",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -174,6 +203,50 @@ class PatientTypeSelectionPage extends ConsumerWidget {
                   ))),
         ],
       ),
+    );
+  }
+}
+
+class RibbonButton extends StatelessWidget {
+  final Widget child;
+  final String ribbonText;
+  final Color ribbonColor;
+
+  const RibbonButton({
+    Key? key,
+    required this.child,
+    required this.ribbonText,
+    this.ribbonColor = AppColors.deepRed2,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        child,
+        Positioned(
+          top: 0,
+          right: 0,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: ribbonColor,
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(8),
+                topRight: Radius.circular(8),
+              ),
+            ),
+            child: Text(
+              ribbonText,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
