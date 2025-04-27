@@ -27,7 +27,7 @@ class MainApp extends StatelessWidget {
       title: "Aglan ABG",
       theme: ThemeManager.getTheme(context),
       debugShowCheckedModeBanner: false,
-      initialRoute: RouteNames.patientTypeSelection,
+      initialRoute: RouteNames.initialSelection,
       onGenerateRoute: RouteManager.instance().onGenerateRoute,
     );
   }

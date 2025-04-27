@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../views/pages/about_page.dart';
 import '../../views/pages/contact_us.dart';
+import '../../views/pages/copd_options.dart';
+import '../../views/pages/follow_up_abg.dart';
+import '../../views/pages/initial_selection.dart';
 import '../../views/pages/input_data_page.dart';
 import '../../views/pages/patient_type_selection.dart';
 import '../../views/pages/results_data_page.dart';
@@ -36,6 +39,18 @@ class RouteManager {
             builder: (BuildContext ctx) => const PatientTypeSelectionPage(),
             settings:
                 const RouteSettings(name: RouteNames.patientTypeSelection));
+      case RouteNames.initialSelection:
+        return MaterialPageRoute<void>(
+            builder: (BuildContext ctx) => const InitialSelectionView(),
+            settings: const RouteSettings(name: RouteNames.initialSelection));
+      case RouteNames.followUpAbgOptions:
+        return MaterialPageRoute<void>(
+            builder: (BuildContext ctx) => const FollowUpAbgOptionsView(),
+            settings: const RouteSettings(name: RouteNames.followUpAbgOptions));
+      case RouteNames.copdOptions:
+        return MaterialPageRoute<void>(
+            builder: (BuildContext ctx) => const COPDOptionsView(),
+            settings: const RouteSettings(name: RouteNames.copdOptions));
     }
     return null;
   }

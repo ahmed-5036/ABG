@@ -131,7 +131,7 @@ class _InputDataPageState extends State<InputDataPage> {
                           if (!context.mounted) return;
 
                           context.navigator.pushNamedAndRemoveUntil(
-                              RouteNames.patientTypeSelection,
+                              RouteNames.initialSelection,
                               (Route route) => false);
                         },
                         icon: const Icon(Icons.group_add_sharp)),

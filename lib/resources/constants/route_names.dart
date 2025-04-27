@@ -12,4 +12,7 @@ class RouteNames {
   static const String resultData = "/results";
   static const String splash = "/splash";
   static const String patientTypeSelection = "/select_patient_type";
+  static const String initialSelection = '/initial-selection';
+  static const String followUpAbgOptions = '/follow-up-abg-options';
+  static const String copdOptions = '/copd-options';
 }

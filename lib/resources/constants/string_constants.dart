@@ -22,6 +22,56 @@ class StringConstants {
       " then developed Normal AG changes ";
   static const String patientTypeTwoDetailsPartThreeOfThree =
       "(vomiting, diarrhea,NGT drainage)";
+  // Follow Up ABG Option Constants
+  static const String followUpAbgTitle = "Follow Up ABG Options";
+  static const String followUpAbgSubtitle = "Select the Primary Insult Type";
+
+  static const String primaryMetabolicInsultTitle = "Primary Metabolic Insult";
+  static const String primaryMetabolicInsultDescription =
+      "Metabolic changes that primarily originate from metabolic processes";
+
+  static const List<String> primaryMetabolicInsultExamples = [
+    'Metabolic Acidosis',
+    'Metabolic Alkalosis',
+    'Normocarbia',
+    'Hypochloremia',
+  ];
+
+  static const String primaryRespiratoryInsultTitle =
+      "Primary Respiratory Insult";
+  static const String primaryRespiratoryInsultDescription =
+      "Respiratory changes that primarily affect acid-base balance through ventilation";
+
+  static const List<String> primaryRespiratoryInsultExamples = [
+    'Respiratory Acidosis',
+    'Respiratory Alkalosis',
+    'Hypoventilation',
+    'Hyperventilation'
+  ];
+
+  // New COPD Option Constants
+  static const String copdOptionOneTitle = "Normal AG to High AG";
+  static const String copdOptionOneDescription =
+      "Patient started with normal AG (vomiting, diarrhea, RTA, normal metabolic state) "
+      "then developed high AG changes (shock, DKA, uremia) with COPD";
+
+  static const List<String> copdNormalAgExamples = [
+    'Vomiting',
+    'Diarrhea',
+    'RTA (Renal Tubular Acidosis)',
+    'Normal Metabolic State'
+  ];
+
+  static const List<String> copdHighAgExamples = [
+    'Shock',
+    'Diabetic Ketoacidosis (DKA)',
+    'Uremia'
+  ];
+
+  static const String copdOptionTwoTitle = "High AG to Normal AG";
+  static const String copdOptionTwoDescription =
+      "Patient started with high AG (shock, DKA, uremia) or normal metabolic state "
+      "then developed normal AG changes (vomiting, diarrhea) with COPD";
   static const String selectPatient = "Select patient type";
   // static const String fromHistory = "(From History)";
   static const String fromHistory = "From History";
