@@ -62,32 +62,28 @@ class FollowUpAbgOptionsView extends ConsumerWidget {
                   clipBehavior: Clip.hardEdge,
                   decoration: const BoxDecoration(),
                   padding: const EdgeInsets.all(10),
-                  child: Banner(
-                    message: "Scenario 1",
-                    location: BannerLocation.topStart,
-                    child: BorderedButton(
-                      customWidgetLabel: const Text(
-                        StringConstants.primaryMetabolicInsultTitle,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.deepRed2,
-                          fontSize: 18,
-                        ),
-                        textAlign: TextAlign.center,
+                  child: BorderedButton(
+                    customWidgetLabel: const Text(
+                      StringConstants.primaryMetabolicInsultTitle,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.deepRed2,
+                        fontSize: 18,
                       ),
-                      color: AppColors.blue,
-                      verticalPadding: 8,
-                      customHeight: 100,
-                      action: () {
-                        ref.read(followUpAbgOptionProvider.notifier).state =
-                            StringConstants.primaryMetabolicInsultTitle;
-
-                        _showOptionDetails(
-                            context,
-                            StringConstants.primaryMetabolicInsultTitle,
-                            StringConstants.primaryMetabolicInsultDescription);
-                      },
+                      textAlign: TextAlign.center,
                     ),
+                    color: AppColors.blue,
+                    verticalPadding: 8,
+                    customHeight: 100,
+                    action: () {
+                      ref.read(followUpAbgOptionProvider.notifier).state =
+                          StringConstants.primaryMetabolicInsultTitle;
+
+                      _showOptionDetails(
+                          context,
+                          StringConstants.primaryMetabolicInsultTitle,
+                          StringConstants.primaryMetabolicInsultDescription);
+                    },
                   ),
                 ),
               ),

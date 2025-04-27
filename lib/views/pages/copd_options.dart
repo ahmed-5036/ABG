@@ -62,73 +62,69 @@ class COPDOptionsView extends ConsumerWidget {
                   clipBehavior: Clip.hardEdge,
                   decoration: const BoxDecoration(),
                   padding: const EdgeInsets.all(10),
-                  child: Banner(
-                    message: "Scenario 1",
-                    location: BannerLocation.topStart,
-                    child: BorderedButton(
-                      customWidgetLabel: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text.rich(
-                          TextSpan(
-                            children: <InlineSpan>[
-                              TextSpan(
-                                text: StringConstants.copdOptionOneTitle,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.deepRed2,
-                                  fontSize: 18,
-                                ),
+                  child: BorderedButton(
+                    customWidgetLabel: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text.rich(
+                        TextSpan(
+                          children: <InlineSpan>[
+                            TextSpan(
+                              text: StringConstants.copdOptionOneTitle,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.deepRed2,
+                                fontSize: 18,
                               ),
-                              const TextSpan(
-                                text: "\n",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 14,
-                                ),
+                            ),
+                            const TextSpan(
+                              text: "\n",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                fontSize: 14,
                               ),
-                              TextSpan(
-                                text: StringConstants.copdNormalAgExamples
-                                    .join(', '),
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 14,
-                                ),
+                            ),
+                            TextSpan(
+                              text: StringConstants.copdNormalAgExamples
+                                  .join(', '),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w300,
+                                fontSize: 14,
                               ),
-                              const TextSpan(
-                                text: " then developed ",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.deepRed2,
-                                  fontSize: 14,
-                                ),
+                            ),
+                            const TextSpan(
+                              text: " then developed ",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.deepRed2,
+                                fontSize: 14,
                               ),
-                              TextSpan(
-                                text: StringConstants.copdHighAgExamples
-                                    .join(', '),
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 14,
-                                ),
+                            ),
+                            TextSpan(
+                              text:
+                                  StringConstants.copdHighAgExamples.join(', '),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w300,
+                                fontSize: 14,
                               ),
-                            ],
-                          ),
-                          textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
+                        textAlign: TextAlign.center,
                       ),
-                      color: AppColors.blue,
-                      verticalPadding: 8,
-                      customHeight: 100,
-                      action: () {
-                        ref.read(copdOptionProvider.notifier).state =
-                            StringConstants.copdOptionOneTitle;
-
-                        // TODO: Add navigation or further action
-                        _showOptionDetails(
-                            context,
-                            StringConstants.copdOptionOneTitle,
-                            StringConstants.copdOptionOneDescription);
-                      },
                     ),
+                    color: AppColors.blue,
+                    verticalPadding: 8,
+                    customHeight: 100,
+                    action: () {
+                      ref.read(copdOptionProvider.notifier).state =
+                          StringConstants.copdOptionOneTitle;
+
+                      // TODO: Add navigation or further action
+                      _showOptionDetails(
+                          context,
+                          StringConstants.copdOptionOneTitle,
+                          StringConstants.copdOptionOneDescription);
+                    },
                   ),
                 ),
               ),
