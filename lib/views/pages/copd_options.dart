@@ -6,6 +6,7 @@ import '../../resources/constants/app_colors.dart';
 import '../../resources/constants/app_images.dart';
 import '../../resources/constants/route_names.dart';
 import '../../resources/constants/string_constants.dart';
+import '../../services/extension.dart';
 import '../atoms/primary_button.dart';
 import '../organism/adaptive_input_dialog.dart';
 
@@ -119,11 +120,11 @@ class COPDOptionsView extends ConsumerWidget {
                       ref.read(copdOptionProvider.notifier).state =
                           StringConstants.copdOptionOneTitle;
 
-                      // TODO: Add navigation or further action
-                      _showOptionDetails(
-                          context,
-                          StringConstants.copdOptionOneTitle,
-                          StringConstants.copdOptionOneDescription);
+                      // _showOptionDetails(
+                      //     context,
+                      //     StringConstants.copdOptionOneTitle,
+                      //     StringConstants.copdOptionOneDescription);
+                      context.navigator.pushNamed(RouteNames.inputData);
                     },
                   ),
                 ),

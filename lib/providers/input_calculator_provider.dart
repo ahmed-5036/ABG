@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/final_result.dart';
+import '../models/abg_result.dart';
 import '../resources/constants/calculation_constants.dart';
 import '../services/enum.dart';
 import 'result_calculator_providers.dart';
