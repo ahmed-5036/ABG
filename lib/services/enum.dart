@@ -52,7 +52,7 @@ enum ChlorineLevel {
 }
 
 enum MetabolicLevel {
-  na(("N/A", null)),
+  unknown(("N/A", null)),
   simpleMetabolicAcidosis(
       ("Normal Metabolic Acidosis", CalculationConstants.hypoValue)),
   mixedMetabolicAcidosis(
@@ -69,22 +69,6 @@ enum MetabolicLevel {
   const MetabolicLevel(this.level);
   final (String, int?) level;
 }
-
-// enum MetabolicLevel {
-//   na(("N/A", null)),
-//   simpleMetabolicAcidosis(
-//       ("Normal Metabolic Acidosis", CalculationConstants.hypoValue)),
-
-//   metabolicAcidosis(("Metabolic Acidosis", CalculationConstants.hypoValue)),
-//   simpleMetabolicAlkalosis(
-//       ("Normal Metabolic Alkalosis", CalculationConstants.hyperValue)),
-//   metabolicAlkalosis(("Metabolic Alkalosis", CalculationConstants.hyperValue)),
-
-//   normal(("Normal Metabolic State", CalculationConstants.normalValue));
-
-//   const MetabolicLevel(this.level);
-//   final (String, int?) level;
-// }
 
 enum PhLevel {
   na(("N/A", null)),
@@ -107,7 +91,6 @@ enum PCO2Level {
   const PCO2Level(this.level);
   final (String, int?) level;
 }
-//-----------------Input Levels--------------------------
 
 //-----------------Results Levels--------------------------
 
@@ -147,10 +130,9 @@ enum SIGLevel {
   const SIGLevel(this.level);
   final (String, int?) level;
 }
-// =IFS(B20=0,"N/A",B20<B18,"HYPO VENTILATORY RESPIRATORY ACIDOSIS",B20>B18,"HYPERVENTILATORY RESPIRATORY ALKALOSIS",AND(B20>40,B18>40,B20=B18),"COMPENSATORY RESPIRATORY ACIDOSIS",AND(B20<40,B18<40,B20=B18),"COMPENSATORY RESPIRATORY ALKALOSIS")
 
 enum RespiratoryLevel {
-  na(("N/A", null)),
+  unknown(("N/A", null)),
   hypoVentilatoryRespiratoryAcidosis((
     "Hypo Ventilatory Respiratory Acidosis",
     CalculationConstants.hypoValue
@@ -171,7 +153,7 @@ enum RespiratoryLevel {
 }
 
 enum OxygenWaterLevel {
-  na(("NO DATA", null)),
+  unknown(("NO DATA", null)),
   hypoxemia(("Hypoxemia", CalculationConstants.hypoValue)),
   normoxia(("Normoxia", CalculationConstants.normalValue));
 

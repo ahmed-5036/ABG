@@ -21,6 +21,7 @@ class DefaultTextField extends StatelessWidget {
     this.onEditingComplete,
     this.onChanged,
     this.hint,
+    String? errorText,
   });
   final TextInputType? keyboardType;
   final AutovalidateMode? autovalidateMode;

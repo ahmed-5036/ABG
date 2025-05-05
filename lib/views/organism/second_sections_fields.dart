@@ -1,101 +1,180 @@
+// lib/views/organism/second_sections_fields.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../providers/input_calculator_provider.dart';
+import '../../providers/index.dart';
 import '../../resources/constants/app_constants.dart';
 import '../molecules/default_text_field.dart';
 import 'adaptive_input_dialog.dart';
 import 'colorful_text_result.dart';
 
-final Provider<Map<String, TextEditingController>> secondSectionTxtEditProvider =
-    Provider<Map<String, TextEditingController>>((ProviderRef<Map<String, TextEditingController>> ref) {
-  return <String, TextEditingController>{
-    "hco3TxtEditing": TextEditingController(),
-    "phTxtEditing": TextEditingController(),
+// Controller provider
+final secondSectionControllersProvider =
+    Provider<Map<String, TextEditingController>>((ref) {
+  return {
+    "hco3": TextEditingController(),
+    "ph": TextEditingController(),
   };
 });
 
+// Validation messages provider
+final secondSectionValidationProvider =
+    Provider.family<String?, String>((ref, field) {
+  final inputs = ref.watch(inputStateProvider);
+  if ((inputs.isValid[field] ?? false) == false) {
+    switch (field) {
+      case 'hco3':
+        return 'HCO3 must be around 24 mEq/L';
+      case 'ph':
+        return 'pH must be around 7.4';
+      default:
+        return 'Invalid value';
+    }
+  }
+  return null;
+});
+
 class SecondSection extends ConsumerWidget {
-  const SecondSection({
-    super.key,
-  });
+  const SecondSection({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    double? hco3;
-    double? ph;
-
     return Column(
-      children: <Widget>[
-        const SizedBox(
-          height: 8,
-        ),
-        Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
-          return AdaptiveInputDialog(
-              firstInput: DefaultTextField(
-                textInputAction: TextInputAction.next,
-                label: "HCO3 mEq/L (24)",
-                hint: "HCO3 mEq/L",
-                controller:
-                    ref.read(secondSectionTxtEditProvider)["hco3TxtEditing"],
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(numberWithDecimalRegex),
-                  LengthLimitingTextInputFormatter(3)
-                ],
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
-                ),
-                onChanged: (String hco3Val) {
-                  if (hco3Val.isEmpty) {
-                    hco3 = null;
-                  } else {
-                    hco3 = double.parse(hco3Val);
-                  }
-                  ref
-                      .read(hco3NotifierProvider.notifier)
-                      .getHCo3Diagnosis(hco3);
-                },
-              ),
-              secondInput: ColorfulCalcTextResult(
-                text: ref.watch(hco3NotifierProvider).findingLevel.level.$1,
-                status: ref.watch(hco3NotifierProvider).findingLevel.level.$2,
-              ));
-        }),
-        Consumer(
-            builder: (BuildContext context, WidgetRef ref, Widget? child) =>
-                AdaptiveInputDialog(
-                    firstInput: DefaultTextField(
-                      textInputAction: TextInputAction.next,
-                      hint: "PH",
-                      label: "PH (7.4)",
-                      controller: ref
-                          .read(secondSectionTxtEditProvider)["phTxtEditing"],
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(
-                            numberWithDecimalRegex),
-                        LengthLimitingTextInputFormatter(6)
-                      ],
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                      onChanged: (String phVal) {
-                        if (phVal.isEmpty) {
-                          ph = null;
-                        } else {
-                          ph = double.parse(phVal);
-                        }
-
-                        ref
-                            .read(phNotifierProvider.notifier)
-                            .getPhDiagnosis(ph);
-                      },
-                    ),
-                    secondInput: ColorfulCalcTextResult(
-                      text: ref.watch(phNotifierProvider).findingLevel.level.$1,
-                      status:
-                          ref.watch(phNotifierProvider).findingLevel.level.$2,
-                    ))),
+      children: [
+        const SizedBox(height: 8),
+        _buildHCO3Field(context, ref),
+        _buildPHField(context, ref),
       ],
     );
+  }
+
+  Widget _buildHCO3Field(BuildContext context, WidgetRef ref) {
+    return Consumer(
+      builder: (context, ref, child) {
+        final inputState = ref.watch(inputStateProvider);
+        final value = inputState.values['hco3'];
+        final isValid = inputState.isValid['hco3'] ?? false;
+
+        return AdaptiveInputDialog(
+          firstInput: DefaultTextField(
+            textInputAction: TextInputAction.next,
+            label: "HCO3 mEq/L (24)",
+            hint: "HCO3 mEq/L",
+            controller: ref.read(secondSectionControllersProvider)["hco3"],
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(numberWithDecimalRegex),
+              LengthLimitingTextInputFormatter(3),
+            ],
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            onChanged: (value) {
+              if (value.isEmpty) {
+                ref.read(inputStateProvider.notifier).updateValue('hco3', 0);
+              } else {
+                final numValue = double.tryParse(value);
+                if (numValue != null) {
+                  ref
+                      .read(inputStateProvider.notifier)
+                      .updateValue('hco3', numValue);
+                }
+              }
+            },
+            errorText: ref.watch(secondSectionValidationProvider('hco3')),
+          ),
+          secondInput: ColorfulCalcTextResult(
+            text: _getHCO3ResultText(value, isValid),
+            status: _getHCO3ResultStatus(value, isValid),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildPHField(BuildContext context, WidgetRef ref) {
+    return Consumer(
+      builder: (context, ref, child) {
+        final inputState = ref.watch(inputStateProvider);
+        final value = inputState.values['ph'];
+        final isValid = inputState.isValid['ph'] ?? false;
+
+        return AdaptiveInputDialog(
+          firstInput: DefaultTextField(
+            textInputAction: TextInputAction.next,
+            hint: "PH",
+            label: "PH (7.4)",
+            controller: ref.read(secondSectionControllersProvider)["ph"],
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(numberWithDecimalRegex),
+              LengthLimitingTextInputFormatter(6),
+            ],
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            onChanged: (value) {
+              if (value.isEmpty) {
+                ref.read(inputStateProvider.notifier).updateValue('ph', 0);
+              } else {
+                final numValue = double.tryParse(value);
+                if (numValue != null) {
+                  ref
+                      .read(inputStateProvider.notifier)
+                      .updateValue('ph', numValue);
+                }
+              }
+            },
+            errorText: ref.watch(secondSectionValidationProvider('ph')),
+          ),
+          secondInput: ColorfulCalcTextResult(
+            text: _getPHResultText(value, isValid),
+            status: _getPHResultStatus(value, isValid),
+          ),
+        );
+      },
+    );
+  }
+
+  String _getHCO3ResultText(double? value, bool isValid) {
+    if (value == null || !isValid) return 'N/A';
+
+    if (value == 24) {
+      return 'Normal metabolic state';
+    } else if (value < 24) {
+      return 'Metabolic acidosis';
+    } else {
+      return 'Metabolic alkalosis';
+    }
+  }
+
+  int? _getHCO3ResultStatus(double? value, bool isValid) {
+    if (value == null || !isValid) return null;
+
+    if (value == 24) {
+      return 0; // normal
+    } else if (value < 24) {
+      return -1; // acidosis
+    } else {
+      return 1; // alkalosis
+    }
+  }
+
+  String _getPHResultText(double? value, bool isValid) {
+    if (value == null || !isValid) return 'N/A';
+
+    if (value == 7.4) {
+      return 'Normal';
+    } else if (value < 7.4) {
+      return 'Acidosis';
+    } else {
+      return 'Alkalosis';
+    }
+  }
+
+  int? _getPHResultStatus(double? value, bool isValid) {
+    if (value == null || !isValid) return null;
+
+    if (value == 7.4) {
+      return 0; // normal
+    } else if (value < 7.4) {
+      return -1; // acidosis
+    } else {
+      return 1; // alkalosis
+    }
   }
 }

@@ -1,6 +1,6 @@
 -- Merging decision tree log ---
 application
-INJECTED from F:\flutter_projects\Aglan-ABG-App\android\app\src\main\AndroidManifest.xml:25:5-55:19
+INJECTED from F:\flutter_projects\Aglan-ABG-App\android\app\src\main\AndroidManifest.xml:25:5-56:19
 INJECTED from F:\flutter_projects\Aglan-ABG-App\android\app\src\debug\AndroidManifest.xml
 MERGED from [:url_launcher_android] F:\flutter_projects\Aglan-ABG-App\build\url_launcher_android\intermediates\merged_manifest\debug\AndroidManifest.xml:7:5-12:19
 MERGED from [:url_launcher_android] F:\flutter_projects\Aglan-ABG-App\build\url_launcher_android\intermediates\merged_manifest\debug\AndroidManifest.xml:7:5-12:19
@@ -29,8 +29,8 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\De
 	android:name
 		INJECTED from F:\flutter_projects\Aglan-ABG-App\android\app\src\main\AndroidManifest.xml
 manifest
-ADDED from F:\flutter_projects\Aglan-ABG-App\android\app\src\main\AndroidManifest.xml:1:1-56:12
-MERGED from F:\flutter_projects\Aglan-ABG-App\android\app\src\main\AndroidManifest.xml:1:1-56:12
+ADDED from F:\flutter_projects\Aglan-ABG-App\android\app\src\main\AndroidManifest.xml:1:1-57:12
+MERGED from F:\flutter_projects\Aglan-ABG-App\android\app\src\main\AndroidManifest.xml:1:1-57:12
 INJECTED from F:\flutter_projects\Aglan-ABG-App\android\app\src\debug\AndroidManifest.xml:1:1-7:12
 INJECTED from F:\flutter_projects\Aglan-ABG-App\android\app\src\debug\AndroidManifest.xml:1:1-7:12
 INJECTED from F:\flutter_projects\Aglan-ABG-App\android\app\src\debug\AndroidManifest.xml:1:1-7:12

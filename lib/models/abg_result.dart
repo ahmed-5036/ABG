@@ -6,8 +6,12 @@ import '../services/enum.dart';
 class FinalResult<T> {
   final T findingLevel;
   final double? findingNumber;
+  final Map<String, dynamic>? additionalData;
 
-  const FinalResult({required this.findingLevel, required this.findingNumber});
+  const FinalResult(
+      {required this.findingLevel,
+      required this.findingNumber,
+      this.additionalData});
 
   @override
   String toString() =>
@@ -78,16 +82,16 @@ class ABGResult {
         chlorineResult:
             FinalResult(findingLevel: ChlorineLevel.na, findingNumber: 0),
         metabolicResult:
-            FinalResult(findingLevel: MetabolicLevel.na, findingNumber: 0),
+            FinalResult(findingLevel: MetabolicLevel.unknown, findingNumber: 0),
         phResult: FinalResult(findingLevel: PhLevel.na, findingNumber: 0),
         pco2Result: FinalResult(findingLevel: PCO2Level.na, findingNumber: 0),
         clNaResult: FinalResult(findingLevel: CLNaLevel.na, findingNumber: 0),
         agResult: FinalResult(findingLevel: AGLevel.na, findingNumber: 0),
         sigResult: FinalResult(findingLevel: SIGLevel.na, findingNumber: 0),
-        respiratoryResult:
-            FinalResult(findingLevel: RespiratoryLevel.na, findingNumber: 0),
-        oxygenResult:
-            FinalResult(findingLevel: OxygenWaterLevel.na, findingNumber: 0),
+        respiratoryResult: FinalResult(
+            findingLevel: RespiratoryLevel.unknown, findingNumber: 0),
+        oxygenResult: FinalResult(
+            findingLevel: OxygenWaterLevel.unknown, findingNumber: 0),
       );
 
   // Add copyWith method for immutability

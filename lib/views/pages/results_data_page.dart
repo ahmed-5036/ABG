@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-import '../../providers/input_calculator_provider.dart';
-import '../../providers/result_calculator_providers.dart';
+import '../../providers/index.dart';
 import '../../resources/constants/app_colors.dart';
 import '../../resources/constants/app_constants.dart';
 import '../../resources/constants/route_names.dart';
@@ -12,55 +11,7 @@ import '../../resources/constants/string_constants.dart';
 import '../../services/extension.dart';
 import '../atoms/primary_button.dart';
 import '../molecules/progress_bar_with_title.dart';
-import '../organism/first_sections_fields.dart';
-import '../organism/second_sections_fields.dart';
-import '../organism/third_sections_fields.dart';
-
-List<ProviderOrFamily> appProviders = <ProviderOrFamily>[
-  potassiumNotifierProvider,
-  sodiumNotifierProvider,
-  albuminNotifierProvider,
-  chlorineNotifierProvider,
-  firstSectionTxtEditProvider,
-  diagnosisOneResultProvider,
-  correctedCLProvider,
-  correctedCLProviderResult,
-  clNaCalculationProvider,
-  sidGeneralProvider,
-  correctedHCO3Provider,
-  correlationHCO3Provider,
-  correctedAGStartProvider,
-  correctedAGStartResultProvider,
-
-  ///
-  hco3NotifierProvider,
-  bbCalculationProvider,
-  bbResultProvider,
-  phNotifierProvider,
-  correctedAGPresentProvider,
-  correctedAGPresentResultProvider,
-  sigProvider,
-  sigResultProvider,
-  correctedHCO3TwoCorrelationProvider,
-  aG2CalculationProvider,
-  secondSectionTxtEditProvider,
-  diagnosisSecondResultProvider,
-
-  ///
-  pCO2NotifierProvider,
-  pAOutputO2Provider,
-  paInputO2Provider,
-  expectedPCo2ResultProvider,
-  expectedPCo2CalculationProvider,
-  aAProvider,
-  agesProvider,
-  paInputO2Provider,
-  expectedAaProvider,
-  thirdSectionTxtEditProvider,
-  diagnosisThirdResultProvider,
-  diagnosisFourthResultProvider,
-  finalDiagnosisResultProvider,
-];
+import '../../providers/reset/reset_providers.dart';
 
 class ResultsDataPage extends ConsumerWidget {
   const ResultsDataPage({super.key});
@@ -79,120 +30,134 @@ class ResultsDataPage extends ConsumerWidget {
         body: SingleChildScrollView(
           child: Padding(
             padding: kDefaultPagePadding,
-            child: Column(children: <Widget>[
-              ProgressBarWithTitle(
-                step: ref.watch(stepStateProvider),
-              ),
-              ListView.separated(
-                itemCount: ref.read(fourResultDiagnosisProvider).length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                separatorBuilder: (BuildContext context, int index) =>
-                    const SizedBox(
-                  height: 16,
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  Map<String, dynamic> diagnosis =
-                      ref.watch(fourResultDiagnosisProvider)[index];
-                  return BorderedButton(
-                    label: diagnosis["label"] as String,
-                    color: AppColors.blue,
-                    verticalPadding: 8,
-                    action: () async {
-                      Alert(
-                        context: context,
-                        type: AlertType.none,
-                        title: diagnosis["title"] as String,
-                        desc: "",
-                        content: diagnosis["desc"] as Widget,
-                        buttons: <DialogButton>[
-                          DialogButton(
-                            onPressed: () => context.navigator.pop(),
-                            color: AppColors.deepRed,
-                            child: const Text(
-                              StringConstants.close,
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
-                            ),
-                          )
-                        ],
-                      ).show();
-                    },
-                  );
-                },
-              ),
-              const SizedBox(
-                height: 24 * 2,
-              ),
-              BorderedButton(
-                label: "Final Diagnosis",
-                color: AppColors.blue,
-                verticalPadding: 24,
-                customHeight: 20,
-                action: () async {
-                  Alert(
-                    context: context,
-                    type: AlertType.none,
-                    title: StringConstants.finalDiagnosis,
-                    desc: "",
-                    content: Text(
-                      ref.watch(finalDiagnosisResultProvider),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.bold),
-                    ),
-                    buttons: <DialogButton>[
-                      DialogButton(
-                        onPressed: () => context.navigator.pop(),
-                        // width: 120,
-                        color: AppColors.deepRed,
+            child: Column(
+              children: [
+                ProgressBarWithTitle(step: ref.watch(stepStateProvider)),
 
-                        child: const Text(
-                          StringConstants.close,
-                          style: TextStyle(color: Colors.white, fontSize: 20),
+                // Diagnosis List
+                ...ref.watch(resultDetailsProvider).map(
+                      (diagnosis) => Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: BorderedButton(
+                          label: diagnosis["label"] as String,
+                          color: AppColors.blue,
+                          verticalPadding: 8,
+                          action: () {
+                            Alert(
+                              context: context,
+                              type: AlertType.none,
+                              title: diagnosis["label"] as String,
+                              desc: "",
+                              content: Text(
+                                diagnosis["description"] as String,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                              buttons: [
+                                DialogButton(
+                                  onPressed: () => context.navigator.pop(),
+                                  color: AppColors.deepRed,
+                                  child: const Text(
+                                    StringConstants.close,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ).show();
+                          },
                         ),
-                      )
-                    ],
-                  ).show();
-                },
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              BorderedButton(
-                label: "New Patient",
-                color: AppColors.appbarBackground,
-                verticalPadding: 24,
-                customHeight: 20,
-                action: () async {
-                  String? newReq = await showModalActionSheet(
+                      ),
+                    ),
+
+                const SizedBox(height: 48),
+
+                // Final Diagnosis
+                BorderedButton(
+                  label: StringConstants.finalDiagnosis,
+                  color: AppColors.blue,
+                  verticalPadding: 24,
+                  customHeight: 20,
+                  action: () {
+                    Alert(
+                      context: context,
+                      type: AlertType.none,
+                      title: StringConstants.finalDiagnosis,
+                      desc: "",
+                      content: Text(
+                        ref.watch(finalDiagnosisProvider),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      buttons: [
+                        DialogButton(
+                          onPressed: () => context.navigator.pop(),
+                          color: AppColors.deepRed,
+                          child: const Text(
+                            StringConstants.close,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                            ),
+                          ),
+                        )
+                      ],
+                    ).show();
+                  },
+                ),
+
+                const SizedBox(height: 24),
+
+                // New Patient Button
+                BorderedButton(
+                  label: StringConstants.newPatient,
+                  color: AppColors.appbarBackground,
+                  verticalPadding: 24,
+                  customHeight: 20,
+                  action: () async {
+                    final choice = await showModalActionSheet<String>(
                       context: context,
                       title: StringConstants.newPatient,
                       message: StringConstants.startAnalysisForNewPatient,
-                      actions: <SheetAction<String>>[
+                      actions: [
                         const SheetAction<String>(
-                            label: StringConstants.newPatient,
-                            key: RouteNames.patientTypeSelection),
+                          label: StringConstants.newPatient,
+                          key: RouteNames.patientTypeSelection,
+                        ),
                         const SheetAction<String>(
-                            label: StringConstants.goBack, key: null),
-                      ].nonNulls.toList());
-                  if (!context.mounted) return;
-                  if (newReq == null) {
-                    if (context.navigator.canPop()) {
-                      context.navigator.pop();
+                          label: StringConstants.goBack,
+                          key: null,
+                        ),
+                      ].nonNulls.toList(),
+                    );
+
+                    if (!context.mounted) return;
+                    if (choice == null) {
+                      if (context.navigator.canPop()) {
+                        context.navigator.pop();
+                      }
+                      return;
                     }
-                    return;
-                  }
 
-                  for (ProviderOrFamily provider in appProviders) {
-                    ref.invalidate(provider);
-                  }
+                    // Reset all used providers
+                    for (final provider in [
+                      ...inputResetProviders,
+                      ...resultResetProviders,
+                    ]) {
+                      ref.invalidate(provider);
+                    }
 
-                  context.navigator
-                      .pushNamedAndRemoveUntil(newReq, (Route route) => false);
-                },
-              ),
-            ]),
+                    context.navigator.pushNamedAndRemoveUntil(
+                        choice as String, (route) => false);
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
