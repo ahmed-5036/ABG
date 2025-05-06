@@ -111,11 +111,15 @@ class FirstSection extends ConsumerWidget {
             ],
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             onChanged: (value) {
-              final numValue = double.tryParse(value.toParsableString());
-              if (numValue != null) {
-                ref
-                    .read(inputStateProvider.notifier)
-                    .updateValue(field, numValue);
+              if (value.isEmpty) {
+                ref.read(inputStateProvider.notifier).resetField(field);
+              } else {
+                final numValue = double.tryParse(value.toParsableString());
+                if (numValue != null) {
+                  ref
+                      .read(inputStateProvider.notifier)
+                      .updateValue(field, numValue);
+                }
               }
             },
             errorText: ref.watch(firstSectionValidationProvider(field)),
