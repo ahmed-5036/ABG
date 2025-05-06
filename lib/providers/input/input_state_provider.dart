@@ -1,5 +1,3 @@
-// lib/providers/input/input_state_provider.dart
-// lib/providers/input/input_state_provider.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../resources/constants/calculation_constants.dart';
 import '../../services/validator.dart';
@@ -10,9 +8,9 @@ class InputState {
   final Map<String, String?> errors;
 
   const InputState({
-    required this.values,
-    required this.isValid,
-    required this.errors,
+    this.values = const {},
+    this.isValid = const {},
+    this.errors = const {},
   });
 
   bool get isComplete {
@@ -75,12 +73,7 @@ class InputStateNotifier extends StateNotifier<InputState> {
     'age': Range(0, 120, 'Age'),
   };
 
-  InputStateNotifier()
-      : super(const InputState(
-          values: {},
-          isValid: {},
-          errors: {},
-        ));
+  InputStateNotifier() : super(const InputState());
 
   void updateValue(String field, double value) {
     final validationResult = _validateField(field, value);
@@ -101,7 +94,6 @@ class InputStateNotifier extends StateNotifier<InputState> {
     return _validateRange(value, range.min, range.max, range.label);
   }
 
-  // Modify the _validateRange method to accept values but still flag them
   ValidationResult _validateRange(
     double value,
     double min,
@@ -109,14 +101,12 @@ class InputStateNotifier extends StateNotifier<InputState> {
     String fieldName,
   ) {
     if (value < min || value > max) {
-      // The value is out of range, but still accepted
       return ValidationResult(
-        isValid:
-            true, // This will accept the input even though it's out of range
+        isValid: true,
         error: '$fieldName is out of the valid range ($min - $max)',
       );
     }
-    return ValidationResult(isValid: true); // Value is within the valid range
+    return ValidationResult(isValid: true);
   }
 
   void resetField(String field) {
@@ -132,10 +122,11 @@ class InputStateNotifier extends StateNotifier<InputState> {
   }
 
   void resetAll() {
-    state = const InputState(
-      values: {},
-      isValid: {},
-      errors: {},
+   
+    state = InputState(
+      values: {},     // Clear all input values
+      isValid: {},    // Reset validity states
+      errors: {},     // Clear any error messages
     );
   }
 }

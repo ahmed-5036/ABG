@@ -194,4 +194,11 @@ class FirstSection extends ConsumerWidget {
         return null;
     }
   }
+
+  static void clearControllers(WidgetRef ref) {
+    final controllers = ref.read(firstSectionControllersProvider);
+    controllers.forEach((key, controller) {
+      controller.clear();
+    });
+  }
 }

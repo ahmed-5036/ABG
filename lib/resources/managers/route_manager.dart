@@ -6,7 +6,7 @@ import '../../views/pages/copd_options.dart';
 import '../../views/pages/follow_up_abg.dart';
 import '../../views/pages/initial_selection.dart';
 import '../../views/pages/input_data_page.dart';
-import '../../views/pages/patient_type_selection.dart';
+import '../../views/pages/abg_admission.dart';
 import '../../views/pages/results_data_page.dart';
 import '../constants/route_names.dart';
 

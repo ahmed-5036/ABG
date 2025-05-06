@@ -5,6 +5,7 @@ import '../../resources/constants/app_colors.dart';
 import '../../resources/constants/app_images.dart';
 import '../../resources/constants/route_names.dart';
 import '../../resources/constants/string_constants.dart';
+import '../../services/calculators/calculator_factory.dart';
 import '../../services/extension.dart';
 import '../atoms/primary_button.dart';
 import '../organism/adaptive_input_dialog.dart';
@@ -17,6 +18,10 @@ class FollowUpAbgOptionsView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Retrieve the calculator types passed from initial selection
+    final calculatorTypes =
+        ModalRoute.of(context)?.settings.arguments as List<CalculatorType>?;
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 140,
@@ -58,33 +63,35 @@ class FollowUpAbgOptionsView extends ConsumerWidget {
               flexSecond: 1,
               firstInput: Padding(
                 padding: const EdgeInsets.all(16),
-                child: Container(
-                  clipBehavior: Clip.hardEdge,
-                  decoration: const BoxDecoration(),
-                  padding: const EdgeInsets.all(10),
-                  child: BorderedButton(
-                    customWidgetLabel: const Text(
-                      StringConstants.primaryMetabolicInsultTitle,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.deepRed2,
-                        fontSize: 18,
-                      ),
-                      textAlign: TextAlign.center,
+                child: BorderedButton(
+                  customWidgetLabel: const Text(
+                    StringConstants.primaryMetabolicInsultTitle,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.deepRed2,
+                      fontSize: 18,
                     ),
-                    color: AppColors.blue,
-                    verticalPadding: 8,
-                    customHeight: 100,
-                    action: () {
-                      ref.read(followUpAbgOptionProvider.notifier).state =
-                          StringConstants.primaryMetabolicInsultTitle;
-
-                      _showOptionDetails(
-                          context,
-                          StringConstants.primaryMetabolicInsultTitle,
-                          StringConstants.primaryMetabolicInsultDescription);
-                    },
+                    textAlign: TextAlign.center,
                   ),
+                  color: AppColors.blue,
+                  verticalPadding: 8,
+                  customHeight: 100,
+                  action: () {
+                    // Set the calculator type to the first option (Metabolic)
+                    ref.read(calculatorTypeProvider.notifier).state =
+                        calculatorTypes?[0] ??
+                            CalculatorType.followUpABGMetabolic;
+
+                    ref.read(followUpAbgOptionProvider.notifier).state =
+                        StringConstants.primaryMetabolicInsultTitle;
+
+                    _showOptionDetails(
+                        context,
+                        StringConstants.primaryMetabolicInsultTitle,
+                        StringConstants.primaryMetabolicInsultDescription, () {
+                      context.navigator.pushNamed(RouteNames.inputData);
+                    });
+                  },
                 ),
               ),
               secondInput: Padding(
@@ -103,13 +110,21 @@ class FollowUpAbgOptionsView extends ConsumerWidget {
                   verticalPadding: 8,
                   customHeight: 100,
                   action: () {
+                    // Set the calculator type to the second option (Respiratory)
+                    ref.read(calculatorTypeProvider.notifier).state =
+                        calculatorTypes?[1] ??
+                            CalculatorType.followUpABGRespiratory;
+
                     ref.read(followUpAbgOptionProvider.notifier).state =
                         StringConstants.primaryRespiratoryInsultTitle;
 
                     _showOptionDetails(
                         context,
                         StringConstants.primaryRespiratoryInsultTitle,
-                        StringConstants.primaryRespiratoryInsultDescription);
+                        StringConstants.primaryRespiratoryInsultDescription,
+                        () {
+                      context.navigator.pushNamed(RouteNames.inputData);
+                    });
                   },
                 ),
               ),
@@ -120,8 +135,8 @@ class FollowUpAbgOptionsView extends ConsumerWidget {
     );
   }
 
-  void _showOptionDetails(
-      BuildContext context, String title, String description) {
+  void _showOptionDetails(BuildContext context, String title,
+      String description, VoidCallback? onConfirm) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -151,6 +166,13 @@ class FollowUpAbgOptionsView extends ConsumerWidget {
               child: const Text('Close'),
               onPressed: () {
                 Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Proceed'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                onConfirm?.call();
               },
             ),
           ],

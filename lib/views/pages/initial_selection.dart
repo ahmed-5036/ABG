@@ -7,11 +7,16 @@ import '../../resources/constants/route_names.dart';
 import '../../resources/constants/string_constants.dart';
 import '../../services/enum.dart';
 import '../../services/extension.dart';
+import '../../services/calculators/calculator_factory.dart';
 import '../atoms/primary_button.dart';
 import '../organism/adaptive_input_dialog.dart';
 
 // Enum for initial options
-enum InitialOption { abgAdmission, followUpAbg, copd }
+enum InitialOption { 
+  abgAdmission, 
+  followUpAbg, 
+  copd 
+}
 
 // Provider for tracking the selected initial option
 final initialOptionProvider = StateProvider<InitialOption?>((ref) => null);
@@ -36,40 +41,64 @@ class InitialSelectionView extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildOptionButton(context, ref, 'ABG Admission',
-                InitialOption.abgAdmission, RouteNames.patientTypeSelection),
-            _buildOptionButton(context, ref, 'Follow Up ABG',
-                InitialOption.followUpAbg, RouteNames.followUpAbgOptions),
-            _buildOptionButton(context, ref, 'COPD Patients',
-                InitialOption.copd, RouteNames.copdOptions),
+            _buildModeButton(
+              context, 
+              ref, 
+              'ABG Admission', 
+              InitialOption.abgAdmission,
+              RouteNames.patientTypeSelection,
+              [
+                CalculatorType.admissionABGNormal,
+                CalculatorType.admissionABGHigh
+              ]
+            ),
+            _buildModeButton(
+              context, 
+              ref, 
+              'Follow Up ABG', 
+              InitialOption.followUpAbg,
+              RouteNames.followUpAbgOptions,
+              [
+                CalculatorType.followUpABGMetabolic,
+                CalculatorType.followUpABGRespiratory
+              ]
+            ),
+            _buildModeButton(
+              context, 
+              ref, 
+              'COPD Patients', 
+              InitialOption.copd,
+              RouteNames.copdOptions,
+              [
+                CalculatorType.copdCalculationNormal,
+                CalculatorType.copdCalculationHigh
+              ]
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildOptionButton(BuildContext context, WidgetRef ref, String label,
-      InitialOption option, String routeName) {
+  Widget _buildModeButton(
+    BuildContext context, 
+    WidgetRef ref, 
+    String label, 
+    InitialOption initialOption,
+    String route,
+    List<CalculatorType> calculatorTypes
+  ) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: BorderedButton(
-        customWidgetLabel: Text(
-          label,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: AppColors.deepRed2,
-            fontSize: 18,
-          ),
-        ),
+        label: label,
         color: AppColors.blue,
-        verticalPadding: 8,
-        customHeight: 100,
         action: () {
-          // Update the selected option
-          ref.read(initialOptionProvider.notifier).state = option;
-
-          // Navigate to the selected route
-          context.navigator.pushNamed(routeName);
+          // Set the initial option
+          ref.read(initialOptionProvider.notifier).state = initialOption;
+          
+          // Navigate to the route with calculator type options
+          Navigator.of(context).pushNamed(route, arguments: calculatorTypes);
         },
       ),
     );

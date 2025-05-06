@@ -1,4 +1,3 @@
-// lib/views/pages/input_data_page.dart
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,6 +10,7 @@ import '../../resources/constants/app_constants.dart';
 import '../../resources/constants/app_images.dart';
 import '../../resources/constants/route_names.dart';
 import '../../resources/constants/string_constants.dart';
+import '../../services/calculators/calculator_factory.dart';
 import '../../services/enum.dart';
 import '../../services/extension.dart';
 import '../atoms/primary_button.dart';
@@ -20,7 +20,7 @@ import '../organism/app_drawer.dart';
 import '../organism/first_sections_fields.dart';
 import '../organism/second_sections_fields.dart';
 import '../organism/third_sections_fields.dart';
-import 'patient_type_selection.dart';
+import 'abg_admission.dart';
 
 class InputDataPage extends ConsumerStatefulWidget {
   const InputDataPage({super.key});
@@ -59,9 +59,12 @@ class _InputDataPageState extends ConsumerState<InputDataPage> {
                     message: StringConstants.startCollectingNewData,
                   );
                   if (confirm == OkCancelResult.ok) {
-                    ref.invalidate(inputStateProvider);
-                    ref.invalidate(inputCompleteProvider);
+                    ref.read(inputStateProvider.notifier).resetAll();
+                    FirstSection.clearControllers(ref);
+
+                    // Reset other necessary providers
                     ref.invalidate(calculatorResultProvider);
+                    // Add any other providers that need to be reset
                   }
                 },
               ),
@@ -99,29 +102,49 @@ class _InputDataPageState extends ConsumerState<InputDataPage> {
             Consumer(
               builder: (context, ref, _) {
                 final type = ref.watch(patientTypeProvider)?.type ?? "";
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    HeaderTitle(
-                      customWidgetLabel: Text.rich(
-                        TextSpan(
-                          children: [
+                final calculatorMetadata =
+                    ref.watch(calculatorMetadataProvider);
+                final calculatorName = calculatorMetadata['name'] ?? '';
+
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: HeaderTitle(
+                          customWidgetLabel: Text.rich(
                             TextSpan(
-                              text: StringConstants.analysis,
-                              style: Theme.of(context).textTheme.headlineLarge,
+                              children: [
+                                TextSpan(
+                                  text: StringConstants.analysis,
+                                  style:
+                                      Theme.of(context).textTheme.headlineLarge,
+                                ),
+                                TextSpan(
+                                  text: ' $calculatorName',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w300,
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                if (type.isNotEmpty)
+                                  TextSpan(
+                                    text: ' ($type)',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                              ],
                             ),
-                            TextSpan(
-                              text: type,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w300,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 );
               },
             ),

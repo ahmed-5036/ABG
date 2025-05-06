@@ -2,7 +2,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:aai_app/services/calculations/base_calculator.dart';
 import 'package:aai_app/services/calculators/calculator_factory.dart';
-import 'package:aai_app/views/pages/patient_type_selection.dart';
+import 'package:aai_app/views/pages/abg_admission.dart';
 
 final calculatorProvider = Provider<ABGCalculator>((ref) {
   final type = ref.watch(calculatorTypeProvider);

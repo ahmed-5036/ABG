@@ -7,7 +7,7 @@
 // import '../views/organism/table_one_diagnosis.dart';
 // import '../views/organism/table_three_diagnosis.dart';
 // import '../views/organism/table_two_diagnosis.dart';
-// import '../views/pages/patient_type_selection.dart';
+// import '../views/pages/abg_admission.dart';
 // import 'input_calculator_provider.dart';
 //
 // //--------------------First Section-------------------------

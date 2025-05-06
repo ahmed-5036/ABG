@@ -6,7 +6,7 @@
 // import '../../providers/input_calculator_provider.dart';
 // import '../../providers/result_calculator_providers.dart';
 // import '../../resources/constants/app_colors.dart';
-// import '../pages/patient_type_selection.dart';
+// import '../pages/abg_admission.dart';
 //
 // class TableOneDiagnosis extends ConsumerWidget {
 //   const TableOneDiagnosis({super.key});

@@ -1,7 +1,9 @@
 // lib/services/calculators/calculator_factory.dart
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../views/pages/patient_type_selection.dart';
+import '../../views/pages/abg_admission.dart';
+import '../calculations/admission_calculator.dart';
+import '../calculations/copd_calculator.dart';
 import '../enum.dart';
 import 'package:aai_app/services/calculations/base_calculator.dart';
 import 'package:aai_app/services/calculations/follow_up_calculator.dart';
@@ -26,23 +28,16 @@ class ABGCalculatorFactory {
         return RespiratoryPrimaryCalculator();
 
       case CalculatorType.admissionABGNormal:
-        // TODO: Implement Normal Admission ABG Calculator
-        throw UnimplementedError(
-            'Normal Admission ABG Calculator not implemented yet');
+        return AdmissionABGNormalCalculator();
 
       case CalculatorType.admissionABGHigh:
-        // TODO: Implement High Admission ABG Calculator
-        throw UnimplementedError(
-            'High Admission ABG Calculator not implemented yet');
+        return AdmissionABGHighCalculator();
 
       case CalculatorType.copdCalculationNormal:
-        // TODO: Implement Normal COPD Calculator
-        throw UnimplementedError('Normal COPD Calculator not implemented yet');
+        return COPDNormalCalculator();
 
       case CalculatorType.copdCalculationHigh:
-        // TODO: Implement High COPD Calculator
-        throw UnimplementedError('High COPD Calculator not implemented yet');
-
+        return COPDHighCalculator();
       default:
         throw Exception('Invalid calculator type: $type');
     }
@@ -86,16 +81,6 @@ class ABGCalculatorFactory {
     }
   }
 
-  static bool requiresPatientType(CalculatorType type) {
-    switch (type) {
-      case CalculatorType.followUpABGMetabolic:
-      case CalculatorType.followUpABGRespiratory:
-        return true;
-      default:
-        return false;
-    }
-  }
-
   static bool validateInputs(CalculatorType type, Map<String, double?> inputs) {
     switch (type) {
       case CalculatorType.followUpABGMetabolic:
@@ -107,6 +92,16 @@ class ABGCalculatorFactory {
       case CalculatorType.copdCalculationNormal:
       case CalculatorType.copdCalculationHigh:
         return _validateCopdInputs(inputs);
+      default:
+        return false;
+    }
+  }
+
+  static bool requiresPatientType(CalculatorType type) {
+    switch (type) {
+      case CalculatorType.followUpABGMetabolic:
+      case CalculatorType.followUpABGRespiratory:
+        return true;
       default:
         return false;
     }

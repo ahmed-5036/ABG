@@ -5,6 +5,7 @@ import '../../resources/constants/app_colors.dart';
 import '../../resources/constants/app_images.dart';
 import '../../resources/constants/route_names.dart';
 import '../../resources/constants/string_constants.dart';
+import '../../services/calculators/calculator_factory.dart';
 import '../../services/enum.dart';
 import '../../services/extension.dart';
 import '../atoms/primary_button.dart';
@@ -20,6 +21,10 @@ class PatientTypeSelectionPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Retrieve the calculator types passed from initial selection
+    final calculatorTypes =
+        ModalRoute.of(context)?.settings.arguments as List<CalculatorType>?;
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 140,
@@ -114,6 +119,11 @@ class PatientTypeSelectionPage extends ConsumerWidget {
                             verticalPadding: 8,
                             customHeight: 100,
                             action: () async {
+                              // Set the calculator type to the first option (Normal)
+                              ref.read(calculatorTypeProvider.notifier).state =
+                                  calculatorTypes?[0] ??
+                                      CalculatorType.admissionABGNormal;
+
                               ref.read(patientTypeProvider.notifier).update(
                                   (PatientType? state) =>
                                       PatientType.patientTypeOne);
@@ -194,6 +204,11 @@ class PatientTypeSelectionPage extends ConsumerWidget {
                       verticalPadding: 8,
                       customHeight: 100,
                       action: () async {
+                        // Set the calculator type to the second option (High)
+                        ref.read(calculatorTypeProvider.notifier).state =
+                            calculatorTypes?[1] ??
+                                CalculatorType.admissionABGHigh;
+
                         ref.read(patientTypeProvider.notifier).update(
                             (PatientType? state) => PatientType.patientTypeTwo);
                         context.navigator
