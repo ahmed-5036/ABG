@@ -16,7 +16,6 @@ class InputState {
   bool get isComplete {
     final hasRequiredFields = _hasRequiredFields();
     final isValidFields = isValid.values.every((v) => v);
-    print("isComplete: $hasRequiredFields && $isValidFields");
     return values.isNotEmpty && isValidFields && hasRequiredFields;
   }
 
@@ -77,8 +76,6 @@ class InputStateNotifier extends StateNotifier<InputState> {
 
   void updateValue(String field, double value) {
     final validationResult = _validateField(field, value);
-    print(
-        "Updating field: $field with value: $value, valid: ${validationResult.isValid}");
     state = state.copyWith(
       values: {...state.values, field: value},
       isValid: {...state.isValid, field: validationResult.isValid},
@@ -122,11 +119,10 @@ class InputStateNotifier extends StateNotifier<InputState> {
   }
 
   void resetAll() {
-   
     state = InputState(
-      values: {},     // Clear all input values
-      isValid: {},    // Reset validity states
-      errors: {},     // Clear any error messages
+      values: {}, // Clear all input values
+      isValid: {}, // Reset validity states
+      errors: {}, // Clear any error messages
     );
   }
 }

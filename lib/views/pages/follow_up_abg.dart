@@ -64,12 +64,32 @@ class FollowUpAbgOptionsView extends ConsumerWidget {
               firstInput: Padding(
                 padding: const EdgeInsets.all(16),
                 child: BorderedButton(
-                  customWidgetLabel: const Text(
-                    StringConstants.primaryMetabolicInsultTitle,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.deepRed2,
-                      fontSize: 18,
+                  customWidgetLabel: Text.rich(
+                    TextSpan(
+                      children: <InlineSpan>[
+                        TextSpan(
+                          text: StringConstants.primaryMetabolicInsultTitle,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.deepRed2,
+                            fontSize: 18,
+                          ),
+                        ),
+                        const TextSpan(
+                          text: "\n",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 14,
+                          ),
+                        ),
+                        TextSpan(
+                          text: StringConstants.primaryMetabolicInsultExamples.join(', '),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -85,24 +105,39 @@ class FollowUpAbgOptionsView extends ConsumerWidget {
                     ref.read(followUpAbgOptionProvider.notifier).state =
                         StringConstants.primaryMetabolicInsultTitle;
 
-                    _showOptionDetails(
-                        context,
-                        StringConstants.primaryMetabolicInsultTitle,
-                        StringConstants.primaryMetabolicInsultDescription, () {
-                      context.navigator.pushNamed(RouteNames.inputData);
-                    });
+                    context.navigator.pushNamed(RouteNames.inputData);
                   },
                 ),
               ),
               secondInput: Padding(
                 padding: const EdgeInsets.all(16),
                 child: BorderedButton(
-                  customWidgetLabel: const Text(
-                    StringConstants.primaryRespiratoryInsultTitle,
-                    style: TextStyle(
-                      color: AppColors.deepRed2,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                  customWidgetLabel: Text.rich(
+                    TextSpan(
+                      children: <InlineSpan>[
+                        TextSpan(
+                          text: StringConstants.primaryRespiratoryInsultTitle,
+                          style: const TextStyle(
+                            color: AppColors.deepRed2,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        const TextSpan(
+                          text: "\n",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 14,
+                          ),
+                        ),
+                        TextSpan(
+                          text: StringConstants.primaryRespiratoryInsultExamples.join(', '),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -118,13 +153,7 @@ class FollowUpAbgOptionsView extends ConsumerWidget {
                     ref.read(followUpAbgOptionProvider.notifier).state =
                         StringConstants.primaryRespiratoryInsultTitle;
 
-                    _showOptionDetails(
-                        context,
-                        StringConstants.primaryRespiratoryInsultTitle,
-                        StringConstants.primaryRespiratoryInsultDescription,
-                        () {
-                      context.navigator.pushNamed(RouteNames.inputData);
-                    });
+                    context.navigator.pushNamed(RouteNames.inputData);
                   },
                 ),
               ),
@@ -132,52 +161,6 @@ class FollowUpAbgOptionsView extends ConsumerWidget {
           ),
         ],
       ),
-    );
-  }
-
-  void _showOptionDetails(BuildContext context, String title,
-      String description, VoidCallback? onConfirm) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(description),
-                const SizedBox(height: 16),
-                Text('Examples:',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                if (title == StringConstants.primaryMetabolicInsultTitle)
-                  ...StringConstants.primaryMetabolicInsultExamples
-                      .map((example) => Text('• $example'))
-                      .toList()
-                else
-                  ...StringConstants.primaryRespiratoryInsultExamples
-                      .map((example) => Text('• $example'))
-                      .toList(),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              child: const Text('Close'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Proceed'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                onConfirm?.call();
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 }

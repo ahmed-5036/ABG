@@ -63,37 +63,49 @@ class COPDOptionsView extends ConsumerWidget {
               firstInput: Padding(
                 padding: const EdgeInsets.all(16),
                 child: BorderedButton(
-                  customWidgetLabel: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text.rich(
-                      TextSpan(
-                        children: <InlineSpan>[
-                          TextSpan(
-                            text: StringConstants.copdOptionOneTitle,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.deepRed2,
-                              fontSize: 18,
-                            ),
+                  customWidgetLabel: Text.rich(
+                    TextSpan(
+                      children: <InlineSpan>[
+                        TextSpan(
+                          text: StringConstants.copdOptionOneTitle,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.deepRed2,
+                            fontSize: 18,
                           ),
-                          const TextSpan(
-                            text: "\n",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w300,
-                              fontSize: 14,
-                            ),
+                        ),
+                        const TextSpan(
+                          text: "\n",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 14,
                           ),
-                          TextSpan(
-                            text: StringConstants.copdNormalAgExamples.join(', '),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w300,
-                              fontSize: 14,
-                            ),
+                        ),
+                        TextSpan(
+                          text: StringConstants.copdNormalAgDetailsPartOneOfThree,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 14,
                           ),
-                        ],
-                      ),
-                      textAlign: TextAlign.center,
+                        ),
+                        TextSpan(
+                          text: StringConstants.copdNormalAgDetailsPartTwoOfThree,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.deepRed2,
+                            fontSize: 14,
+                          ),
+                        ),
+                        TextSpan(
+                          text: StringConstants.copdNormalAgDetailsPartThreeOfThree,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
                     ),
+                    textAlign: TextAlign.center,
                   ),
                   color: AppColors.blue,
                   verticalPadding: 8,
@@ -113,37 +125,49 @@ class COPDOptionsView extends ConsumerWidget {
               secondInput: Padding(
                 padding: const EdgeInsets.all(16),
                 child: BorderedButton(
-                  customWidgetLabel: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text.rich(
-                      TextSpan(
-                        children: <InlineSpan>[
-                          TextSpan(
-                            text: StringConstants.copdOptionTwoTitle,
-                            style: const TextStyle(
-                              color: AppColors.deepRed2,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
+                  customWidgetLabel: Text.rich(
+                    TextSpan(
+                      children: <InlineSpan>[
+                        TextSpan(
+                          text: StringConstants.copdOptionTwoTitle,
+                          style: const TextStyle(
+                            color: AppColors.deepRed2,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
                           ),
-                          const TextSpan(
-                            text: "\n",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w300,
-                              fontSize: 14,
-                            ),
+                        ),
+                        const TextSpan(
+                          text: "\n",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 14,
                           ),
-                          TextSpan(
-                            text: StringConstants.copdHighAgExamples.join(', '),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w300,
-                              fontSize: 14,
-                            ),
+                        ),
+                        TextSpan(
+                          text: StringConstants.copdHighAgDetailsPartOneOfThree,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 14,
                           ),
-                        ],
-                      ),
-                      textAlign: TextAlign.center,
+                        ),
+                        TextSpan(
+                          text: StringConstants.copdHighAgDetailsPartTwoOfThree,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.deepRed2,
+                            fontSize: 14,
+                          ),
+                        ),
+                        TextSpan(
+                          text: StringConstants.copdHighAgDetailsPartThreeOfThree,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
                     ),
+                    textAlign: TextAlign.center,
                   ),
                   color: AppColors.blue,
                   verticalPadding: 8,

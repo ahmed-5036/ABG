@@ -50,7 +50,7 @@ class StringConstants {
   ];
 
   // New COPD Option Constants
-  static const String copdOptionOneTitle = "Normal AG to High AG";
+  static const String copdOptionOneTitle = "Started with Normal AG";
   static const String copdOptionOneDescription =
       "Patient started with normal AG (vomiting, diarrhea, RTA, normal metabolic state) "
       "then developed high AG changes (shock, DKA, uremia) with COPD";
@@ -68,7 +68,21 @@ class StringConstants {
     'Uremia'
   ];
 
-  static const String copdOptionTwoTitle = "High AG to Normal AG";
+  // COPD Three-part text constants
+  static const String copdNormalAgDetailsPartOneOfThree =
+      "(vomiting, diarrhea, RTA, normal metabolic state)";
+  static const String copdNormalAgDetailsPartTwoOfThree =
+      " then developed high AG changes ";
+  static const String copdNormalAgDetailsPartThreeOfThree =
+      "(shock, DKA, uremia)";
+
+  static const String copdHighAgDetailsPartOneOfThree = "(shock, DKA, uremia)";
+  static const String copdHighAgDetailsPartTwoOfThree =
+      " then developed Normal AG changes ";
+  static const String copdHighAgDetailsPartThreeOfThree =
+      "(vomiting, diarrhea, NGT drainage)";
+
+  static const String copdOptionTwoTitle = "Started with High AG";
   static const String copdOptionTwoDescription =
       "Patient started with high AG (shock, DKA, uremia) or normal metabolic state "
       "then developed normal AG changes (vomiting, diarrhea) with COPD";
