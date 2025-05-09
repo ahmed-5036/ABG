@@ -22,10 +22,21 @@ class COPDNormalCalculator extends COPDCalculator {
     required double hco3,
     required double albumin,
   }) {
-    MetabolicLevel metabolicState;
-    // For HCO3 < 24 (Metabolic Acidosis)
-    double expectedPCO2 = 40 - ((24 - hco3) * 1.2);
+    // Calculate corrected AG
+    double correctedAG = (sodium - chlorine - hco3) + ((4 - albumin) * 2.5);
 
+    // Calculate expected HCO3 for normal AG scenario
+    double expectedHCO3 = hco3 + (correctedAG - 12);
+
+    // Calculate expected PCO2
+    double expectedPCO2 = 40 + ((expectedHCO3 - hco3) / 0.35);
+
+    // Calculate expected pH
+    double expectedPH = 7.4 -
+        (((expectedPCO2 - 40) * 0.08) / 10) +
+        (((expectedHCO3 - 24) * 0.15) / 10);
+
+    MetabolicLevel metabolicState;
     if (hco3 < 24) {
       metabolicState = MetabolicLevel.metabolicAcidosis;
     } else if (hco3 == 24) {
@@ -37,7 +48,12 @@ class COPDNormalCalculator extends COPDCalculator {
     return FinalResult(
       findingLevel: metabolicState,
       findingNumber: hco3,
-      additionalData: {'expectedPCO2': expectedPCO2},
+      additionalData: {
+        'expectedPCO2': expectedPCO2,
+        'expectedHCO3': expectedHCO3,
+        'expectedPH': expectedPH,
+        'correctedAG': correctedAG,
+      },
     );
   }
 
@@ -47,7 +63,8 @@ class COPDNormalCalculator extends COPDCalculator {
     required double hco3,
     required double ph,
   }) {
-    double expectedPCO2 = 40 - ((24 - hco3) * 1.2);
+    // Calculate expected PCO2 using the same formula as metabolic state
+    double expectedPCO2 = 40 + ((hco3 - 24) / 0.35);
 
     RespiratoryLevel respiratoryState;
     if ((expectedPCO2 - pco2).abs() <= 3) {
@@ -98,22 +115,38 @@ class COPDHighCalculator extends COPDCalculator {
     required double hco3,
     required double albumin,
   }) {
-    MetabolicLevel metabolicState;
-    // For HCO3 > 24 (Metabolic Alkalosis)
-    double expectedPCO2 = 40 - ((24 - hco3) * 0.6);
+    // Calculate measured SID
+    double measuredSID = sodium - chlorine;
 
-    if (hco3 > 24) {
-      metabolicState = MetabolicLevel.metabolicAlkalosis;
+    // Calculate expected HCO3 for high AG scenario
+    double expectedHCO3 = hco3 + (36 - measuredSID);
+
+    // Calculate expected PCO2
+    double expectedPCO2 = 40 + ((expectedHCO3 - hco3) / 0.35);
+
+    // Calculate expected pH
+    double expectedPH = 7.4 -
+        ((expectedPCO2 - 40) * 0.08 / 10) +
+        ((expectedHCO3 - 24) * 0.15 / 10);
+
+    MetabolicLevel metabolicState;
+    if (hco3 < 24) {
+      metabolicState = MetabolicLevel.metabolicAcidosis;
     } else if (hco3 == 24) {
       metabolicState = MetabolicLevel.normal;
     } else {
-      metabolicState = MetabolicLevel.metabolicAcidosis;
+      metabolicState = MetabolicLevel.metabolicAlkalosis;
     }
 
     return FinalResult(
       findingLevel: metabolicState,
       findingNumber: hco3,
-      additionalData: {'expectedPCO2': expectedPCO2},
+      additionalData: {
+        'expectedPCO2': expectedPCO2,
+        'expectedHCO3': expectedHCO3,
+        'expectedPH': expectedPH,
+        'measuredSID': measuredSID,
+      },
     );
   }
 
@@ -123,7 +156,8 @@ class COPDHighCalculator extends COPDCalculator {
     required double hco3,
     required double ph,
   }) {
-    double expectedPCO2 = 40 - ((24 - hco3) * 1.2);
+    // Calculate expected PCO2 using the same formula as metabolic state
+    double expectedPCO2 = 40 + ((hco3 - 24) / 0.35);
 
     RespiratoryLevel respiratoryState;
     if ((expectedPCO2 - pco2).abs() <= 3) {
