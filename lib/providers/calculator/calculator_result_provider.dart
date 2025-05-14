@@ -85,7 +85,7 @@ final calculatorResultProvider = Provider<ABGResult>((ref) {
   final calculator = ref.watch(calculatorProvider);
   final inputs = ref.watch(inputStateProvider);
 
-  if (!inputs.isComplete) return ABGResult.initial();
+  if (inputs.isComplete) return ABGResult.initial();
 
   final metabolicResult = calculator.calculateMetabolicState(
     sodium: inputs.values['sodium'] ?? 0,

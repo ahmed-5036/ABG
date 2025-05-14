@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/index.dart';
+import '../../providers/patient_type_provider.dart';
 import '../../resources/constants/app_colors.dart';
 import '../../resources/constants/string_constants.dart';
 import '../../services/enum.dart';
-import '../pages/abg_admission.dart';
 
 class TableOneDiagnosis extends ConsumerWidget {
   const TableOneDiagnosis({super.key});

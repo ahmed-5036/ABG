@@ -4,6 +4,8 @@ import 'package:aai_app/services/calculations/base_calculator.dart';
 import 'package:aai_app/services/calculators/calculator_factory.dart';
 import 'package:aai_app/views/pages/abg_admission.dart';
 
+import '../patient_type_provider.dart';
+
 final calculatorProvider = Provider<ABGCalculator>((ref) {
   final type = ref.watch(calculatorTypeProvider);
   final patientType = ref.watch(patientTypeProvider);

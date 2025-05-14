@@ -1,12 +1,14 @@
+// lib/views/pages/input_data_page.dart
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
-
+import '../../providers/patient_type_provider.dart';
 import '../../providers/input/input_state_provider.dart';
 import '../../providers/input/input_validation_provider.dart';
 import '../../providers/calculator/calculator_result_provider.dart';
 import '../../providers/input/navigation_validation_provider.dart';
+import '../../providers/reset/reset_providers.dart';
 import '../../resources/constants/app_constants.dart';
 import '../../resources/constants/app_images.dart';
 import '../../resources/constants/route_names.dart';
@@ -69,13 +71,9 @@ class _InputDataPageState extends ConsumerState<InputDataPage> {
                   );
                   if (confirm == OkCancelResult.ok) {
                     ref.read(inputStateProvider.notifier).resetAll();
-                    FirstSection.clearControllers(ref);
-                    COPDSection.clearControllers(
-                        ref); // Add this to clear COPD fields
-
-                    // Reset other necessary providers
+                    resetControllers(ref, firstSectionControllersProvider);
+                    resetControllers(ref, copdSectionControllersProvider);
                     ref.invalidate(calculatorResultProvider);
-                    // Add any other providers that need to be reset
                   }
                 },
               ),
@@ -140,15 +138,6 @@ class _InputDataPageState extends ConsumerState<InputDataPage> {
                                     color: Colors.grey,
                                   ),
                                 ),
-                                if (type.isNotEmpty)
-                                  TextSpan(
-                                    text: ' ($type)',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
                               ],
                             ),
                           ),
@@ -205,15 +194,28 @@ class _InputDataPageState extends ConsumerState<InputDataPage> {
                             final isReady = ref.watch(navigateToResultProvider);
                             return BorderedButton(
                               label: StringConstants.calculate,
-                              enabled: true,
+                              enabled:
+                                  isReady, // <-- This should be controlled by isReady
                               action: () {
-                                Future<void>.delayed(
-                                    const Duration(milliseconds: 100), () {
-                                  ref.read(stepStateProvider.notifier).state =
-                                      CurrentStep.definitions;
-                                });
-                                context.navigator
-                                    .pushNamed(RouteNames.resultData);
+                                if (isReady) {
+                                  // <-- Add additional check here
+                                  Future<void>.delayed(
+                                      const Duration(milliseconds: 100), () {
+                                    ref.read(stepStateProvider.notifier).state =
+                                        CurrentStep.definitions;
+                                  });
+                                  context.navigator
+                                      .pushNamed(RouteNames.resultData);
+                                } else {
+                                  // Show a message to the user about missing fields
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          'Please fill in all required fields.'),
+                                      duration: Duration(seconds: 2),
+                                    ),
+                                  );
+                                }
                               },
                             );
                           },

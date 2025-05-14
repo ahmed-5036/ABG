@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../views/molecules/progress_bar_with_title.dart';
 import '../index.dart';
@@ -17,3 +18,17 @@ final List<ProviderOrFamily> resultResetProviders = [
   oxygenationResultProvider,
   finalDiagnosisProvider,
 ];
+
+void resetControllers(WidgetRef ref,
+    Provider<Map<String, TextEditingController>> controllersProvider) {
+  final controllers = ref.read(controllersProvider);
+
+  // Clear each controller and reset the corresponding field in input state
+  controllers.forEach((field, controller) {
+    //  Clear the text controller
+    controller.clear();
+
+    // Reset the field in inputStateProvider - this clears the result text
+    ref.read(inputStateProvider.notifier).resetField(field);
+  });
+}

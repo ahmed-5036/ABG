@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../providers/reset/reset_providers.dart';
 import '../../resources/constants/app_colors.dart';
 import '../../resources/constants/app_images.dart';
 import '../../resources/constants/route_names.dart';
@@ -9,6 +10,9 @@ import '../../services/calculators/calculator_factory.dart';
 import '../../services/extension.dart';
 import '../atoms/primary_button.dart';
 import '../organism/adaptive_input_dialog.dart';
+import '../organism/first_sections_fields.dart';
+import '../organism/second_sections_fields.dart';
+import '../organism/third_sections_fields.dart';
 
 // Provider for Follow Up ABG selection
 final followUpAbgOptionProvider = StateProvider<String?>((ref) => null);
@@ -83,7 +87,8 @@ class FollowUpAbgOptionsView extends ConsumerWidget {
                           ),
                         ),
                         TextSpan(
-                          text: StringConstants.primaryMetabolicInsultExamples.join(', '),
+                          text: StringConstants.primaryMetabolicInsultExamples
+                              .join(', '),
                           style: const TextStyle(
                             fontWeight: FontWeight.w300,
                             fontSize: 14,
@@ -97,6 +102,9 @@ class FollowUpAbgOptionsView extends ConsumerWidget {
                   verticalPadding: 8,
                   customHeight: 100,
                   action: () {
+                    resetControllers(ref, firstSectionControllersProvider);
+                    resetControllers(ref, secondSectionControllersProvider);
+                    resetControllers(ref, thirdSectionControllersProvider);
                     // Set the calculator type to the first option (Metabolic)
                     ref.read(calculatorTypeProvider.notifier).state =
                         calculatorTypes?[0] ??
@@ -131,7 +139,8 @@ class FollowUpAbgOptionsView extends ConsumerWidget {
                           ),
                         ),
                         TextSpan(
-                          text: StringConstants.primaryRespiratoryInsultExamples.join(', '),
+                          text: StringConstants.primaryRespiratoryInsultExamples
+                              .join(', '),
                           style: const TextStyle(
                             fontWeight: FontWeight.w300,
                             fontSize: 14,
@@ -145,6 +154,9 @@ class FollowUpAbgOptionsView extends ConsumerWidget {
                   verticalPadding: 8,
                   customHeight: 100,
                   action: () {
+                    resetControllers(ref, firstSectionControllersProvider);
+                    resetControllers(ref, secondSectionControllersProvider);
+                    resetControllers(ref, thirdSectionControllersProvider);
                     // Set the calculator type to the second option (Respiratory)
                     ref.read(calculatorTypeProvider.notifier).state =
                         calculatorTypes?[1] ??

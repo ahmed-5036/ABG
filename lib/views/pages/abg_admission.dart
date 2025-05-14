@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import '../../providers/patient_type_provider.dart';
+import '../../providers/reset/reset_providers.dart';
 import '../../resources/constants/app_colors.dart';
 import '../../resources/constants/app_images.dart';
 import '../../resources/constants/route_names.dart';
@@ -10,11 +11,9 @@ import '../../services/enum.dart';
 import '../../services/extension.dart';
 import '../atoms/primary_button.dart';
 import '../organism/adaptive_input_dialog.dart';
-
-final StateProvider<PatientType?> patientTypeProvider =
-    StateProvider<PatientType?>((_) {
-  return null;
-});
+import '../organism/first_sections_fields.dart';
+import '../organism/second_sections_fields.dart';
+import '../organism/third_sections_fields.dart';
 
 class PatientTypeSelectionPage extends ConsumerWidget {
   const PatientTypeSelectionPage({super.key});
@@ -119,6 +118,12 @@ class PatientTypeSelectionPage extends ConsumerWidget {
                             verticalPadding: 8,
                             customHeight: 100,
                             action: () async {
+                              resetControllers(
+                                  ref, firstSectionControllersProvider);
+                              resetControllers(
+                                  ref, secondSectionControllersProvider);
+                              resetControllers(
+                                  ref, thirdSectionControllersProvider);
                               // Set the calculator type to the first option (Normal)
                               ref.read(calculatorTypeProvider.notifier).state =
                                   calculatorTypes?[0] ??
@@ -128,8 +133,7 @@ class PatientTypeSelectionPage extends ConsumerWidget {
                                   (PatientType? state) =>
                                       PatientType.patientTypeOne);
 
-                              context.navigator
-                                  .pushReplacementNamed(RouteNames.inputData);
+                              context.navigator.pushNamed(RouteNames.inputData);
                             },
                           ),
                           Positioned(
@@ -205,14 +209,16 @@ class PatientTypeSelectionPage extends ConsumerWidget {
                       customHeight: 100,
                       action: () async {
                         // Set the calculator type to the second option (High)
+                        resetControllers(ref, firstSectionControllersProvider);
+                        resetControllers(ref, secondSectionControllersProvider);
+                        resetControllers(ref, thirdSectionControllersProvider);
                         ref.read(calculatorTypeProvider.notifier).state =
                             calculatorTypes?[1] ??
                                 CalculatorType.admissionABGHigh;
 
                         ref.read(patientTypeProvider.notifier).update(
                             (PatientType? state) => PatientType.patientTypeTwo);
-                        context.navigator
-                            .pushReplacementNamed(RouteNames.inputData);
+                        context.navigator.pushNamed(RouteNames.inputData);
                       },
                     ),
                   ))),

@@ -369,10 +369,16 @@ class COPDSection extends ConsumerWidget {
     }
   }
 
-  static void clearControllers(WidgetRef ref) {
-    final controllers = ref.read(copdSectionControllersProvider);
-    controllers.forEach((key, controller) {
-      controller.clear();
-    });
-  }
+  // static void resetFields(WidgetRef ref) {
+  //   final controllers = ref.read(copdSectionControllersProvider);
+  //
+  //   // 2. Clear each controller and reset the corresponding field in input state
+  //   controllers.forEach((field, controller) {
+  //     // Clear the text controller
+  //     controller.clear();
+  //
+  //     // Reset the field in inputStateProvider - this clears the result text
+  //     ref.read(inputStateProvider.notifier).resetField(field);
+  //   });
+  // }
 }

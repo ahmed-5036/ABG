@@ -1,14 +1,19 @@
+// lib/views/pages/copd_options.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../providers/patient_type_provider.dart';
+import '../../providers/reset/reset_providers.dart';
 import '../../resources/constants/app_colors.dart';
 import '../../resources/constants/app_images.dart';
 import '../../resources/constants/route_names.dart';
 import '../../resources/constants/string_constants.dart';
 import '../../services/calculators/calculator_factory.dart';
+import '../../services/enum.dart';
 import '../../services/extension.dart';
 import '../atoms/primary_button.dart';
 import '../organism/adaptive_input_dialog.dart';
+import '../organism/copd_section_fields.dart';
 
 // Provider for COPD selection
 final copdOptionProvider = StateProvider<String?>((ref) => null);
@@ -19,7 +24,8 @@ class COPDOptionsView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Retrieve the calculator types passed from initial selection
-    final calculatorTypes = ModalRoute.of(context)?.settings.arguments as List<CalculatorType>?;
+    final calculatorTypes =
+        ModalRoute.of(context)?.settings.arguments as List<CalculatorType>?;
 
     return Scaffold(
       appBar: AppBar(
@@ -82,14 +88,16 @@ class COPDOptionsView extends ConsumerWidget {
                           ),
                         ),
                         TextSpan(
-                          text: StringConstants.copdNormalAgDetailsPartOneOfThree,
+                          text:
+                              StringConstants.copdNormalAgDetailsPartOneOfThree,
                           style: const TextStyle(
                             fontWeight: FontWeight.w300,
                             fontSize: 14,
                           ),
                         ),
                         TextSpan(
-                          text: StringConstants.copdNormalAgDetailsPartTwoOfThree,
+                          text:
+                              StringConstants.copdNormalAgDetailsPartTwoOfThree,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: AppColors.deepRed2,
@@ -97,7 +105,8 @@ class COPDOptionsView extends ConsumerWidget {
                           ),
                         ),
                         TextSpan(
-                          text: StringConstants.copdNormalAgDetailsPartThreeOfThree,
+                          text: StringConstants
+                              .copdNormalAgDetailsPartThreeOfThree,
                           style: const TextStyle(
                             fontWeight: FontWeight.w300,
                             fontSize: 14,
@@ -111,12 +120,16 @@ class COPDOptionsView extends ConsumerWidget {
                   verticalPadding: 8,
                   customHeight: 100,
                   action: () {
+                    resetControllers(ref, copdSectionControllersProvider);
                     // Set the calculator type to the first option (Normal)
-                    ref.read(calculatorTypeProvider.notifier).state = 
-                        calculatorTypes?[0] ?? CalculatorType.copdCalculationNormal;
-                    
+                    ref.read(calculatorTypeProvider.notifier).state =
+                        CalculatorType.copdCalculationNormal;
+
                     ref.read(copdOptionProvider.notifier).state =
                         StringConstants.copdOptionOneTitle;
+
+                    ref.read(patientTypeProvider.notifier).update(
+                        (PatientType? state) => PatientType.patientTypeOne);
 
                     context.navigator.pushNamed(RouteNames.inputData);
                   },
@@ -159,7 +172,8 @@ class COPDOptionsView extends ConsumerWidget {
                           ),
                         ),
                         TextSpan(
-                          text: StringConstants.copdHighAgDetailsPartThreeOfThree,
+                          text:
+                              StringConstants.copdHighAgDetailsPartThreeOfThree,
                           style: const TextStyle(
                             fontWeight: FontWeight.w300,
                             fontSize: 14,
@@ -173,13 +187,15 @@ class COPDOptionsView extends ConsumerWidget {
                   verticalPadding: 8,
                   customHeight: 100,
                   action: () {
+                    resetControllers(ref, copdSectionControllersProvider);
                     // Set the calculator type to the second option (High)
-                    ref.read(calculatorTypeProvider.notifier).state = 
-                        calculatorTypes?[1] ?? CalculatorType.copdCalculationHigh;
-                    
+                    ref.read(calculatorTypeProvider.notifier).state =
+                        CalculatorType.copdCalculationHigh;
+
                     ref.read(copdOptionProvider.notifier).state =
                         StringConstants.copdOptionTwoTitle;
-
+                    ref.read(patientTypeProvider.notifier).update(
+                        (PatientType? state) => PatientType.patientTypeTwo);
                     context.navigator.pushNamed(RouteNames.inputData);
                   },
                 ),
