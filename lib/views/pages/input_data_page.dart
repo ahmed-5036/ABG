@@ -1,6 +1,7 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/services.dart';
 
 import '../../providers/input/input_state_provider.dart';
 import '../../providers/input/input_validation_provider.dart';
@@ -20,7 +21,9 @@ import '../organism/app_drawer.dart';
 import '../organism/first_sections_fields.dart';
 import '../organism/second_sections_fields.dart';
 import '../organism/third_sections_fields.dart';
+import '../organism/copd_section_fields.dart';
 import 'abg_admission.dart';
+import '../molecules/default_text_field.dart';
 
 class InputDataPage extends ConsumerStatefulWidget {
   const InputDataPage({super.key});
@@ -30,6 +33,12 @@ class InputDataPage extends ConsumerStatefulWidget {
 }
 
 class _InputDataPageState extends ConsumerState<InputDataPage> {
+  bool _isCopdCalculator(WidgetRef ref) {
+    final calculatorType = ref.watch(calculatorTypeProvider);
+    return calculatorType == CalculatorType.copdCalculationNormal ||
+        calculatorType == CalculatorType.copdCalculationHigh;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,6 +70,8 @@ class _InputDataPageState extends ConsumerState<InputDataPage> {
                   if (confirm == OkCancelResult.ok) {
                     ref.read(inputStateProvider.notifier).resetAll();
                     FirstSection.clearControllers(ref);
+                    COPDSection.clearControllers(
+                        ref); // Add this to clear COPD fields
 
                     // Reset other necessary providers
                     ref.invalidate(calculatorResultProvider);
@@ -172,34 +183,45 @@ class _InputDataPageState extends ConsumerState<InputDataPage> {
               ),
               child: Padding(
                 padding: kDefaultPagePadding,
-                child: Column(
-                  children: [
-                    const SizedBox(height: 24),
-                    const FirstSection(),
-                    const SizedBox(height: 16),
-                    const SecondSection(),
-                    const SizedBox(height: 16),
-                    const ThirdSection(),
-                    const SizedBox(height: 24),
-                    Consumer(
-                      builder: (context, ref, _) {
-                        final isReady = ref.watch(navigateToResultProvider);
-                        return BorderedButton(
-                          label: StringConstants.calculate,
-                          enabled: true,
-                          action: () {
-                            Future<void>.delayed(
-                                const Duration(milliseconds: 100), () {
-                              ref.read(stepStateProvider.notifier).state =
-                                  CurrentStep.definitions;
-                            });
-                            context.navigator.pushNamed(RouteNames.resultData);
+                child: Consumer(
+                  builder: (context, ref, _) {
+                    final isCopd = _isCopdCalculator(ref);
+                    return Column(
+                      children: [
+                        const SizedBox(height: 24),
+                        if (isCopd) ...[
+                          // Render only the required COPD fields
+                          const COPDSection(),
+                        ] else ...[
+                          const FirstSection(),
+                          const SizedBox(height: 16),
+                          const SecondSection(),
+                          const SizedBox(height: 16),
+                          const ThirdSection(),
+                        ],
+                        const SizedBox(height: 24),
+                        Consumer(
+                          builder: (context, ref, _) {
+                            final isReady = ref.watch(navigateToResultProvider);
+                            return BorderedButton(
+                              label: StringConstants.calculate,
+                              enabled: true,
+                              action: () {
+                                Future<void>.delayed(
+                                    const Duration(milliseconds: 100), () {
+                                  ref.read(stepStateProvider.notifier).state =
+                                      CurrentStep.definitions;
+                                });
+                                context.navigator
+                                    .pushNamed(RouteNames.resultData);
+                              },
+                            );
                           },
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                  ],
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                    );
+                  },
                 ),
               ),
             ),
