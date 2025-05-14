@@ -2,6 +2,8 @@
 import '../../models/abg_result.dart';
 import '../enum.dart';
 import 'base_calculator.dart';
+import 'package:flutter/services.dart';
+import 'package:aai_app/views/molecules/default_text_field.dart';
 
 abstract class COPDCalculator implements ABGCalculator {
   @override

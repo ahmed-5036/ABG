@@ -3,7 +3,83 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:aai_app/models/abg_result.dart';
 import 'package:aai_app/services/enum.dart';
 import 'package:aai_app/providers/input/input_state_provider.dart';
+import '../../services/calculators/calculator_factory.dart'
+    as calculator_factory;
 import 'calculator_state_provider.dart';
+
+/// Provider that determines if COPD inputs are complete
+final copdInputsCompleteProvider = Provider<bool>((ref) {
+  final inputs = ref.watch(inputStateProvider).values;
+
+  // Check for all required COPD fields
+  return inputs.containsKey('sodium') &&
+      inputs.containsKey('chlorine') &&
+      inputs.containsKey('hco3') &&
+      inputs.containsKey('albumin') &&
+      inputs.containsKey('pco2') &&
+      inputs['sodium'] != null &&
+      inputs['chlorine'] != null &&
+      inputs['hco3'] != null &&
+      inputs['albumin'] != null &&
+      inputs['pco2'] != null;
+});
+
+/// Provider for COPD calculation results
+final copdCalculationResultProvider = Provider<Map<String, dynamic>>((ref) {
+  final calculatorType = ref.watch(calculator_factory.calculatorTypeProvider);
+  final inputs = ref.watch(inputStateProvider).values;
+  final isCopdCalculator = calculatorType ==
+          calculator_factory.CalculatorType.copdCalculationNormal ||
+      calculatorType == calculator_factory.CalculatorType.copdCalculationHigh;
+
+  // Skip if not a COPD calculator or inputs aren't complete
+  if (!isCopdCalculator || !ref.watch(copdInputsCompleteProvider)) {
+    return {};
+  }
+
+  // Extract values needed for calculation
+  final sodium = inputs['sodium'] ?? 0.0;
+  final chlorine = inputs['chlorine'] ?? 0.0;
+  final hco3 = inputs['hco3'] ?? 0.0;
+  final albumin = inputs['albumin'] ?? 0.0;
+  final pco2 = inputs['pco2'] ?? 0.0;
+
+  // Determine which COPD calculator to use
+  final isNormalCopd =
+      calculatorType == calculator_factory.CalculatorType.copdCalculationNormal;
+
+  if (isNormalCopd) {
+    // Normal AG COPD calculations
+    final correctedAG = (sodium - chlorine - hco3) + ((4 - albumin) * 2.5);
+    final expectedHCO3 = hco3 + (correctedAG - 12);
+    final expectedPCO2 = 40 + ((expectedHCO3 - hco3) / 0.35);
+    final expectedPH = 7.4 -
+        (((expectedPCO2 - 40) * 0.08) / 10) +
+        (((expectedHCO3 - 24) * 0.15) / 10);
+
+    return {
+      'correctedAG': correctedAG,
+      'expectedHCO3': expectedHCO3,
+      'expectedPCO2': expectedPCO2,
+      'expectedPH': expectedPH,
+    };
+  } else {
+    // High AG COPD calculations
+    final measuredSID = sodium - chlorine;
+    final expectedHCO3 = hco3 + (36 - measuredSID);
+    final expectedPCO2 = 40 + ((expectedHCO3 - hco3) / 0.35);
+    final expectedPH = 7.4 -
+        ((expectedPCO2 - 40) * 0.08 / 10) +
+        ((expectedHCO3 - 24) * 0.15 / 10);
+
+    return {
+      'measuredSID': measuredSID,
+      'expectedHCO3': expectedHCO3,
+      'expectedPCO2': expectedPCO2,
+      'expectedPH': expectedPH,
+    };
+  }
+});
 
 final calculatorResultProvider = Provider<ABGResult>((ref) {
   final calculator = ref.watch(calculatorProvider);
@@ -133,6 +209,7 @@ final oxygenationCalculationProvider =
     age: inputs.values['age'] ?? 0,
   );
 });
+
 final expectedPCO2Provider = Provider<double>((ref) {
   final hco3 = ref.watch(inputStateProvider).values['hco3'];
   if (hco3 == null) return 0;
@@ -140,6 +217,7 @@ final expectedPCO2Provider = Provider<double>((ref) {
   // Winter's Formula (for metabolic acidosis)
   return (1.5 * hco3) + 8;
 });
+
 // Provider for final diagnosis
 final finalCalculationProvider = Provider<String>((ref) {
   final metabolic = ref.watch(metabolicCalculationProvider);
