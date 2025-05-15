@@ -48,7 +48,7 @@ class AdmissionABGNormalCalculator extends AdmissionABGCalculator {
     return FinalResult(
       findingLevel: metabolicState,
       findingNumber: hco3,
-      additionalData: {
+      additionalData: <String, dynamic>{
         'correctedAG': correctedAG,
         'expectedHCO3': expectedHCO3,
         'expectedPCO2': expectedPCO2,
@@ -77,7 +77,7 @@ class AdmissionABGNormalCalculator extends AdmissionABGCalculator {
     return FinalResult(
       findingLevel: respiratoryState,
       findingNumber: pco2,
-      additionalData: {'expectedPCO2': expectedPCO2},
+      additionalData: <String, dynamic>{'expectedPCO2': expectedPCO2},
     );
   }
 
@@ -98,7 +98,7 @@ class AdmissionABGNormalCalculator extends AdmissionABGCalculator {
           ? OxygenWaterLevel.hypoxemia
           : OxygenWaterLevel.normoxia,
       findingNumber: aA,
-      additionalData: {
+      additionalData: <String, dynamic>{
         'pAO2': pAO2,
         'expectedAa': expectedAa,
       },
@@ -140,7 +140,7 @@ class AdmissionABGHighCalculator extends AdmissionABGCalculator {
     return FinalResult(
       findingLevel: metabolicState,
       findingNumber: hco3,
-      additionalData: {
+      additionalData: <String, dynamic>{
         'sid': sid,
         'expectedHCO3': expectedHCO3,
         'expectedPCO2': expectedPCO2,
@@ -169,7 +169,7 @@ class AdmissionABGHighCalculator extends AdmissionABGCalculator {
     return FinalResult(
       findingLevel: respiratoryState,
       findingNumber: pco2,
-      additionalData: {'expectedPCO2': expectedPCO2},
+      additionalData: <String, dynamic>{'expectedPCO2': expectedPCO2},
     );
   }
 
@@ -190,7 +190,7 @@ class AdmissionABGHighCalculator extends AdmissionABGCalculator {
           ? OxygenWaterLevel.hypoxemia
           : OxygenWaterLevel.normoxia,
       findingNumber: aA,
-      additionalData: {
+      additionalData: <String, dynamic>{
         'pAO2': pAO2,
         'expectedAa': expectedAa,
       },

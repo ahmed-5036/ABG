@@ -2,12 +2,11 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/patient_type_provider.dart';
-import '../../views/pages/abg_admission.dart';
 import '../calculations/admission_calculator.dart';
 import '../calculations/copd_calculator.dart';
 import '../enum.dart';
-import 'package:aai_app/services/calculations/base_calculator.dart';
-import 'package:aai_app/services/calculations/follow_up_calculator.dart';
+import '../calculations/base_calculator.dart';
+import '../calculations/follow_up_calculator.dart';
 
 enum CalculatorType {
   admissionABGNormal,
@@ -109,7 +108,7 @@ class ABGCalculatorFactory {
   }
 
   static bool _validateFollowUpInputs(Map<String, double?> inputs) {
-    final requiredInputs = [
+    final List<String> requiredInputs = <String>[
       'sodium',
       'chlorine',
       'hco3',
@@ -121,14 +120,14 @@ class ABGCalculatorFactory {
       'age'
     ];
 
-    return requiredInputs.every((input) =>
+    return requiredInputs.every((String input) =>
         inputs.containsKey(input) &&
         inputs[input] != null &&
         inputs[input]! > 0);
   }
 
   static bool _validateAdmissionInputs(Map<String, double?> inputs) {
-    final requiredInputs = [
+    final List<String> requiredInputs = <String>[
       'sodium',
       'chlorine',
       'hco3',
@@ -137,16 +136,16 @@ class ABGCalculatorFactory {
       'pco2'
     ];
 
-    return requiredInputs.every((input) =>
+    return requiredInputs.every((String input) =>
         inputs.containsKey(input) &&
         inputs[input] != null &&
         inputs[input]! > 0);
   }
 
   static bool _validateCopdInputs(Map<String, double?> inputs) {
-    final requiredInputs = ['hco3', 'pco2', 'ph'];
+    final List<String> requiredInputs = <String>['hco3', 'pco2', 'ph'];
 
-    return requiredInputs.every((input) =>
+    return requiredInputs.every((String input) =>
         inputs.containsKey(input) &&
         inputs[input] != null &&
         inputs[input]! > 0);
@@ -155,25 +154,25 @@ class ABGCalculatorFactory {
 
 // Riverpod Providers
 
-final calculatorTypeProvider = StateProvider<CalculatorType>((ref) {
+final StateProvider<CalculatorType> calculatorTypeProvider = StateProvider<CalculatorType>((StateProviderRef<CalculatorType> ref) {
   return CalculatorType.followUpABGMetabolic; // default calculator
 });
 
-final calculatorProvider = Provider<ABGCalculator>((ref) {
-  final type = ref.watch(calculatorTypeProvider);
-  final patientType = ref.watch(patientTypeProvider);
+final Provider<ABGCalculator> calculatorProvider = Provider<ABGCalculator>((ProviderRef<ABGCalculator> ref) {
+  final CalculatorType type = ref.watch(calculatorTypeProvider);
+  final PatientType? patientType = ref.watch(patientTypeProvider);
   return ABGCalculatorFactory.getCalculator(type, patientType);
 });
 
-final inputValidationProvider =
-    Provider.family<bool, Map<String, double?>>((ref, inputs) {
-  final type = ref.watch(calculatorTypeProvider);
+final ProviderFamily<bool, Map<String, double?>> inputValidationProvider =
+    Provider.family<bool, Map<String, double?>>((ProviderRef<bool> ref, Map<String, double?> inputs) {
+  final CalculatorType type = ref.watch(calculatorTypeProvider);
   return ABGCalculatorFactory.validateInputs(type, inputs);
 });
 
-final calculatorMetadataProvider = Provider<Map<String, String>>((ref) {
-  final type = ref.watch(calculatorTypeProvider);
-  return {
+final Provider<Map<String, String>> calculatorMetadataProvider = Provider<Map<String, String>>((ProviderRef<Map<String, String>> ref) {
+  final CalculatorType type = ref.watch(calculatorTypeProvider);
+  return <String, String>{
     'name': ABGCalculatorFactory.getCalculatorName(type),
     'description': ABGCalculatorFactory.getCalculatorDescription(type),
     'requiresPatientType':
@@ -182,18 +181,18 @@ final calculatorMetadataProvider = Provider<Map<String, String>>((ref) {
 });
 
 // Helper provider to group calculators by type
-final calculatorGroupsProvider =
-    Provider<Map<String, List<CalculatorType>>>((ref) {
-  return {
-    'Admission ABG': [
+final Provider<Map<String, List<CalculatorType>>> calculatorGroupsProvider =
+    Provider<Map<String, List<CalculatorType>>>((ProviderRef<Map<String, List<CalculatorType>>> ref) {
+  return <String, List<CalculatorType>>{
+    'Admission ABG': <CalculatorType>[
       CalculatorType.admissionABGNormal,
       CalculatorType.admissionABGHigh,
     ],
-    'Follow-up ABG': [
+    'Follow-up ABG': <CalculatorType>[
       CalculatorType.followUpABGMetabolic,
       CalculatorType.followUpABGRespiratory,
     ],
-    'COPD Calculation': [
+    'COPD Calculation': <CalculatorType>[
       CalculatorType.copdCalculationNormal,
       CalculatorType.copdCalculationHigh,
     ],

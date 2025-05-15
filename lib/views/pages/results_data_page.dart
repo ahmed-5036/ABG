@@ -10,7 +10,6 @@ import '../../resources/constants/app_constants.dart';
 import '../../resources/constants/route_names.dart';
 import '../../resources/constants/string_constants.dart';
 import '../../services/calculators/calculator_factory.dart';
-import '../../services/enum.dart';
 import '../../services/extension.dart';
 import '../atoms/primary_button.dart';
 import '../molecules/progress_bar_with_title.dart';
@@ -26,8 +25,8 @@ class ResultsDataPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final calculatorType = ref.watch(calculatorTypeProvider);
-    final isCopdCalculator = _isCopdCalculator(calculatorType);
+    final CalculatorType calculatorType = ref.watch(calculatorTypeProvider);
+    final bool isCopdCalculator = _isCopdCalculator(calculatorType);
 
     return WillPopScope(
       onWillPop: () async {
@@ -42,7 +41,7 @@ class ResultsDataPage extends ConsumerWidget {
           child: Padding(
             padding: kDefaultPagePadding,
             child: Column(
-              children: [
+              children: <Widget>[
                 ProgressBarWithTitle(step: ref.watch(stepStateProvider)),
 
                 if (isCopdCalculator)
@@ -50,7 +49,7 @@ class ResultsDataPage extends ConsumerWidget {
                 else
                   // Standard diagnosis list
                   ...ref.watch(resultDetailsProvider).map(
-                        (diagnosis) => Padding(
+                        (Map<String, dynamic> diagnosis) => Padding(
                           padding: const EdgeInsets.only(bottom: 16),
                           child: BorderedButton(
                             label: diagnosis["label"] as String,
@@ -67,7 +66,7 @@ class ResultsDataPage extends ConsumerWidget {
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(fontSize: 14),
                                 ),
-                                buttons: [
+                                buttons: <DialogButton>[
                                   DialogButton(
                                     onPressed: () => context.navigator.pop(),
                                     color: AppColors.deepRed,
@@ -109,7 +108,7 @@ class ResultsDataPage extends ConsumerWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        buttons: [
+                        buttons: <DialogButton>[
                           DialogButton(
                             onPressed: () => context.navigator.pop(),
                             color: AppColors.deepRed,
@@ -135,11 +134,11 @@ class ResultsDataPage extends ConsumerWidget {
                   verticalPadding: 24,
                   customHeight: 20,
                   action: () async {
-                    final choice = await showModalActionSheet<String>(
+                    final String? choice = await showModalActionSheet<String>(
                       context: context,
                       title: StringConstants.newPatient,
                       message: StringConstants.startAnalysisForNewPatient,
-                      actions: [
+                      actions: <SheetAction<String>>[
                         const SheetAction<String>(
                           label: StringConstants.newPatient,
                           key: RouteNames.patientTypeSelection,
@@ -160,7 +159,7 @@ class ResultsDataPage extends ConsumerWidget {
                     }
 
                     // Reset all used providers
-                    for (final provider in [
+                    for (final ProviderOrFamily provider in <ProviderOrFamily>[
                       ...inputResetProviders,
                       ...resultResetProviders,
                     ]) {
@@ -169,7 +168,7 @@ class ResultsDataPage extends ConsumerWidget {
 
                     context.navigator.pushNamedAndRemoveUntil(
                       choice,
-                      (route) => false,
+                      (Route route) => false,
                     );
                   },
                 ),
@@ -184,21 +183,21 @@ class ResultsDataPage extends ConsumerWidget {
   Widget _buildCopdResults(
       BuildContext context, WidgetRef ref, CalculatorType calculatorType) {
     // Use the COPD calculation provider directly
-    final copdResults = ref.watch(copdCalculationResultProvider);
+    final Map<String, dynamic> copdResults = ref.watch(copdCalculationResultProvider);
 
     // Get input values for display
-    final inputValues = ref.watch(inputStateProvider).values;
-    final sodium = inputValues['sodium'] ?? 0.0;
-    final chlorine = inputValues['chlorine'] ?? 0.0;
-    final hco3 = inputValues['hco3'] ?? 0.0;
-    final albumin = inputValues['albumin'] ?? 0.0;
-    final pco2 = inputValues['pco2'] ?? 0.0;
+    final Map<String, double> inputValues = ref.watch(inputStateProvider).values;
+    final double sodium = inputValues['sodium'] ?? 0.0;
+    final double chlorine = inputValues['chlorine'] ?? 0.0;
+    final double hco3 = inputValues['hco3'] ?? 0.0;
+    final double albumin = inputValues['albumin'] ?? 0.0;
+    final double pco2 = inputValues['pco2'] ?? 0.0;
 
     // Determine if we're using normal or high COPD calculation
-    final isNormalCopd = calculatorType == CalculatorType.copdCalculationNormal;
+    final bool isNormalCopd = calculatorType == CalculatorType.copdCalculationNormal;
 
     return Column(
-      children: [
+      children: <Widget>[
         // Title for the COPD Results
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -216,7 +215,7 @@ class ResultsDataPage extends ConsumerWidget {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: <Widget>[
                 const Text(
                   "Input Values",
                   style: TextStyle(
@@ -295,7 +294,7 @@ class ResultsDataPage extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
+        children: <Widget>[
           Text(
             label,
             style: const TextStyle(fontWeight: FontWeight.w500),
@@ -325,7 +324,7 @@ class ResultsDataPage extends ConsumerWidget {
         padding: const EdgeInsets.all(16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
+          children: <Widget>[
             Text(
               label,
               style: const TextStyle(

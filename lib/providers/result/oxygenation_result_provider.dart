@@ -4,12 +4,14 @@ import '../../models/abg_result.dart';
 import '../../services/enum.dart';
 import '../calculator/calculator_result_provider.dart';
 
-final oxygenationResultProvider = Provider<OxygenWaterLevel>((ref) {
-  final result = ref.watch(calculatorResultProvider);
+final Provider<OxygenWaterLevel> oxygenationResultProvider =
+    Provider<OxygenWaterLevel>((ProviderRef<OxygenWaterLevel> ref) {
+  final ABGResult result = ref.watch(calculatorResultProvider);
   return result.oxygenResult.findingLevel;
 });
 
-final oxygenationDetailsProvider = Provider<Map<String, dynamic>>((ref) {
-  final result = ref.watch(calculatorResultProvider);
-  return result.oxygenResult.additionalData ?? {};
+final Provider<Map<String, dynamic>> oxygenationDetailsProvider =
+    Provider<Map<String, dynamic>>((ProviderRef<Map<String, dynamic>> ref) {
+  final ABGResult result = ref.watch(calculatorResultProvider);
+  return result.oxygenResult.additionalData ?? <String, dynamic>{};
 });

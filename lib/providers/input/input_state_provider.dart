@@ -1,7 +1,5 @@
 // lib/providers/input/input_state_provider.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../resources/constants/calculation_constants.dart';
-import '../../services/validator.dart';
 
 class InputState {
   final Map<String, double> values;
@@ -9,23 +7,23 @@ class InputState {
   final Map<String, String?> errors;
 
   const InputState({
-    this.values = const {},
-    this.isValid = const {},
-    this.errors = const {},
+    this.values = const <String, double>{},
+    this.isValid = const <String, bool>{},
+    this.errors = const <String, String?>{},
   });
 
   bool get isComplete {
-    final hasRequiredFields = _hasRequiredFields();
-    final isValidFields = isValid.values.every((v) => v);
-    final hasValues = values.values.every((v) => v != null && v > 0);
-    final allFieldsValid = values.keys.every((field) => 
+    final bool hasRequiredFields = _hasRequiredFields();
+    final bool isValidFields = isValid.values.every((bool v) => v);
+    final bool hasValues = values.values.every((double v) => v > 0);
+    final bool allFieldsValid = values.keys.every((String field) => 
       isValid[field] == true && values[field] != null && values[field]! > 0);
     return values.isNotEmpty && hasValues && isValidFields && hasRequiredFields && allFieldsValid;
   }
 
   bool _hasRequiredFields() {
     return InputStateNotifier.requiredFields
-        .every((field) => 
+        .every((String field) => 
           values.containsKey(field) && 
           values[field] != null && 
           values[field]! > 0 && 
@@ -54,7 +52,7 @@ class Range {
 }
 
 class InputStateNotifier extends StateNotifier<InputState> {
-  static const requiredFields = [
+  static const List<String> requiredFields = <String>[
     'potassium',
     'sodium',
     'albumin',
@@ -67,7 +65,7 @@ class InputStateNotifier extends StateNotifier<InputState> {
     'age',
   ];
 
-  static const Map<String, Range> fieldRanges = {
+  static const Map<String, Range> fieldRanges = <String, Range>{
     'potassium': Range(3.5, 5.5, 'Potassium'),
     'sodium': Range(135, 145, 'Sodium'),
     'albumin': Range(3.5, 4.5, 'Albumin'),
@@ -83,16 +81,16 @@ class InputStateNotifier extends StateNotifier<InputState> {
   InputStateNotifier() : super(const InputState());
 
   void updateValue(String field, double value) {
-    final validationResult = _validateField(field, value);
+    final ValidationResult validationResult = _validateField(field, value);
     state = state.copyWith(
-      values: {...state.values, field: value},
-      isValid: {...state.isValid, field: validationResult.isValid},
-      errors: {...state.errors, field: validationResult.error},
+      values: <String, double>{...state.values, field: value},
+      isValid: <String, bool>{...state.isValid, field: validationResult.isValid},
+      errors: <String, String?>{...state.errors, field: validationResult.error},
     );
   }
 
   ValidationResult _validateField(String field, double value) {
-    final range = fieldRanges[field];
+    final Range? range = fieldRanges[field];
     if (range == null) {
       return ValidationResult(isValid: false, error: 'Invalid field');
     }
@@ -115,16 +113,16 @@ class InputStateNotifier extends StateNotifier<InputState> {
   }
 
   void resetField(String field) {
-    final newValues = Map<String, double>.from(state.values)..remove(field);
-    final newValid = Map<String, bool>.from(state.isValid)..remove(field);
-    final newErrors = Map<String, String?>.from(state.errors)..remove(field);
+    final Map<String, double> newValues = Map<String, double>.from(state.values)..remove(field);
+    final Map<String, bool> newValid = Map<String, bool>.from(state.isValid)..remove(field);
+    final Map<String, String?> newErrors = Map<String, String?>.from(state.errors)..remove(field);
 
     // Update validation state for all fields
-    final updatedValid = <String, bool>{};
-    final updatedErrors = <String, String?>{};
+    final Map<String, bool> updatedValid = <String, bool>{};
+    final Map<String, String?> updatedErrors = <String, String?>{};
     
-    for (final entry in newValues.entries) {
-      final validationResult = _validateField(entry.key, entry.value);
+    for (final MapEntry<String, double> entry in newValues.entries) {
+      final ValidationResult validationResult = _validateField(entry.key, entry.value);
       updatedValid[entry.key] = validationResult.isValid;
       updatedErrors[entry.key] = validationResult.error;
     }
@@ -137,10 +135,10 @@ class InputStateNotifier extends StateNotifier<InputState> {
   }
 
   void resetAll() {
-    state = InputState(
-      values: {}, // Clear all input values
-      isValid: {}, // Reset validity states
-      errors: {}, // Clear any error messages
+    state = const InputState(
+      values: <String, double>{}, // Clear all input values
+      isValid: <String, bool>{}, // Reset validity states
+      errors: <String, String?>{}, // Clear any error messages
     );
   }
 }
@@ -156,27 +154,27 @@ class ValidationResult {
 }
 
 // Main provider
-final inputStateProvider =
-    StateNotifierProvider<InputStateNotifier, InputState>((ref) {
+final StateNotifierProvider<InputStateNotifier, InputState> inputStateProvider =
+    StateNotifierProvider<InputStateNotifier, InputState>((StateNotifierProviderRef<InputStateNotifier, InputState> ref) {
   return InputStateNotifier();
 });
 
 // Helper providers
-final inputValueProvider = Provider.family<double?, String>((ref, field) {
+final ProviderFamily<double?, String> inputValueProvider = Provider.family<double?, String>((ProviderRef<double?> ref, String field) {
   return ref.watch(inputStateProvider).values[field];
 });
 
-final inputValidityProvider = Provider.family<bool, String>((ref, field) {
+final ProviderFamily<bool, String> inputValidityProvider = Provider.family<bool, String>((ProviderRef<bool> ref, String field) {
   return ref.watch(inputStateProvider).isValid[field] ?? false;
 });
 
-final inputErrorProvider = Provider.family<String?, String>((ref, field) {
+final ProviderFamily<String?, String> inputErrorProvider = Provider.family<String?, String>((ProviderRef<String?> ref, String field) {
   return ref.watch(inputStateProvider).errors[field];
 });
 
-final inputCompleteProvider = Provider<bool>((ref) {
+final Provider<bool> inputCompleteProvider = Provider<bool>((ProviderRef<bool> ref) {
   return ref.watch(inputStateProvider).isComplete;
 });
 
 // Provider to track if validation should be shown
-final showValidationProvider = StateProvider<bool>((ref) => false);
+final StateProvider<bool> showValidationProvider = StateProvider<bool>((StateProviderRef<bool> ref) => false);

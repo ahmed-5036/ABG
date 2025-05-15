@@ -2,10 +2,8 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter/services.dart';
 import '../../providers/patient_type_provider.dart';
 import '../../providers/input/input_state_provider.dart';
-import '../../providers/input/input_validation_provider.dart';
 import '../../providers/calculator/calculator_result_provider.dart';
 import '../../providers/input/navigation_validation_provider.dart';
 import '../../providers/reset/reset_providers.dart';
@@ -24,8 +22,6 @@ import '../organism/first_sections_fields.dart';
 import '../organism/second_sections_fields.dart';
 import '../organism/third_sections_fields.dart';
 import '../organism/copd_section_fields.dart';
-import 'abg_admission.dart';
-import '../molecules/default_text_field.dart';
 import '../../resources/constants/app_colors.dart';
 
 class InputDataPage extends ConsumerStatefulWidget {
@@ -37,15 +33,15 @@ class InputDataPage extends ConsumerStatefulWidget {
 
 class _InputDataPageState extends ConsumerState<InputDataPage> {
   bool _isCopdCalculator(WidgetRef ref) {
-    final calculatorType = ref.watch(calculatorTypeProvider);
+    final CalculatorType calculatorType = ref.watch(calculatorTypeProvider);
     return calculatorType == CalculatorType.copdCalculationNormal ||
         calculatorType == CalculatorType.copdCalculationHigh;
   }
 
   void _showValidationMessage(BuildContext context) {
-    final overlay = Overlay.of(context);
-    final overlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
+    final OverlayState overlay = Overlay.of(context);
+    final OverlayEntry overlayEntry = OverlayEntry(
+      builder: (BuildContext context) => Positioned(
         top: MediaQuery.of(context).padding.top + 180,
         left: 0,
         right: 0,
@@ -58,7 +54,7 @@ class _InputDataPageState extends ConsumerState<InputDataPage> {
               decoration: BoxDecoration(
                 color: AppColors.deepRed.withOpacity(0.95),
                 borderRadius: BorderRadius.circular(12),
-                boxShadow: [
+                boxShadow: <BoxShadow>[
                   BoxShadow(
                     color: Colors.black.withOpacity(0.1),
                     blurRadius: 10,
@@ -66,16 +62,16 @@ class _InputDataPageState extends ConsumerState<InputDataPage> {
                   ),
                 ],
               ),
-              child: Row(
+              child: const Row(
                 mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(
+                children: <Widget>[
+                  Icon(
                     Icons.error_outline,
                     color: Colors.white,
                     size: 24,
                   ),
-                  const SizedBox(width: 12),
-                  const Flexible(
+                  SizedBox(width: 12),
+                  Flexible(
                     child: Text(
                       'Please fill in all required fields',
                       style: TextStyle(
@@ -136,7 +132,7 @@ class _InputDataPageState extends ConsumerState<InputDataPage> {
                   icon: const Icon(Icons.replay_outlined),
                   tooltip: StringConstants.resetAllInputs,
                   onPressed: () async {
-                    final confirm = await showOkCancelAlertDialog(
+                    final OkCancelResult confirm = await showOkCancelAlertDialog(
                       context: context,
                       isDestructiveAction: true,
                       okLabel: StringConstants.resetNow,
@@ -155,7 +151,7 @@ class _InputDataPageState extends ConsumerState<InputDataPage> {
                   tooltip: StringConstants.newPatient,
                   icon: const Icon(Icons.group_add_sharp),
                   onPressed: () async {
-                    final confirm = await showOkCancelAlertDialog(
+                    final OkCancelResult confirm = await showOkCancelAlertDialog(
                       context: context,
                       isDestructiveAction: true,
                       title: StringConstants.startAnalysisForNewPatient,
@@ -168,7 +164,7 @@ class _InputDataPageState extends ConsumerState<InputDataPage> {
                       if (!context.mounted) return;
                       context.navigator.pushNamedAndRemoveUntil(
                         RouteNames.initialSelection,
-                        (route) => false,
+                        (Route route) => false,
                       );
                     }
                   },
@@ -183,22 +179,22 @@ class _InputDataPageState extends ConsumerState<InputDataPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Consumer(
-                builder: (context, ref, _) {
-                  final type = ref.watch(patientTypeProvider)?.type ?? "";
-                  final calculatorMetadata =
+                builder: (BuildContext context, WidgetRef ref, _) {
+                  final String type = ref.watch(patientTypeProvider)?.type ?? "";
+                  final Map<String, String> calculatorMetadata =
                       ref.watch(calculatorMetadataProvider);
-                  final calculatorName = calculatorMetadata['name'] ?? '';
+                  final String calculatorName = calculatorMetadata['name'] ?? '';
 
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
+                      children: <Widget>[
                         Expanded(
                           child: HeaderTitle(
                             customWidgetLabel: Text.rich(
                               TextSpan(
-                                children: [
+                                children: <InlineSpan>[
                                   TextSpan(
                                     text: StringConstants.analysis,
                                     style: Theme.of(context)
@@ -226,7 +222,7 @@ class _InputDataPageState extends ConsumerState<InputDataPage> {
               Padding(
                 padding: kDefaultPagePadding,
                 child: Consumer(
-                  builder: (context, ref, _) => ProgressBarWithTitle(
+                  builder: (BuildContext context, WidgetRef ref, _) => ProgressBarWithTitle(
                     step: ref.watch(stepStateProvider),
                   ),
                 ),
@@ -235,7 +231,7 @@ class _InputDataPageState extends ConsumerState<InputDataPage> {
               Container(
                 decoration: const BoxDecoration(
                   color: Colors.white,
-                  boxShadow: [
+                  boxShadow: <BoxShadow>[
                     BoxShadow(
                       color: Colors.black12,
                       offset: Offset(0, -2),
@@ -248,19 +244,19 @@ class _InputDataPageState extends ConsumerState<InputDataPage> {
                 child: Padding(
                   padding: kDefaultPagePadding,
                   child: Consumer(
-                    builder: (context, ref, _) {
-                      final isCopd = _isCopdCalculator(ref);
-                      final canNavigate = isCopd
+                    builder: (BuildContext context, WidgetRef ref, _) {
+                      final bool isCopd = _isCopdCalculator(ref);
+                      final bool canNavigate = isCopd
                           ? ref.watch(copdInputsCompleteProvider)
                           : ref.watch(navigateToResultProvider);
 
                       return Column(
-                        children: [
+                        children: <Widget>[
                           const SizedBox(height: 24),
-                          if (isCopd) ...[
+                          if (isCopd) ...<Widget>[
                             // Render only the required COPD fields
                             const COPDSection(),
-                          ] else ...[
+                          ] else ...<Widget>[
                             const FirstSection(),
                             const SizedBox(height: 16),
                             const SecondSection(),
@@ -269,7 +265,7 @@ class _InputDataPageState extends ConsumerState<InputDataPage> {
                           ],
                           const SizedBox(height: 24),
                           Consumer(
-                            builder: (context, ref, _) {
+                            builder: (BuildContext context, WidgetRef ref, _) {
                               return BorderedButton(
                                   label: StringConstants.calculate,
                                   action: () {

@@ -4,12 +4,12 @@ import '../../models/abg_result.dart';
 import '../../services/enum.dart';
 import '../calculator/calculator_result_provider.dart';
 
-final metabolicResultProvider = Provider<MetabolicLevel>((ref) {
-  final result = ref.watch(calculatorResultProvider);
+final Provider<MetabolicLevel> metabolicResultProvider = Provider<MetabolicLevel>((ProviderRef<MetabolicLevel> ref) {
+  final ABGResult result = ref.watch(calculatorResultProvider);
   return result.metabolicResult.findingLevel;
 });
 
-final metabolicDetailsProvider = Provider<Map<String, dynamic>>((ref) {
-  final result = ref.watch(calculatorResultProvider);
-  return result.metabolicResult.additionalData ?? {};
+final Provider<Map<String, dynamic>> metabolicDetailsProvider = Provider<Map<String, dynamic>>((ProviderRef<Map<String, dynamic>> ref) {
+  final ABGResult result = ref.watch(calculatorResultProvider);
+  return result.metabolicResult.additionalData ?? <String, dynamic>{};
 });

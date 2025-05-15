@@ -1,13 +1,13 @@
 // lib/providers/calculator/calculator_state_provider.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:aai_app/services/calculations/base_calculator.dart';
-import 'package:aai_app/services/calculators/calculator_factory.dart';
-import 'package:aai_app/views/pages/abg_admission.dart';
+import '../../services/calculations/base_calculator.dart';
+import '../../services/calculators/calculator_factory.dart';
 
+import '../../services/enum.dart';
 import '../patient_type_provider.dart';
 
-final calculatorProvider = Provider<ABGCalculator>((ref) {
-  final type = ref.watch(calculatorTypeProvider);
-  final patientType = ref.watch(patientTypeProvider);
+final Provider<ABGCalculator> calculatorProvider = Provider<ABGCalculator>((ProviderRef<ABGCalculator> ref) {
+  final CalculatorType type = ref.watch(calculatorTypeProvider);
+  final PatientType? patientType = ref.watch(patientTypeProvider);
   return ABGCalculatorFactory.getCalculator(type, patientType);
 });

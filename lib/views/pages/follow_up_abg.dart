@@ -15,7 +15,7 @@ import '../organism/second_sections_fields.dart';
 import '../organism/third_sections_fields.dart';
 
 // Provider for Follow Up ABG selection
-final followUpAbgOptionProvider = StateProvider<String?>((ref) => null);
+final StateProvider<String?> followUpAbgOptionProvider = StateProvider<String?>((StateProviderRef<String?> ref) => null);
 
 class FollowUpAbgOptionsView extends ConsumerWidget {
   const FollowUpAbgOptionsView({super.key});
@@ -23,7 +23,7 @@ class FollowUpAbgOptionsView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Retrieve the calculator types passed from initial selection
-    final calculatorTypes =
+    final List<CalculatorType>? calculatorTypes =
         ModalRoute.of(context)?.settings.arguments as List<CalculatorType>?;
 
     return Scaffold(
@@ -71,9 +71,9 @@ class FollowUpAbgOptionsView extends ConsumerWidget {
                   customWidgetLabel: Text.rich(
                     TextSpan(
                       children: <InlineSpan>[
-                        TextSpan(
+                        const TextSpan(
                           text: StringConstants.primaryMetabolicInsultTitle,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: AppColors.deepRed2,
                             fontSize: 18,
@@ -123,9 +123,9 @@ class FollowUpAbgOptionsView extends ConsumerWidget {
                   customWidgetLabel: Text.rich(
                     TextSpan(
                       children: <InlineSpan>[
-                        TextSpan(
+                        const TextSpan(
                           text: StringConstants.primaryRespiratoryInsultTitle,
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: AppColors.deepRed2,
                             fontWeight: FontWeight.bold,
                             fontSize: 18,

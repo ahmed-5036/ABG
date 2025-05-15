@@ -1,6 +1,7 @@
 // lib/views/organism/table_four_diagnosis.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../models/abg_result.dart';
 import '../../providers/index.dart';
 import '../../resources/constants/app_colors.dart';
 import '../../resources/constants/string_constants.dart';
@@ -11,14 +12,15 @@ class TableFourDiagnosis extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final size = MediaQuery.sizeOf(context);
-    final oxygenationDetails = ref.watch(oxygenationDetailsProvider);
-    final result = ref.watch(calculatorResultProvider);
+    final Size size = MediaQuery.sizeOf(context);
+    final Map<String, dynamic> oxygenationDetails =
+        ref.watch(oxygenationDetailsProvider);
+    final ABGResult result = ref.watch(calculatorResultProvider);
 
     return SizedBox(
       width: size.width * 0.95,
       child: Table(
-        columnWidths: const {
+        columnWidths: const <int, TableColumnWidth>{
           0: FlexColumnWidth(3),
           1: FlexColumnWidth(2),
           2: FlexColumnWidth(2),
@@ -28,7 +30,7 @@ class TableFourDiagnosis extends ConsumerWidget {
           borderRadius: BorderRadius.circular(5),
           width: 2,
         ),
-        children: [
+        children: <TableRow>[
           _buildHeaderRow(),
 
           // PAO2 Row
@@ -65,7 +67,7 @@ class TableFourDiagnosis extends ConsumerWidget {
   TableRow _buildHeaderRow() {
     return TableRow(
       decoration: BoxDecoration(color: AppColors.blue.withOpacity(0.3)),
-      children: const [
+      children: const <Widget>[
         _HeaderCell(text: StringConstants.items),
         _HeaderCell(text: StringConstants.value),
         _HeaderCell(text: 'Definition'),
@@ -79,7 +81,7 @@ class TableFourDiagnosis extends ConsumerWidget {
     required String definition,
   }) {
     return TableRow(
-      children: [
+      children: <Widget>[
         _DataCell(text: label),
         _DataCell(text: value),
         _DataCell(text: definition),
@@ -161,21 +163,22 @@ class _DataCell extends StatelessWidget {
 }
 
 // Helper provider for oxygenation-specific calculations
-final tableFourDetailsProvider = Provider<Map<String, dynamic>>((ref) {
-  final details = ref.watch(oxygenationDetailsProvider);
-  final result = ref.watch(calculatorResultProvider);
+final Provider<Map<String, dynamic>> tableFourDetailsProvider =
+    Provider<Map<String, dynamic>>((ProviderRef<Map<String, dynamic>> ref) {
+  final Map<String, dynamic> details = ref.watch(oxygenationDetailsProvider);
+  final ABGResult result = ref.watch(calculatorResultProvider);
 
-  return {
-    'pao2Details': {
+  return <String, dynamic>{
+    'pao2Details': <String, dynamic>{
       'value': details['pAO2'],
       'definition': _getPAO2Definition(details['pAO2'] as double?),
     },
-    'aaDetails': {
+    'aaDetails': <String, dynamic>{
       'value': details['aA'],
       'definition': _getAADefinition(
           details['aA'] as double?, details['expectedAa'] as double?),
     },
-    'expectedAaDetails': {
+    'expectedAaDetails': <String, dynamic>{
       'value': details['expectedAa'],
       'definition': _getExpectedAADefinition(result.oxygenResult.findingLevel),
     },

@@ -45,8 +45,8 @@ class DefaultTextField extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final showValidation = ref.watch(showValidationProvider);
-    final isEmpty = controller?.text.isEmpty ?? true;
+    final bool showValidation = ref.watch(showValidationProvider);
+    final bool isEmpty = controller?.text.isEmpty ?? true;
 
     return Padding(
       padding: EdgeInsets.only(bottom: bottomPadding),

@@ -10,9 +10,9 @@ import 'adaptive_input_dialog.dart';
 import 'colorful_text_result.dart';
 
 // Controller provider
-final copdSectionControllersProvider =
-    Provider<Map<String, TextEditingController>>((ref) {
-  return {
+final Provider<Map<String, TextEditingController>> copdSectionControllersProvider =
+    Provider<Map<String, TextEditingController>>((ProviderRef<Map<String, TextEditingController>> ref) {
+  return <String, TextEditingController>{
     "sodium": TextEditingController(),
     "chlorine": TextEditingController(),
     "albumin": TextEditingController(),
@@ -22,9 +22,9 @@ final copdSectionControllersProvider =
 });
 
 // Validation messages provider
-final copdSectionValidationProvider =
-    Provider.family<String?, String>((ref, field) {
-  final inputs = ref.watch(inputStateProvider);
+final ProviderFamily<String?, String> copdSectionValidationProvider =
+    Provider.family<String?, String>((ProviderRef<String?> ref, String field) {
+  final InputState inputs = ref.watch(inputStateProvider);
   if ((inputs.isValid[field] ?? false) == false) {
     switch (field) {
       case 'sodium':
@@ -50,7 +50,7 @@ class COPDSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
-      children: [
+      children: <Widget>[
         const SizedBox(height: 8),
         _buildSodiumField(context, ref),
         _buildChlorineField(context, ref),
@@ -63,10 +63,10 @@ class COPDSection extends ConsumerWidget {
 
   Widget _buildSodiumField(BuildContext context, WidgetRef ref) {
     return Consumer(
-      builder: (context, ref, child) {
-        final inputState = ref.watch(inputStateProvider);
-        final value = inputState.values['sodium'];
-        final isValid = inputState.isValid['sodium'] ?? false;
+      builder: (BuildContext context, WidgetRef ref, Widget? child) {
+        final InputState inputState = ref.watch(inputStateProvider);
+        final double? value = inputState.values['sodium'];
+        final bool isValid = inputState.isValid['sodium'] ?? false;
 
         return AdaptiveInputDialog(
           firstInput: DefaultTextField(
@@ -74,16 +74,16 @@ class COPDSection extends ConsumerWidget {
             label: 'Na mEq/L (135-145)',
             hint: 'Na mEq/L',
             controller: ref.read(copdSectionControllersProvider)["sodium"],
-            inputFormatters: [
+            inputFormatters: <TextInputFormatter>[
               FilteringTextInputFormatter.allow(numberWithDecimalRegex),
               LengthLimitingTextInputFormatter(5),
             ],
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            onChanged: (value) {
+            onChanged: (String value) {
               if (value.isEmpty) {
                 ref.read(inputStateProvider.notifier).resetField('sodium');
               } else {
-                final numValue = double.tryParse(value.toParsableString());
+                final double? numValue = double.tryParse(value.toParsableString());
                 if (numValue != null) {
                   ref
                       .read(inputStateProvider.notifier)
@@ -104,10 +104,10 @@ class COPDSection extends ConsumerWidget {
 
   Widget _buildChlorineField(BuildContext context, WidgetRef ref) {
     return Consumer(
-      builder: (context, ref, child) {
-        final inputState = ref.watch(inputStateProvider);
-        final value = inputState.values['chlorine'];
-        final isValid = inputState.isValid['chlorine'] ?? false;
+      builder: (BuildContext context, WidgetRef ref, Widget? child) {
+        final InputState inputState = ref.watch(inputStateProvider);
+        final double? value = inputState.values['chlorine'];
+        final bool isValid = inputState.isValid['chlorine'] ?? false;
 
         return AdaptiveInputDialog(
           firstInput: DefaultTextField(
@@ -115,16 +115,16 @@ class COPDSection extends ConsumerWidget {
             label: 'CL mEq/L (98-108)',
             hint: 'CL mEq/L',
             controller: ref.read(copdSectionControllersProvider)["chlorine"],
-            inputFormatters: [
+            inputFormatters: <TextInputFormatter>[
               FilteringTextInputFormatter.allow(numberWithDecimalRegex),
               LengthLimitingTextInputFormatter(4),
             ],
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            onChanged: (value) {
+            onChanged: (String value) {
               if (value.isEmpty) {
                 ref.read(inputStateProvider.notifier).resetField('chlorine');
               } else {
-                final numValue = double.tryParse(value.toParsableString());
+                final double? numValue = double.tryParse(value.toParsableString());
                 if (numValue != null) {
                   ref
                       .read(inputStateProvider.notifier)
@@ -145,10 +145,10 @@ class COPDSection extends ConsumerWidget {
 
   Widget _buildAlbuminField(BuildContext context, WidgetRef ref) {
     return Consumer(
-      builder: (context, ref, child) {
-        final inputState = ref.watch(inputStateProvider);
-        final value = inputState.values['albumin'];
-        final isValid = inputState.isValid['albumin'] ?? false;
+      builder: (BuildContext context, WidgetRef ref, Widget? child) {
+        final InputState inputState = ref.watch(inputStateProvider);
+        final double? value = inputState.values['albumin'];
+        final bool isValid = inputState.isValid['albumin'] ?? false;
 
         return AdaptiveInputDialog(
           firstInput: DefaultTextField(
@@ -156,16 +156,16 @@ class COPDSection extends ConsumerWidget {
             label: 'Albumin g% (3.5-4.5)',
             hint: 'Albumin g%',
             controller: ref.read(copdSectionControllersProvider)["albumin"],
-            inputFormatters: [
+            inputFormatters: <TextInputFormatter>[
               FilteringTextInputFormatter.allow(numberWithDecimalRegex),
               LengthLimitingTextInputFormatter(4),
             ],
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            onChanged: (value) {
+            onChanged: (String value) {
               if (value.isEmpty) {
                 ref.read(inputStateProvider.notifier).resetField('albumin');
               } else {
-                final numValue = double.tryParse(value.toParsableString());
+                final double? numValue = double.tryParse(value.toParsableString());
                 if (numValue != null) {
                   ref
                       .read(inputStateProvider.notifier)
@@ -186,10 +186,10 @@ class COPDSection extends ConsumerWidget {
 
   Widget _buildHCO3Field(BuildContext context, WidgetRef ref) {
     return Consumer(
-      builder: (context, ref, child) {
-        final inputState = ref.watch(inputStateProvider);
-        final value = inputState.values['hco3'];
-        final isValid = inputState.isValid['hco3'] ?? false;
+      builder: (BuildContext context, WidgetRef ref, Widget? child) {
+        final InputState inputState = ref.watch(inputStateProvider);
+        final double? value = inputState.values['hco3'];
+        final bool isValid = inputState.isValid['hco3'] ?? false;
 
         return AdaptiveInputDialog(
           firstInput: DefaultTextField(
@@ -197,16 +197,16 @@ class COPDSection extends ConsumerWidget {
             label: "HCO3 mEq/L (24)",
             hint: "HCO3 mEq/L",
             controller: ref.read(copdSectionControllersProvider)["hco3"],
-            inputFormatters: [
+            inputFormatters: <TextInputFormatter>[
               FilteringTextInputFormatter.allow(numberWithDecimalRegex),
               LengthLimitingTextInputFormatter(3),
             ],
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            onChanged: (value) {
+            onChanged: (String value) {
               if (value.isEmpty) {
                 ref.read(inputStateProvider.notifier).resetField('hco3');
               } else {
-                final numValue = double.tryParse(value);
+                final double? numValue = double.tryParse(value);
                 if (numValue != null) {
                   ref
                       .read(inputStateProvider.notifier)
@@ -227,10 +227,10 @@ class COPDSection extends ConsumerWidget {
 
   Widget _buildPCO2Field(BuildContext context, WidgetRef ref) {
     return Consumer(
-      builder: (context, ref, child) {
-        final inputState = ref.watch(inputStateProvider);
-        final value = inputState.values['pco2'];
-        final isValid = inputState.isValid['pco2'] ?? false;
+      builder: (BuildContext context, WidgetRef ref, Widget? child) {
+        final InputState inputState = ref.watch(inputStateProvider);
+        final double? value = inputState.values['pco2'];
+        final bool isValid = inputState.isValid['pco2'] ?? false;
 
         return AdaptiveInputDialog(
           firstInput: DefaultTextField(
@@ -238,16 +238,16 @@ class COPDSection extends ConsumerWidget {
             hint: "PCO2 mmHg",
             label: "PCO2 mmHg (40)",
             controller: ref.read(copdSectionControllersProvider)["pco2"],
-            inputFormatters: [
+            inputFormatters: <TextInputFormatter>[
               FilteringTextInputFormatter.allow(numberWithDecimalRegex),
               LengthLimitingTextInputFormatter(3),
             ],
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            onChanged: (value) {
+            onChanged: (String value) {
               if (value.isEmpty) {
                 ref.read(inputStateProvider.notifier).resetField('pco2');
               } else {
-                final numValue = double.tryParse(value);
+                final double? numValue = double.tryParse(value);
                 if (numValue != null) {
                   ref
                       .read(inputStateProvider.notifier)

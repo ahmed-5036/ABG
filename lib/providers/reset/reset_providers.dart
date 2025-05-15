@@ -4,14 +4,14 @@ import '../../views/molecules/progress_bar_with_title.dart';
 import '../index.dart';
 
 /// Input-related providers to reset
-final List<ProviderOrFamily> inputResetProviders = [
+final List<ProviderOrFamily> inputResetProviders = <ProviderOrFamily>[
   inputStateProvider,
   inputCompleteProvider,
   stepStateProvider,
 ];
 
 /// Result-related providers to reset
-final List<ProviderOrFamily> resultResetProviders = [
+final List<ProviderOrFamily> resultResetProviders = <ProviderOrFamily>[
   calculatorResultProvider,
   metabolicResultProvider,
   respiratoryResultProvider,
@@ -21,10 +21,10 @@ final List<ProviderOrFamily> resultResetProviders = [
 
 void resetControllers(WidgetRef ref,
     Provider<Map<String, TextEditingController>> controllersProvider) {
-  final controllers = ref.read(controllersProvider);
+  final Map<String, TextEditingController> controllers = ref.read(controllersProvider);
 
   // Clear each controller and reset the corresponding field in input state
-  controllers.forEach((field, controller) {
+  controllers.forEach((String field, TextEditingController controller) {
     //  Clear the text controller
     controller.clear();
 

@@ -5,15 +5,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../providers/index.dart';
 import '../../resources/constants/app_constants.dart';
-import '../../services/extension.dart';
 import '../molecules/default_text_field.dart';
 import 'adaptive_input_dialog.dart';
 import 'colorful_text_result.dart';
 
 // Controller provider
-final thirdSectionControllersProvider =
-    Provider<Map<String, TextEditingController>>((ref) {
-  return {
+final Provider<Map<String, TextEditingController>> thirdSectionControllersProvider =
+    Provider<Map<String, TextEditingController>>((ProviderRef<Map<String, TextEditingController>> ref) {
+  return <String, TextEditingController>{
     "pco2": TextEditingController(),
     "fio2": TextEditingController(),
     "age": TextEditingController(),
@@ -22,9 +21,9 @@ final thirdSectionControllersProvider =
 });
 
 // Validation messages provider
-final thirdSectionValidationProvider =
-    Provider.family<String?, String>((ref, field) {
-  final inputs = ref.watch(inputStateProvider);
+final ProviderFamily<String?, String> thirdSectionValidationProvider =
+    Provider.family<String?, String>((ProviderRef<String?> ref, String field) {
+  final InputState inputs = ref.watch(inputStateProvider);
   if ((inputs.isValid[field] ?? false) == false) {
     switch (field) {
       case 'pco2':
@@ -48,7 +47,7 @@ class ThirdSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
-      children: [
+      children: <Widget>[
         const SizedBox(height: 8),
         _buildPCO2Field(ref),
         _buildFIO2Field(ref),
@@ -59,9 +58,9 @@ class ThirdSection extends ConsumerWidget {
   }
 
   Widget _buildPCO2Field(WidgetRef ref) {
-    final inputState = ref.watch(inputStateProvider);
-    final value = inputState.values['pco2'];
-    final isValid = inputState.isValid['pco2'] ?? false;
+    final InputState inputState = ref.watch(inputStateProvider);
+    final double? value = inputState.values['pco2'];
+    final bool isValid = inputState.isValid['pco2'] ?? false;
 
     return AdaptiveInputDialog(
       firstInput: DefaultTextField(
@@ -69,16 +68,16 @@ class ThirdSection extends ConsumerWidget {
         hint: "PCO2 mmHg",
         label: "PCO2 mmHg (40)",
         controller: ref.read(thirdSectionControllersProvider)["pco2"],
-        inputFormatters: [
+        inputFormatters: <TextInputFormatter>[
           FilteringTextInputFormatter.allow(numberWithDecimalRegex),
           LengthLimitingTextInputFormatter(3),
         ],
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        onChanged: (value) {
+        onChanged: (String value) {
           if (value.isEmpty) {
             ref.read(inputStateProvider.notifier).resetField('pco2');
           } else {
-            final numValue = double.tryParse(value);
+            final double? numValue = double.tryParse(value);
             if (numValue != null) {
               ref
                   .read(inputStateProvider.notifier)
@@ -120,9 +119,9 @@ class ThirdSection extends ConsumerWidget {
   }
 
   Widget _buildFIO2Field(WidgetRef ref) {
-    final inputState = ref.watch(inputStateProvider);
-    final value = inputState.values['fio2'];
-    final isValid = inputState.isValid['fio2'] ?? false;
+    final InputState inputState = ref.watch(inputStateProvider);
+    final double? value = inputState.values['fio2'];
+    final bool isValid = inputState.isValid['fio2'] ?? false;
 
     return AdaptiveInputDialog(
       firstInput: DefaultTextField(
@@ -130,16 +129,16 @@ class ThirdSection extends ConsumerWidget {
         hint: "FiO2%",
         label: "FiO2% (21)",
         controller: ref.read(thirdSectionControllersProvider)["fio2"],
-        inputFormatters: [
+        inputFormatters: <TextInputFormatter>[
           FilteringTextInputFormatter.allow(numberWithDecimalRegex),
           LengthLimitingTextInputFormatter(3),
         ],
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        onChanged: (value) {
+        onChanged: (String value) {
           if (value.isEmpty) {
             ref.read(inputStateProvider.notifier).resetField('fio2');
           } else {
-            final numValue = double.tryParse(value);
+            final double? numValue = double.tryParse(value);
             if (numValue != null) {
               ref
                   .read(inputStateProvider.notifier)
@@ -171,9 +170,9 @@ class ThirdSection extends ConsumerWidget {
   }
 
   Widget _buildAgeField(WidgetRef ref) {
-    final inputState = ref.watch(inputStateProvider);
-    final value = inputState.values['age'];
-    final isValid = inputState.isValid['age'] ?? false;
+    final InputState inputState = ref.watch(inputStateProvider);
+    final double? value = inputState.values['age'];
+    final bool isValid = inputState.isValid['age'] ?? false;
 
     return AdaptiveInputDialog(
       firstInput: DefaultTextField(
@@ -181,16 +180,16 @@ class ThirdSection extends ConsumerWidget {
         hint: "Age",
         label: "Age (years)",
         controller: ref.read(thirdSectionControllersProvider)["age"],
-        inputFormatters: [
+        inputFormatters: <TextInputFormatter>[
           FilteringTextInputFormatter.digitsOnly,
           LengthLimitingTextInputFormatter(2),
         ],
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        onChanged: (value) {
+        onChanged: (String value) {
           if (value.isEmpty) {
             ref.read(inputStateProvider.notifier).resetField('age');
           } else {
-            final numValue = double.tryParse(value);
+            final double? numValue = double.tryParse(value);
             if (numValue != null) {
               ref
                   .read(inputStateProvider.notifier)
@@ -223,9 +222,9 @@ class ThirdSection extends ConsumerWidget {
   }
 
   Widget _buildPAO2Field(WidgetRef ref) {
-    final inputState = ref.watch(inputStateProvider);
-    final value = inputState.values['pao2'];
-    final isValid = inputState.isValid['pao2'] ?? false;
+    final InputState inputState = ref.watch(inputStateProvider);
+    final double? value = inputState.values['pao2'];
+    final bool isValid = inputState.isValid['pao2'] ?? false;
 
     return AdaptiveInputDialog(
       firstInput: DefaultTextField(
@@ -233,16 +232,16 @@ class ThirdSection extends ConsumerWidget {
         hint: "PaO2 mmHg",
         label: "PaO2 mmHg",
         controller: ref.read(thirdSectionControllersProvider)["pao2"],
-        inputFormatters: [
+        inputFormatters: <TextInputFormatter>[
           FilteringTextInputFormatter.allow(numberWithDecimalRegex),
           LengthLimitingTextInputFormatter(3),
         ],
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        onChanged: (value) {
+        onChanged: (String value) {
           if (value.isEmpty) {
             ref.read(inputStateProvider.notifier).resetField('pao2');
           } else {
-            final numValue = double.tryParse(value);
+            final double? numValue = double.tryParse(value);
             if (numValue != null) {
               ref
                   .read(inputStateProvider.notifier)

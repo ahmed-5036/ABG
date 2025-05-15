@@ -1,6 +1,7 @@
 // lib/views/organism/table_two_diagnosis.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../models/abg_result.dart';
 import '../../providers/index.dart';
 import '../../resources/constants/app_colors.dart';
 import '../../services/enum.dart';
@@ -10,14 +11,15 @@ class TableTwoDiagnosis extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final size = MediaQuery.sizeOf(context);
-    final metabolicDetails = ref.watch(metabolicDetailsProvider);
-    final result = ref.watch(calculatorResultProvider);
+    final Size size = MediaQuery.sizeOf(context);
+    final Map<String, dynamic> metabolicDetails =
+        ref.watch(metabolicDetailsProvider);
+    final ABGResult result = ref.watch(calculatorResultProvider);
 
     return SizedBox(
       width: size.width * 0.95,
       child: Table(
-        columnWidths: const {
+        columnWidths: const <int, TableColumnWidth>{
           0: FlexColumnWidth(3),
           1: FlexColumnWidth(2),
           2: FlexColumnWidth(3),
@@ -27,7 +29,7 @@ class TableTwoDiagnosis extends ConsumerWidget {
           borderRadius: BorderRadius.circular(5),
           width: 2,
         ),
-        children: [
+        children: <TableRow>[
           _buildHeaderRow(),
 
           // BB mEq/L Row
@@ -68,7 +70,7 @@ class TableTwoDiagnosis extends ConsumerWidget {
   TableRow _buildHeaderRow() {
     return TableRow(
       decoration: BoxDecoration(color: AppColors.blue.withOpacity(0.3)),
-      children: const [
+      children: const <Widget>[
         _HeaderCell(text: 'Items'),
         _HeaderCell(text: 'Value'),
         _HeaderCell(text: 'Definition'),
@@ -82,7 +84,7 @@ class TableTwoDiagnosis extends ConsumerWidget {
     required String definition,
   }) {
     return TableRow(
-      children: [
+      children: <Widget>[
         _DataCell(text: label),
         _DataCell(text: value),
         _DataCell(text: definition),
@@ -96,7 +98,7 @@ class TableTwoDiagnosis extends ConsumerWidget {
     final correlationType = details['correlationType'];
 
     return TableRow(
-      children: [
+      children: <Widget>[
         const _DataCell(text: 'Correlation\n(Correct-HCO3/HCO3)'),
         _DataCell(
           text: '$correctedHCO3->$measuredHCO3',
@@ -173,28 +175,30 @@ class _DataCell extends StatelessWidget {
 }
 
 // Helper provider for table-specific calculations
-final tableTwoDetailsProvider = Provider<Map<String, dynamic>>((ref) {
-  final result = ref.watch(calculatorResultProvider);
-  final metabolicDetails = ref.watch(metabolicDetailsProvider);
+final Provider<Map<String, dynamic>> tableTwoDetailsProvider =
+    Provider<Map<String, dynamic>>((ProviderRef<Map<String, dynamic>> ref) {
+  final ABGResult result = ref.watch(calculatorResultProvider);
+  final Map<String, dynamic> metabolicDetails =
+      ref.watch(metabolicDetailsProvider);
 
-  return {
-    'bb': {
+  return <String, dynamic>{
+    'bb': <String, dynamic>{
       'value': metabolicDetails['bb'],
       'definition': _getBBDefinition(metabolicDetails['bb'] as double?),
     },
-    'ag': {
+    'ag': <String, dynamic>{
       'value': metabolicDetails['ag'],
       'definition': result.agResult.findingLevel.level.$1,
     },
-    'correctedAG': {
+    'correctedAG': <String, dynamic>{
       'value': metabolicDetails['correctedAG'],
       'definition': result.agResult.findingLevel.level.$1,
     },
-    'sig': {
+    'sig': <String, dynamic>{
       'value': metabolicDetails['sig'],
       'definition': result.sigResult.findingLevel.level.$1,
     },
-    'correlation': {
+    'correlation': <String, dynamic>{
       'correctedHCO3': metabolicDetails['correctedHCO3'],
       'measuredHCO3': metabolicDetails['measuredHCO3'],
       'type': metabolicDetails['correlationType'],

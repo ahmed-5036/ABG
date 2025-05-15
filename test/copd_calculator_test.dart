@@ -5,10 +5,10 @@ import 'package:aai_app/models/abg_result.dart';
 
 void main() {
   group('COPDNormalCalculator', () {
-    final calculator = COPDNormalCalculator();
+    final COPDNormalCalculator calculator = COPDNormalCalculator();
 
     test('Metabolic state: normal AG scenario', () {
-      final result = calculator.calculateMetabolicState(
+      final FinalResult<MetabolicLevel> result = calculator.calculateMetabolicState(
         sodium: 140,
         chlorine: 104,
         hco3: 24,
@@ -24,7 +24,7 @@ void main() {
     });
 
     test('Respiratory state: normocarbia', () {
-      final result = calculator.calculateRespiratoryState(
+      final FinalResult<RespiratoryLevel> result = calculator.calculateRespiratoryState(
         pco2: 40,
         hco3: 24,
         ph: 7.4,
@@ -35,7 +35,7 @@ void main() {
     });
 
     test('Oxygenation state: normoxia', () {
-      final result = calculator.calculateOxygenationState(
+      final FinalResult<OxygenWaterLevel> result = calculator.calculateOxygenationState(
         fio2: 21,
         pco2: 40,
         pao2: 100,
@@ -48,10 +48,10 @@ void main() {
   });
 
   group('COPDHighCalculator', () {
-    final calculator = COPDHighCalculator();
+    final COPDHighCalculator calculator = COPDHighCalculator();
 
     test('Metabolic state: high AG scenario', () {
-      final result = calculator.calculateMetabolicState(
+      final FinalResult<MetabolicLevel> result = calculator.calculateMetabolicState(
         sodium: 140,
         chlorine: 100,
         hco3: 20,
@@ -67,7 +67,7 @@ void main() {
     });
 
     test('Respiratory state: normocarbia', () {
-      final result = calculator.calculateRespiratoryState(
+      final FinalResult<RespiratoryLevel> result = calculator.calculateRespiratoryState(
         pco2: 40,
         hco3: 24,
         ph: 7.4,
@@ -78,7 +78,7 @@ void main() {
     });
 
     test('Oxygenation state: hypoxemia', () {
-      final result = calculator.calculateOxygenationState(
+      final FinalResult<OxygenWaterLevel> result = calculator.calculateOxygenationState(
         fio2: 21,
         pco2: 40,
         pao2: 50,

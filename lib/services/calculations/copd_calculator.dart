@@ -2,8 +2,6 @@
 import '../../models/abg_result.dart';
 import '../enum.dart';
 import 'base_calculator.dart';
-import 'package:flutter/services.dart';
-import 'package:aai_app/views/molecules/default_text_field.dart';
 
 abstract class COPDCalculator implements ABGCalculator {
   @override
@@ -50,7 +48,7 @@ class COPDNormalCalculator extends COPDCalculator {
     return FinalResult(
       findingLevel: metabolicState,
       findingNumber: hco3,
-      additionalData: {
+      additionalData: <String, dynamic>{
         'expectedPCO2': expectedPCO2,
         'expectedHCO3': expectedHCO3,
         'expectedPH': expectedPH,
@@ -80,7 +78,7 @@ class COPDNormalCalculator extends COPDCalculator {
     return FinalResult(
       findingLevel: respiratoryState,
       findingNumber: pco2,
-      additionalData: {'expectedPCO2': expectedPCO2},
+      additionalData: <String, dynamic>{'expectedPCO2': expectedPCO2},
     );
   }
 
@@ -101,7 +99,7 @@ class COPDNormalCalculator extends COPDCalculator {
           ? OxygenWaterLevel.hypoxemia
           : OxygenWaterLevel.normoxia,
       findingNumber: aA,
-      additionalData: {
+      additionalData: <String, dynamic>{
         'pAO2': pAO2,
         'expectedAa': expectedAa,
       },
@@ -143,7 +141,7 @@ class COPDHighCalculator extends COPDCalculator {
     return FinalResult(
       findingLevel: metabolicState,
       findingNumber: hco3,
-      additionalData: {
+      additionalData: <String, dynamic>{
         'expectedPCO2': expectedPCO2,
         'expectedHCO3': expectedHCO3,
         'expectedPH': expectedPH,
@@ -173,7 +171,7 @@ class COPDHighCalculator extends COPDCalculator {
     return FinalResult(
       findingLevel: respiratoryState,
       findingNumber: pco2,
-      additionalData: {'expectedPCO2': expectedPCO2},
+      additionalData: <String, dynamic>{'expectedPCO2': expectedPCO2},
     );
   }
 
@@ -194,7 +192,7 @@ class COPDHighCalculator extends COPDCalculator {
           ? OxygenWaterLevel.hypoxemia
           : OxygenWaterLevel.normoxia,
       findingNumber: aA,
-      additionalData: {
+      additionalData: <String, dynamic>{
         'pAO2': pAO2,
         'expectedAa': expectedAa,
       },

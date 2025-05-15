@@ -21,7 +21,7 @@ class PatientTypeSelectionPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Retrieve the calculator types passed from initial selection
-    final calculatorTypes =
+    final List<CalculatorType>? calculatorTypes =
         ModalRoute.of(context)?.settings.arguments as List<CalculatorType>?;
 
     return Scaffold(
@@ -72,7 +72,7 @@ class PatientTypeSelectionPage extends ConsumerWidget {
                       ),
                       child: Stack(
                         clipBehavior: Clip.none,
-                        children: [
+                        children: <Widget>[
                           BorderedButton(
                             customWidgetLabel: const Text.rich(
                               TextSpan(
@@ -145,7 +145,7 @@ class PatientTypeSelectionPage extends ConsumerWidget {
                               decoration: BoxDecoration(
                                 color: AppColors.deepRed2,
                                 borderRadius: BorderRadius.circular(4),
-                                boxShadow: [
+                                boxShadow: <BoxShadow>[
                                   BoxShadow(
                                     color: Colors.black.withOpacity(0.2),
                                     blurRadius: 4,

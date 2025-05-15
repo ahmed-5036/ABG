@@ -4,12 +4,14 @@ import '../../models/abg_result.dart';
 import '../../services/enum.dart';
 import '../calculator/calculator_result_provider.dart';
 
-final respiratoryResultProvider = Provider<RespiratoryLevel>((ref) {
-  final result = ref.watch(calculatorResultProvider);
+final Provider<RespiratoryLevel> respiratoryResultProvider =
+    Provider<RespiratoryLevel>((ProviderRef<RespiratoryLevel> ref) {
+  final ABGResult result = ref.watch(calculatorResultProvider);
   return result.respiratoryResult.findingLevel;
 });
 
-final respiratoryDetailsProvider = Provider<Map<String, dynamic>>((ref) {
-  final result = ref.watch(calculatorResultProvider);
-  return result.respiratoryResult.additionalData ?? {};
+final Provider<Map<String, dynamic>> respiratoryDetailsProvider =
+    Provider<Map<String, dynamic>>((ProviderRef<Map<String, dynamic>> ref) {
+  final ABGResult result = ref.watch(calculatorResultProvider);
+  return result.respiratoryResult.additionalData ?? <String, dynamic>{};
 });

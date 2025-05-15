@@ -1,6 +1,7 @@
 // lib/views/organism/table_one_diagnosis.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../models/abg_result.dart';
 import '../../providers/index.dart';
 import '../../providers/patient_type_provider.dart';
 import '../../resources/constants/app_colors.dart';
@@ -12,15 +13,16 @@ class TableOneDiagnosis extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final size = MediaQuery.sizeOf(context);
-    final result = ref.watch(calculatorResultProvider);
-    final metabolicDetails = ref.watch(metabolicDetailsProvider);
-    final patientType = ref.watch(patientTypeProvider);
+    final Size size = MediaQuery.sizeOf(context);
+    final ABGResult result = ref.watch(calculatorResultProvider);
+    final Map<String, dynamic> metabolicDetails =
+        ref.watch(metabolicDetailsProvider);
+    final PatientType? patientType = ref.watch(patientTypeProvider);
 
     return SizedBox(
       width: size.width * 0.95,
       child: Table(
-        columnWidths: const {
+        columnWidths: const <int, TableColumnWidth>{
           0: FlexColumnWidth(3),
           1: FlexColumnWidth(2),
           2: FlexColumnWidth(3),
@@ -30,7 +32,7 @@ class TableOneDiagnosis extends ConsumerWidget {
           borderRadius: BorderRadius.circular(5),
           width: 2,
         ),
-        children: [
+        children: <TableRow>[
           _buildHeaderRow(),
 
           // Corrected CL Row (Only for Type 2 patients)
@@ -76,7 +78,7 @@ class TableOneDiagnosis extends ConsumerWidget {
   TableRow _buildHeaderRow() {
     return TableRow(
       decoration: BoxDecoration(color: AppColors.blue.withOpacity(0.3)),
-      children: const [
+      children: const <Widget>[
         _HeaderCell(text: StringConstants.items),
         _HeaderCell(text: StringConstants.value),
         _HeaderCell(text: StringConstants.definition),
@@ -90,7 +92,7 @@ class TableOneDiagnosis extends ConsumerWidget {
     required String definition,
   }) {
     return TableRow(
-      children: [
+      children: <Widget>[
         _DataCell(text: label),
         _DataCell(text: value),
         _DataCell(text: definition),
@@ -169,11 +171,13 @@ class _DataCell extends StatelessWidget {
 }
 
 // Helper providers for table-specific calculations
-final tableOneDetailsProvider = Provider<Map<String, dynamic>>((ref) {
-  final result = ref.watch(calculatorResultProvider);
-  final metabolicDetails = ref.watch(metabolicDetailsProvider);
+final Provider<Map<String, dynamic>> tableOneDetailsProvider =
+    Provider<Map<String, dynamic>>((ProviderRef<Map<String, dynamic>> ref) {
+  final ABGResult result = ref.watch(calculatorResultProvider);
+  final Map<String, dynamic> metabolicDetails =
+      ref.watch(metabolicDetailsProvider);
 
-  return {
+  return <String, dynamic>{
     'clNa': metabolicDetails['clNa'],
     'sid': metabolicDetails['sid'],
     'correctedHCO3': metabolicDetails['correctedHCO3'],

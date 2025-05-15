@@ -72,7 +72,7 @@ class ABGResult {
   });
 
   // Add factory constructor for creating empty/initial state
-  factory ABGResult.initial() => ABGResult(
+  factory ABGResult.initial() => const ABGResult(
         potassiumResult:
             FinalResult(findingLevel: PotassiumLevel.na, findingNumber: 0),
         sodiumResult:

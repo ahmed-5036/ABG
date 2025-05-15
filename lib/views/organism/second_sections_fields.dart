@@ -9,18 +9,18 @@ import 'adaptive_input_dialog.dart';
 import 'colorful_text_result.dart';
 
 // Controller provider
-final secondSectionControllersProvider =
-    Provider<Map<String, TextEditingController>>((ref) {
-  return {
+final Provider<Map<String, TextEditingController>> secondSectionControllersProvider =
+    Provider<Map<String, TextEditingController>>((ProviderRef<Map<String, TextEditingController>> ref) {
+  return <String, TextEditingController>{
     "hco3": TextEditingController(),
     "ph": TextEditingController(),
   };
 });
 
 // Validation messages provider
-final secondSectionValidationProvider =
-    Provider.family<String?, String>((ref, field) {
-  final inputs = ref.watch(inputStateProvider);
+final ProviderFamily<String?, String> secondSectionValidationProvider =
+    Provider.family<String?, String>((ProviderRef<String?> ref, String field) {
+  final InputState inputs = ref.watch(inputStateProvider);
   if ((inputs.isValid[field] ?? false) == false) {
     switch (field) {
       case 'hco3':
@@ -40,7 +40,7 @@ class SecondSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
-      children: [
+      children: <Widget>[
         const SizedBox(height: 8),
         _buildHCO3Field(context, ref),
         _buildPHField(context, ref),
@@ -50,10 +50,10 @@ class SecondSection extends ConsumerWidget {
 
   Widget _buildHCO3Field(BuildContext context, WidgetRef ref) {
     return Consumer(
-      builder: (context, ref, child) {
-        final inputState = ref.watch(inputStateProvider);
-        final value = inputState.values['hco3'];
-        final isValid = inputState.isValid['hco3'] ?? false;
+      builder: (BuildContext context, WidgetRef ref, Widget? child) {
+        final InputState inputState = ref.watch(inputStateProvider);
+        final double? value = inputState.values['hco3'];
+        final bool isValid = inputState.isValid['hco3'] ?? false;
 
         return AdaptiveInputDialog(
           firstInput: DefaultTextField(
@@ -61,16 +61,16 @@ class SecondSection extends ConsumerWidget {
             label: "HCO3 mEq/L (24)",
             hint: "HCO3 mEq/L",
             controller: ref.read(secondSectionControllersProvider)["hco3"],
-            inputFormatters: [
+            inputFormatters: <TextInputFormatter>[
               FilteringTextInputFormatter.allow(numberWithDecimalRegex),
               LengthLimitingTextInputFormatter(3),
             ],
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            onChanged: (value) {
+            onChanged: (String value) {
               if (value.isEmpty) {
                 ref.read(inputStateProvider.notifier).resetField('hco3');
               } else {
-                final numValue = double.tryParse(value);
+                final double? numValue = double.tryParse(value);
                 if (numValue != null) {
                   ref
                       .read(inputStateProvider.notifier)
@@ -91,10 +91,10 @@ class SecondSection extends ConsumerWidget {
 
   Widget _buildPHField(BuildContext context, WidgetRef ref) {
     return Consumer(
-      builder: (context, ref, child) {
-        final inputState = ref.watch(inputStateProvider);
-        final value = inputState.values['ph'];
-        final isValid = inputState.isValid['ph'] ?? false;
+      builder: (BuildContext context, WidgetRef ref, Widget? child) {
+        final InputState inputState = ref.watch(inputStateProvider);
+        final double? value = inputState.values['ph'];
+        final bool isValid = inputState.isValid['ph'] ?? false;
 
         return AdaptiveInputDialog(
           firstInput: DefaultTextField(
@@ -102,16 +102,16 @@ class SecondSection extends ConsumerWidget {
             hint: "PH",
             label: "PH (7.4)",
             controller: ref.read(secondSectionControllersProvider)["ph"],
-            inputFormatters: [
+            inputFormatters: <TextInputFormatter>[
               FilteringTextInputFormatter.allow(numberWithDecimalRegex),
               LengthLimitingTextInputFormatter(6),
             ],
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            onChanged: (value) {
+            onChanged: (String value) {
               if (value.isEmpty) {
                 ref.read(inputStateProvider.notifier).resetField('ph');
               } else {
-                final numValue = double.tryParse(value);
+                final double? numValue = double.tryParse(value);
                 if (numValue != null) {
                   ref
                       .read(inputStateProvider.notifier)

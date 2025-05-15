@@ -16,7 +16,7 @@ import '../organism/adaptive_input_dialog.dart';
 import '../organism/copd_section_fields.dart';
 
 // Provider for COPD selection
-final copdOptionProvider = StateProvider<String?>((ref) => null);
+final StateProvider<String?> copdOptionProvider = StateProvider<String?>((StateProviderRef<String?> ref) => null);
 
 class COPDOptionsView extends ConsumerWidget {
   const COPDOptionsView({super.key});
@@ -24,7 +24,7 @@ class COPDOptionsView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Retrieve the calculator types passed from initial selection
-    final calculatorTypes =
+    final List<CalculatorType>? calculatorTypes =
         ModalRoute.of(context)?.settings.arguments as List<CalculatorType>?;
 
     return Scaffold(
@@ -69,18 +69,18 @@ class COPDOptionsView extends ConsumerWidget {
               firstInput: Padding(
                 padding: const EdgeInsets.all(16),
                 child: BorderedButton(
-                  customWidgetLabel: Text.rich(
+                  customWidgetLabel: const Text.rich(
                     TextSpan(
                       children: <InlineSpan>[
                         TextSpan(
                           text: StringConstants.copdOptionOneTitle,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: AppColors.deepRed2,
                             fontSize: 18,
                           ),
                         ),
-                        const TextSpan(
+                        TextSpan(
                           text: "\n",
                           style: TextStyle(
                             fontWeight: FontWeight.w300,
@@ -90,7 +90,7 @@ class COPDOptionsView extends ConsumerWidget {
                         TextSpan(
                           text:
                               StringConstants.copdNormalAgDetailsPartOneOfThree,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.w300,
                             fontSize: 14,
                           ),
@@ -98,7 +98,7 @@ class COPDOptionsView extends ConsumerWidget {
                         TextSpan(
                           text:
                               StringConstants.copdNormalAgDetailsPartTwoOfThree,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: AppColors.deepRed2,
                             fontSize: 14,
@@ -107,7 +107,7 @@ class COPDOptionsView extends ConsumerWidget {
                         TextSpan(
                           text: StringConstants
                               .copdNormalAgDetailsPartThreeOfThree,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.w300,
                             fontSize: 14,
                           ),
@@ -138,18 +138,18 @@ class COPDOptionsView extends ConsumerWidget {
               secondInput: Padding(
                 padding: const EdgeInsets.all(16),
                 child: BorderedButton(
-                  customWidgetLabel: Text.rich(
+                  customWidgetLabel: const Text.rich(
                     TextSpan(
                       children: <InlineSpan>[
                         TextSpan(
                           text: StringConstants.copdOptionTwoTitle,
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: AppColors.deepRed2,
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                           ),
                         ),
-                        const TextSpan(
+                        TextSpan(
                           text: "\n",
                           style: TextStyle(
                             fontWeight: FontWeight.w300,
@@ -158,14 +158,14 @@ class COPDOptionsView extends ConsumerWidget {
                         ),
                         TextSpan(
                           text: StringConstants.copdHighAgDetailsPartOneOfThree,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.w300,
                             fontSize: 14,
                           ),
                         ),
                         TextSpan(
                           text: StringConstants.copdHighAgDetailsPartTwoOfThree,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: AppColors.deepRed2,
                             fontSize: 14,
@@ -174,7 +174,7 @@ class COPDOptionsView extends ConsumerWidget {
                         TextSpan(
                           text:
                               StringConstants.copdHighAgDetailsPartThreeOfThree,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.w300,
                             fontSize: 14,
                           ),

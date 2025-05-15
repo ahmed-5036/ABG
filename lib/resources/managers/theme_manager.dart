@@ -35,8 +35,8 @@ class ThemeManager {
         ),
       ),
       checkboxTheme: CheckboxThemeData(
-        fillColor: const MaterialStatePropertyAll<Color?>(Colors.white),
-        checkColor: MaterialStatePropertyAll<Color?>(
+        fillColor: const WidgetStatePropertyAll<Color?>(Colors.white),
+        checkColor: WidgetStatePropertyAll<Color?>(
           Colors.red[300],
         ),
       ),

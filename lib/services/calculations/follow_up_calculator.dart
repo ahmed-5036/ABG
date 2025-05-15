@@ -53,7 +53,7 @@ class MetabolicPrimaryCalculator extends FollowUpABGCalculator {
     return FinalResult(
       findingLevel: metabolicState,
       findingNumber: hco3,
-      additionalData: {
+      additionalData: <String, dynamic>{
         'sid2': sid2,
         'bb': bb,
         'correctedAG2': correctedAG2,
@@ -87,7 +87,7 @@ class MetabolicPrimaryCalculator extends FollowUpABGCalculator {
     return FinalResult(
       findingLevel: respiratoryState,
       findingNumber: pco2,
-      additionalData: {'expectedPCO2': expectedPCO2},
+      additionalData: <String, dynamic>{'expectedPCO2': expectedPCO2},
     );
   }
 
@@ -107,7 +107,7 @@ class MetabolicPrimaryCalculator extends FollowUpABGCalculator {
           ? OxygenWaterLevel.hypoxemia
           : OxygenWaterLevel.normoxia,
       findingNumber: aA,
-      additionalData: {
+      additionalData: <String, dynamic>{
         'pAO2': pAO2,
         'expectedAa': expectedAa,
       },
@@ -150,7 +150,7 @@ class RespiratoryPrimaryCalculator extends FollowUpABGCalculator {
     return FinalResult(
       findingLevel: metabolicState,
       findingNumber: hco3,
-      additionalData: {'expectedHCO3': expectedHCO3},
+      additionalData: <String, dynamic>{'expectedHCO3': expectedHCO3},
     );
   }
 
@@ -191,7 +191,7 @@ class RespiratoryPrimaryCalculator extends FollowUpABGCalculator {
           ? OxygenWaterLevel.hypoxemia
           : OxygenWaterLevel.normoxia,
       findingNumber: aA,
-      additionalData: {
+      additionalData: <String, dynamic>{
         'pAO2': pAO2,
         'expectedAa': expectedAa,
       },

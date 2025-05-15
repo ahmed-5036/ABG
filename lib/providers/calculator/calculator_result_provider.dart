@@ -1,17 +1,19 @@
 // lib/providers/calculator/calculator_result_provider.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:aai_app/models/abg_result.dart';
-import 'package:aai_app/services/enum.dart';
-import 'package:aai_app/providers/input/input_state_provider.dart';
+import '../../models/abg_result.dart';
+import '../../services/enum.dart';
+import '../input/input_state_provider.dart';
+import '../../services/calculations/base_calculator.dart';
 import '../../services/calculators/calculator_factory.dart'
     as calculator_factory;
 import 'calculator_state_provider.dart';
 
 /// Provider that determines if COPD inputs are complete
-final copdInputsCompleteProvider = Provider<bool>((ref) {
-  final inputs = ref.watch(inputStateProvider);
-  final values = inputs.values;
-  final isValid = inputs.isValid;
+final Provider<bool> copdInputsCompleteProvider =
+    Provider<bool>((ProviderRef<bool> ref) {
+  final InputState inputs = ref.watch(inputStateProvider);
+  final Map<String, double> values = inputs.values;
+  final Map<String, bool> isValid = inputs.isValid;
 
   // Check for all required COPD fields
   return values.containsKey('sodium') &&
@@ -32,39 +34,42 @@ final copdInputsCompleteProvider = Provider<bool>((ref) {
 });
 
 /// Provider for COPD calculation results
-final copdCalculationResultProvider = Provider<Map<String, dynamic>>((ref) {
-  final calculatorType = ref.watch(calculator_factory.calculatorTypeProvider);
-  final inputs = ref.watch(inputStateProvider).values;
-  final isCopdCalculator = calculatorType ==
+final Provider<Map<String, dynamic>> copdCalculationResultProvider =
+    Provider<Map<String, dynamic>>((ProviderRef<Map<String, dynamic>> ref) {
+  final calculator_factory.CalculatorType calculatorType =
+      ref.watch(calculator_factory.calculatorTypeProvider);
+  final Map<String, double> inputs = ref.watch(inputStateProvider).values;
+  final bool isCopdCalculator = calculatorType ==
           calculator_factory.CalculatorType.copdCalculationNormal ||
       calculatorType == calculator_factory.CalculatorType.copdCalculationHigh;
 
   // Skip if not a COPD calculator or inputs aren't complete
   if (!isCopdCalculator || !ref.watch(copdInputsCompleteProvider)) {
-    return {};
+    return <String, dynamic>{};
   }
 
   // Extract values needed for calculation
-  final sodium = inputs['sodium'] ?? 0.0;
-  final chlorine = inputs['chlorine'] ?? 0.0;
-  final hco3 = inputs['hco3'] ?? 0.0;
-  final albumin = inputs['albumin'] ?? 0.0;
-  final pco2 = inputs['pco2'] ?? 0.0;
+  final double sodium = inputs['sodium'] ?? 0.0;
+  final double chlorine = inputs['chlorine'] ?? 0.0;
+  final double hco3 = inputs['hco3'] ?? 0.0;
+  final double albumin = inputs['albumin'] ?? 0.0;
+  final double pco2 = inputs['pco2'] ?? 0.0;
 
   // Determine which COPD calculator to use
-  final isNormalCopd =
+  final bool isNormalCopd =
       calculatorType == calculator_factory.CalculatorType.copdCalculationNormal;
 
   if (isNormalCopd) {
     // Normal AG COPD calculations
-    final correctedAG = (sodium - chlorine - hco3) + ((4 - albumin) * 2.5);
-    final expectedHCO3 = hco3 + (correctedAG - 12);
-    final expectedPCO2 = 40 + ((expectedHCO3 - hco3) / 0.35);
-    final expectedPH = 7.4 -
+    final double correctedAG =
+        (sodium - chlorine - hco3) + ((4 - albumin) * 2.5);
+    final double expectedHCO3 = hco3 + (correctedAG - 12);
+    final double expectedPCO2 = 40 + ((expectedHCO3 - hco3) / 0.35);
+    final double expectedPH = 7.4 -
         (((expectedPCO2 - 40) * 0.08) / 10) +
         (((expectedHCO3 - 24) * 0.15) / 10);
 
-    return {
+    return <String, dynamic>{
       'correctedAG': correctedAG,
       'expectedHCO3': expectedHCO3,
       'expectedPCO2': expectedPCO2,
@@ -72,14 +77,14 @@ final copdCalculationResultProvider = Provider<Map<String, dynamic>>((ref) {
     };
   } else {
     // High AG COPD calculations
-    final measuredSID = sodium - chlorine;
-    final expectedHCO3 = hco3 + (36 - measuredSID);
-    final expectedPCO2 = 40 + ((expectedHCO3 - hco3) / 0.35);
-    final expectedPH = 7.4 -
+    final double measuredSID = sodium - chlorine;
+    final double expectedHCO3 = hco3 + (36 - measuredSID);
+    final double expectedPCO2 = 40 + ((expectedHCO3 - hco3) / 0.35);
+    final double expectedPH = 7.4 -
         ((expectedPCO2 - 40) * 0.08 / 10) +
         ((expectedHCO3 - 24) * 0.15 / 10);
 
-    return {
+    return <String, dynamic>{
       'measuredSID': measuredSID,
       'expectedHCO3': expectedHCO3,
       'expectedPCO2': expectedPCO2,
@@ -88,26 +93,30 @@ final copdCalculationResultProvider = Provider<Map<String, dynamic>>((ref) {
   }
 });
 
-final calculatorResultProvider = Provider<ABGResult>((ref) {
-  final calculator = ref.watch(calculatorProvider);
-  final inputs = ref.watch(inputStateProvider);
+final Provider<ABGResult> calculatorResultProvider =
+    Provider<ABGResult>((ProviderRef<ABGResult> ref) {
+  final ABGCalculator calculator = ref.watch(calculatorProvider);
+  final InputState inputs = ref.watch(inputStateProvider);
 
   if (!inputs.isComplete) return ABGResult.initial();
 
-  final metabolicResult = calculator.calculateMetabolicState(
+  final FinalResult<MetabolicLevel> metabolicResult =
+      calculator.calculateMetabolicState(
     sodium: inputs.values['sodium'] ?? 0,
     chlorine: inputs.values['chlorine'] ?? 0,
     hco3: inputs.values['hco3'] ?? 0,
     albumin: inputs.values['albumin'] ?? 0,
   );
 
-  final respiratoryResult = calculator.calculateRespiratoryState(
+  final FinalResult<RespiratoryLevel> respiratoryResult =
+      calculator.calculateRespiratoryState(
     pco2: inputs.values['pco2'] ?? 0,
     hco3: inputs.values['hco3'] ?? 0,
     ph: inputs.values['ph'] ?? 0,
   );
 
-  final oxygenationResult = calculator.calculateOxygenationState(
+  final FinalResult<OxygenWaterLevel> oxygenationResult =
+      calculator.calculateOxygenationState(
     fio2: inputs.values['fio2'] ?? 0,
     pco2: inputs.values['pco2'] ?? 0,
     pao2: inputs.values['pao2'] ?? 0,
@@ -140,15 +149,15 @@ final calculatorResultProvider = Provider<ABGResult>((ref) {
       findingLevel: PCO2Level.na,
       findingNumber: inputs.values['pco2'],
     ),
-    clNaResult: FinalResult(
+    clNaResult: const FinalResult(
       findingLevel: CLNaLevel.na,
       findingNumber: null,
     ),
-    agResult: FinalResult(
+    agResult: const FinalResult(
       findingLevel: AGLevel.na,
       findingNumber: null,
     ),
-    sigResult: FinalResult(
+    sigResult: const FinalResult(
       findingLevel: SIGLevel.na,
       findingNumber: null,
     ),
@@ -158,13 +167,14 @@ final calculatorResultProvider = Provider<ABGResult>((ref) {
 });
 
 // Add helper providers for individual calculations
-final metabolicCalculationProvider =
-    Provider<FinalResult<MetabolicLevel>>((ref) {
-  final calculator = ref.watch(calculatorProvider);
-  final inputs = ref.watch(inputStateProvider);
+final Provider<FinalResult<MetabolicLevel>> metabolicCalculationProvider =
+    Provider<FinalResult<MetabolicLevel>>(
+        (ProviderRef<FinalResult<MetabolicLevel>> ref) {
+  final ABGCalculator calculator = ref.watch(calculatorProvider);
+  final InputState inputs = ref.watch(inputStateProvider);
 
   if (!inputs.isComplete) {
-    return FinalResult(
+    return const FinalResult(
       findingLevel: MetabolicLevel.unknown,
       findingNumber: null,
     );
@@ -178,13 +188,14 @@ final metabolicCalculationProvider =
   );
 });
 
-final respiratoryCalculationProvider =
-    Provider<FinalResult<RespiratoryLevel>>((ref) {
-  final calculator = ref.watch(calculatorProvider);
-  final inputs = ref.watch(inputStateProvider);
+final Provider<FinalResult<RespiratoryLevel>> respiratoryCalculationProvider =
+    Provider<FinalResult<RespiratoryLevel>>(
+        (ProviderRef<FinalResult<RespiratoryLevel>> ref) {
+  final ABGCalculator calculator = ref.watch(calculatorProvider);
+  final InputState inputs = ref.watch(inputStateProvider);
 
   if (!inputs.isComplete) {
-    return FinalResult(
+    return const FinalResult(
       findingLevel: RespiratoryLevel.unknown,
       findingNumber: null,
     );
@@ -197,13 +208,14 @@ final respiratoryCalculationProvider =
   );
 });
 
-final oxygenationCalculationProvider =
-    Provider<FinalResult<OxygenWaterLevel>>((ref) {
-  final calculator = ref.watch(calculatorProvider);
-  final inputs = ref.watch(inputStateProvider);
+final Provider<FinalResult<OxygenWaterLevel>> oxygenationCalculationProvider =
+    Provider<FinalResult<OxygenWaterLevel>>(
+        (ProviderRef<FinalResult<OxygenWaterLevel>> ref) {
+  final ABGCalculator calculator = ref.watch(calculatorProvider);
+  final InputState inputs = ref.watch(inputStateProvider);
 
   if (!inputs.isComplete) {
-    return FinalResult(
+    return const FinalResult(
       findingLevel: OxygenWaterLevel.unknown,
       findingNumber: null,
     );
@@ -217,8 +229,9 @@ final oxygenationCalculationProvider =
   );
 });
 
-final expectedPCO2Provider = Provider<double>((ref) {
-  final hco3 = ref.watch(inputStateProvider).values['hco3'];
+final Provider<double> expectedPCO2Provider =
+    Provider<double>((ProviderRef<double> ref) {
+  final double? hco3 = ref.watch(inputStateProvider).values['hco3'];
   if (hco3 == null) return 0;
 
   // Winter's Formula (for metabolic acidosis)
@@ -226,10 +239,14 @@ final expectedPCO2Provider = Provider<double>((ref) {
 });
 
 // Provider for final diagnosis
-final finalCalculationProvider = Provider<String>((ref) {
-  final metabolic = ref.watch(metabolicCalculationProvider);
-  final respiratory = ref.watch(respiratoryCalculationProvider);
-  final oxygenation = ref.watch(oxygenationCalculationProvider);
+final Provider<String> finalCalculationProvider =
+    Provider<String>((ProviderRef<String> ref) {
+  final FinalResult<MetabolicLevel> metabolic =
+      ref.watch(metabolicCalculationProvider);
+  final FinalResult<RespiratoryLevel> respiratory =
+      ref.watch(respiratoryCalculationProvider);
+  final FinalResult<OxygenWaterLevel> oxygenation =
+      ref.watch(oxygenationCalculationProvider);
 
   if (metabolic.findingLevel == MetabolicLevel.unknown ||
       respiratory.findingLevel == RespiratoryLevel.unknown ||

@@ -4,12 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../resources/constants/app_colors.dart';
 import '../../resources/constants/app_images.dart';
 import '../../resources/constants/route_names.dart';
-import '../../resources/constants/string_constants.dart';
-import '../../services/enum.dart';
-import '../../services/extension.dart';
 import '../../services/calculators/calculator_factory.dart';
 import '../atoms/primary_button.dart';
-import '../organism/adaptive_input_dialog.dart';
 
 // Enum for initial options
 enum InitialOption { 
@@ -19,7 +15,7 @@ enum InitialOption {
 }
 
 // Provider for tracking the selected initial option
-final initialOptionProvider = StateProvider<InitialOption?>((ref) => null);
+final StateProvider<InitialOption?> initialOptionProvider = StateProvider<InitialOption?>((StateProviderRef<InitialOption?> ref) => null);
 
 class InitialSelectionView extends ConsumerWidget {
   const InitialSelectionView({super.key});
@@ -40,14 +36,14 @@ class InitialSelectionView extends ConsumerWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: <Widget>[
             _buildModeButton(
               context, 
               ref, 
               'ABG Admission', 
               InitialOption.abgAdmission,
               RouteNames.patientTypeSelection,
-              [
+              <CalculatorType>[
                 CalculatorType.admissionABGNormal,
                 CalculatorType.admissionABGHigh
               ]
@@ -58,7 +54,7 @@ class InitialSelectionView extends ConsumerWidget {
               'Follow Up ABG', 
               InitialOption.followUpAbg,
               RouteNames.followUpAbgOptions,
-              [
+              <CalculatorType>[
                 CalculatorType.followUpABGMetabolic,
                 CalculatorType.followUpABGRespiratory
               ]
@@ -69,7 +65,7 @@ class InitialSelectionView extends ConsumerWidget {
               'COPD Patients', 
               InitialOption.copd,
               RouteNames.copdOptions,
-              [
+              <CalculatorType>[
                 CalculatorType.copdCalculationNormal,
                 CalculatorType.copdCalculationHigh
               ]

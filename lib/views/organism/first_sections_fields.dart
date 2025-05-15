@@ -10,9 +10,9 @@ import 'adaptive_input_dialog.dart';
 import 'colorful_text_result.dart';
 
 // Controller provider
-final firstSectionControllersProvider =
-    Provider<Map<String, TextEditingController>>((ref) {
-  return {
+final Provider<Map<String, TextEditingController>> firstSectionControllersProvider =
+    Provider<Map<String, TextEditingController>>((ProviderRef<Map<String, TextEditingController>> ref) {
+  return <String, TextEditingController>{
     "potassium": TextEditingController(),
     "sodium": TextEditingController(),
     "albumin": TextEditingController(),
@@ -21,9 +21,9 @@ final firstSectionControllersProvider =
 });
 
 // Validation messages provider
-final firstSectionValidationProvider =
-    Provider.family<String?, String>((ref, field) {
-  final inputs = ref.watch(inputStateProvider);
+final ProviderFamily<String?, String> firstSectionValidationProvider =
+    Provider.family<String?, String>((ProviderRef<String?> ref, String field) {
+  final InputState inputs = ref.watch(inputStateProvider);
   if (inputs.isValid[field] != true) {
     switch (field) {
       case 'potassium':
@@ -47,7 +47,7 @@ class FirstSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
-      children: [
+      children: <Widget>[
         const SizedBox(height: 8),
         _buildInputField(
           context: context,
@@ -94,10 +94,10 @@ class FirstSection extends ConsumerWidget {
     required int maxLength,
   }) {
     return Consumer(
-      builder: (context, ref, child) {
-        final inputState = ref.watch(inputStateProvider);
-        final value = inputState.values[field];
-        final isValid = inputState.isValid[field] ?? false;
+      builder: (BuildContext context, WidgetRef ref, Widget? child) {
+        final InputState inputState = ref.watch(inputStateProvider);
+        final double? value = inputState.values[field];
+        final bool isValid = inputState.isValid[field] ?? false;
 
         return AdaptiveInputDialog(
           firstInput: DefaultTextField(
@@ -105,16 +105,16 @@ class FirstSection extends ConsumerWidget {
             hint: hint,
             label: label,
             controller: ref.read(firstSectionControllersProvider)[field],
-            inputFormatters: [
+            inputFormatters: <TextInputFormatter>[
               FilteringTextInputFormatter.allow(numberWithDecimalRegex),
               LengthLimitingTextInputFormatter(maxLength),
             ],
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            onChanged: (value) {
+            onChanged: (String value) {
               if (value.isEmpty) {
                 ref.read(inputStateProvider.notifier).resetField(field);
               } else {
-                final numValue = double.tryParse(value.toParsableString());
+                final double? numValue = double.tryParse(value.toParsableString());
                 if (numValue != null) {
                   ref
                       .read(inputStateProvider.notifier)

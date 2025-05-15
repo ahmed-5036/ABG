@@ -1,17 +1,13 @@
 // lib/providers/index.dart
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../providers/input/navigation_validation_provider.dart';
 import '../models/abg_result.dart';
 import '../services/enum.dart';
-import '../services/calculators/calculator_factory.dart';
 import 'calculator/calculator_result_provider.dart';
 import 'input/input_state_provider.dart';
-import 'input/input_validation_provider.dart';
 import 'result/metabolic_result_provider.dart';
 import 'result/oxygenation_result_provider.dart';
 import 'result/respiratory_result_provider.dart';
-import 'input/navigation_validation_provider.dart';
 export 'input/navigation_validation_provider.dart';
 export 'calculator/calculator_type_provider.dart';
 export 'calculator/calculator_state_provider.dart';
@@ -23,44 +19,52 @@ export 'result/respiratory_result_provider.dart';
 export 'result/oxygenation_result_provider.dart';
 
 // Convenience providers
-final finalDiagnosisProvider = Provider<String>((ref) {
-  final inputs = ref.watch(inputStateProvider);
+final Provider<String> finalDiagnosisProvider =
+    Provider<String>((ProviderRef<String> ref) {
+  final InputState inputs = ref.watch(inputStateProvider);
   debugPrint("Inputs: $inputs");
 
   if (!inputs.isComplete) {
     return "INCOMPLETE MEASURED ITEMS, PLEASE FILL THE INPUT FIELDS";
   }
 
-  final metabolic = ref.watch(metabolicResultProvider);
-  final respiratory = ref.watch(respiratoryResultProvider);
-  final oxygenation = ref.watch(oxygenationResultProvider);
+  final MetabolicLevel metabolic = ref.watch(metabolicResultProvider);
+  final RespiratoryLevel respiratory = ref.watch(respiratoryResultProvider);
+  final OxygenWaterLevel oxygenation = ref.watch(oxygenationResultProvider);
 
   return "Patient has ${metabolic.level.$1} with ${respiratory.level.$1} and ${oxygenation.level.$1}";
 });
 
-final resultDetailsProvider = Provider<List<Map<String, dynamic>>>((ref) {
-  final metabolicLevel = ref.watch(metabolicResultProvider);
-  final respiratoryLevel = ref.watch(respiratoryResultProvider);
-  final oxygenationLevel = ref.watch(oxygenationResultProvider);
+final Provider<List<Map<String, dynamic>>> resultDetailsProvider =
+    Provider<List<Map<String, dynamic>>>(
+        (ProviderRef<List<Map<String, dynamic>>> ref) {
+  final MetabolicLevel metabolicLevel = ref.watch(metabolicResultProvider);
+  final RespiratoryLevel respiratoryLevel =
+      ref.watch(respiratoryResultProvider);
+  final OxygenWaterLevel oxygenationLevel =
+      ref.watch(oxygenationResultProvider);
 
-  final metabolicDetails = ref.watch(metabolicDetailsProvider);
-  final respiratoryDetails = ref.watch(respiratoryDetailsProvider);
-  final oxygenationDetails = ref.watch(oxygenationDetailsProvider);
+  final Map<String, dynamic> metabolicDetails =
+      ref.watch(metabolicDetailsProvider);
+  final Map<String, dynamic> respiratoryDetails =
+      ref.watch(respiratoryDetailsProvider);
+  final Map<String, dynamic> oxygenationDetails =
+      ref.watch(oxygenationDetailsProvider);
 
-  return [
-    {
+  return <Map<String, dynamic>>[
+    <String, dynamic>{
       "label": "Metabolic State",
       "result": metabolicLevel,
       "details": metabolicDetails,
       "description": _getMetabolicDescription(metabolicLevel),
     },
-    {
+    <String, dynamic>{
       "label": "Respiratory State",
       "result": respiratoryLevel,
       "details": respiratoryDetails,
       "description": _getRespiratoryDescription(respiratoryLevel),
     },
-    {
+    <String, dynamic>{
       "label": "Oxygenation State",
       "result": oxygenationLevel,
       "details": oxygenationDetails,
@@ -123,14 +127,16 @@ String _getOxygenationDescription(OxygenWaterLevel level) {
 }
 
 // Additional helper providers
-final hasValidInputsProvider = Provider<bool>((ref) {
-  final inputs = ref.watch(inputStateProvider);
+final Provider<bool> hasValidInputsProvider =
+    Provider<bool>((ProviderRef<bool> ref) {
+  final InputState inputs = ref.watch(inputStateProvider);
   return inputs.isComplete;
 });
 
-final calculationStateProvider = Provider<CalculationState>((ref) {
-  final hasValidInputs = ref.watch(hasValidInputsProvider);
-  final result = ref.watch(calculatorResultProvider);
+final Provider<CalculationState> calculationStateProvider =
+    Provider<CalculationState>((ProviderRef<CalculationState> ref) {
+  final bool hasValidInputs = ref.watch(hasValidInputsProvider);
+  final ABGResult result = ref.watch(calculatorResultProvider);
 
   if (!hasValidInputs) {
     return CalculationState.incomplete;

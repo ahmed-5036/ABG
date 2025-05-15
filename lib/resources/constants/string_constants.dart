@@ -30,7 +30,7 @@ class StringConstants {
   static const String primaryMetabolicInsultDescription =
       "Metabolic changes that primarily originate from metabolic processes";
 
-  static const List<String> primaryMetabolicInsultExamples = [
+  static const List<String> primaryMetabolicInsultExamples = <String>[
     'Metabolic Acidosis',
     'Metabolic Alkalosis',
     'Normocarbia',
@@ -42,7 +42,7 @@ class StringConstants {
   static const String primaryRespiratoryInsultDescription =
       "Respiratory changes that primarily affect acid-base balance through ventilation";
 
-  static const List<String> primaryRespiratoryInsultExamples = [
+  static const List<String> primaryRespiratoryInsultExamples = <String>[
     'Respiratory Acidosis',
     'Respiratory Alkalosis',
     'Hypoventilation',
@@ -55,14 +55,14 @@ class StringConstants {
       "Patient started with normal AG (vomiting, diarrhea, RTA, normal metabolic state) "
       "then developed high AG changes (shock, DKA, uremia) with COPD";
 
-  static const List<String> copdNormalAgExamples = [
+  static const List<String> copdNormalAgExamples = <String>[
     'Vomiting',
     'Diarrhea',
     'RTA (Renal Tubular Acidosis)',
     'Normal Metabolic State'
   ];
 
-  static const List<String> copdHighAgExamples = [
+  static const List<String> copdHighAgExamples = <String>[
     'Shock',
     'Diabetic Ketoacidosis (DKA)',
     'Uremia'
