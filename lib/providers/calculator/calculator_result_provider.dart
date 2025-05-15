@@ -9,19 +9,26 @@ import 'calculator_state_provider.dart';
 
 /// Provider that determines if COPD inputs are complete
 final copdInputsCompleteProvider = Provider<bool>((ref) {
-  final inputs = ref.watch(inputStateProvider).values;
+  final inputs = ref.watch(inputStateProvider);
+  final values = inputs.values;
+  final isValid = inputs.isValid;
 
   // Check for all required COPD fields
-  return inputs.containsKey('sodium') &&
-      inputs.containsKey('chlorine') &&
-      inputs.containsKey('hco3') &&
-      inputs.containsKey('albumin') &&
-      inputs.containsKey('pco2') &&
-      inputs['sodium'] != null &&
-      inputs['chlorine'] != null &&
-      inputs['hco3'] != null &&
-      inputs['albumin'] != null &&
-      inputs['pco2'] != null;
+  return values.containsKey('sodium') &&
+      values.containsKey('chlorine') &&
+      values.containsKey('hco3') &&
+      values.containsKey('albumin') &&
+      values.containsKey('pco2') &&
+      values['sodium'] != null &&
+      values['chlorine'] != null &&
+      values['hco3'] != null &&
+      values['albumin'] != null &&
+      values['pco2'] != null &&
+      isValid['sodium'] == true &&
+      isValid['chlorine'] == true &&
+      isValid['hco3'] == true &&
+      isValid['albumin'] == true &&
+      isValid['pco2'] == true;
 });
 
 /// Provider for COPD calculation results
@@ -85,7 +92,7 @@ final calculatorResultProvider = Provider<ABGResult>((ref) {
   final calculator = ref.watch(calculatorProvider);
   final inputs = ref.watch(inputStateProvider);
 
-  if (inputs.isComplete) return ABGResult.initial();
+  if (!inputs.isComplete) return ABGResult.initial();
 
   final metabolicResult = calculator.calculateMetabolicState(
     sodium: inputs.values['sodium'] ?? 0,

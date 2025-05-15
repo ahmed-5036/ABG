@@ -76,7 +76,7 @@ class ThirdSection extends ConsumerWidget {
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         onChanged: (value) {
           if (value.isEmpty) {
-            ref.read(inputStateProvider.notifier).updateValue('pco2', 0);
+            ref.read(inputStateProvider.notifier).resetField('pco2');
           } else {
             final numValue = double.tryParse(value);
             if (numValue != null) {
@@ -137,7 +137,7 @@ class ThirdSection extends ConsumerWidget {
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         onChanged: (value) {
           if (value.isEmpty) {
-            ref.read(inputStateProvider.notifier).updateValue('fio2', 0);
+            ref.read(inputStateProvider.notifier).resetField('fio2');
           } else {
             final numValue = double.tryParse(value);
             if (numValue != null) {
@@ -188,7 +188,7 @@ class ThirdSection extends ConsumerWidget {
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         onChanged: (value) {
           if (value.isEmpty) {
-            ref.read(inputStateProvider.notifier).updateValue('age', 0);
+            ref.read(inputStateProvider.notifier).resetField('age');
           } else {
             final numValue = double.tryParse(value);
             if (numValue != null) {
@@ -240,7 +240,7 @@ class ThirdSection extends ConsumerWidget {
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         onChanged: (value) {
           if (value.isEmpty) {
-            ref.read(inputStateProvider.notifier).updateValue('pao2', 0);
+            ref.read(inputStateProvider.notifier).resetField('pao2');
           } else {
             final numValue = double.tryParse(value);
             if (numValue != null) {

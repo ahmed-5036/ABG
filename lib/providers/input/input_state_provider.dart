@@ -17,12 +17,19 @@ class InputState {
   bool get isComplete {
     final hasRequiredFields = _hasRequiredFields();
     final isValidFields = isValid.values.every((v) => v);
-    return values.isNotEmpty && isValidFields && hasRequiredFields;
+    final hasValues = values.values.every((v) => v != null && v > 0);
+    final allFieldsValid = values.keys.every((field) => 
+      isValid[field] == true && values[field] != null && values[field]! > 0);
+    return values.isNotEmpty && hasValues && isValidFields && hasRequiredFields && allFieldsValid;
   }
 
   bool _hasRequiredFields() {
     return InputStateNotifier.requiredFields
-        .every((field) => values.containsKey(field));
+        .every((field) => 
+          values.containsKey(field) && 
+          values[field] != null && 
+          values[field]! > 0 && 
+          isValid[field] == true);
   }
 
   InputState copyWith({
@@ -112,10 +119,20 @@ class InputStateNotifier extends StateNotifier<InputState> {
     final newValid = Map<String, bool>.from(state.isValid)..remove(field);
     final newErrors = Map<String, String?>.from(state.errors)..remove(field);
 
+    // Update validation state for all fields
+    final updatedValid = <String, bool>{};
+    final updatedErrors = <String, String?>{};
+    
+    for (final entry in newValues.entries) {
+      final validationResult = _validateField(entry.key, entry.value);
+      updatedValid[entry.key] = validationResult.isValid;
+      updatedErrors[entry.key] = validationResult.error;
+    }
+
     state = state.copyWith(
       values: newValues,
-      isValid: newValid,
-      errors: newErrors,
+      isValid: updatedValid,
+      errors: updatedErrors,
     );
   }
 
@@ -160,3 +177,6 @@ final inputErrorProvider = Provider.family<String?, String>((ref, field) {
 final inputCompleteProvider = Provider<bool>((ref) {
   return ref.watch(inputStateProvider).isComplete;
 });
+
+// Provider to track if validation should be shown
+final showValidationProvider = StateProvider<bool>((ref) => false);

@@ -68,7 +68,7 @@ class SecondSection extends ConsumerWidget {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             onChanged: (value) {
               if (value.isEmpty) {
-                ref.read(inputStateProvider.notifier).updateValue('hco3', 0);
+                ref.read(inputStateProvider.notifier).resetField('hco3');
               } else {
                 final numValue = double.tryParse(value);
                 if (numValue != null) {
@@ -109,7 +109,7 @@ class SecondSection extends ConsumerWidget {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             onChanged: (value) {
               if (value.isEmpty) {
-                ref.read(inputStateProvider.notifier).updateValue('ph', 0);
+                ref.read(inputStateProvider.notifier).resetField('ph');
               } else {
                 final numValue = double.tryParse(value);
                 if (numValue != null) {
