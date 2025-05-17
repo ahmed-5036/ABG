@@ -132,7 +132,8 @@ class _InputDataPageState extends ConsumerState<InputDataPage> {
                   icon: const Icon(Icons.replay_outlined),
                   tooltip: StringConstants.resetAllInputs,
                   onPressed: () async {
-                    final OkCancelResult confirm = await showOkCancelAlertDialog(
+                    final OkCancelResult confirm =
+                        await showOkCancelAlertDialog(
                       context: context,
                       isDestructiveAction: true,
                       okLabel: StringConstants.resetNow,
@@ -144,6 +145,9 @@ class _InputDataPageState extends ConsumerState<InputDataPage> {
                       resetControllers(ref, firstSectionControllersProvider);
                       resetControllers(ref, copdSectionControllersProvider);
                       ref.invalidate(calculatorResultProvider);
+
+                      // Reset validation state
+                      ref.read(showValidationProvider.notifier).state = false;
                     }
                   },
                 ),
@@ -151,7 +155,8 @@ class _InputDataPageState extends ConsumerState<InputDataPage> {
                   tooltip: StringConstants.newPatient,
                   icon: const Icon(Icons.group_add_sharp),
                   onPressed: () async {
-                    final OkCancelResult confirm = await showOkCancelAlertDialog(
+                    final OkCancelResult confirm =
+                        await showOkCancelAlertDialog(
                       context: context,
                       isDestructiveAction: true,
                       title: StringConstants.startAnalysisForNewPatient,
@@ -161,6 +166,7 @@ class _InputDataPageState extends ConsumerState<InputDataPage> {
                       ref.invalidate(inputStateProvider);
                       ref.invalidate(inputCompleteProvider);
                       ref.invalidate(calculatorResultProvider);
+
                       if (!context.mounted) return;
                       context.navigator.pushNamedAndRemoveUntil(
                         RouteNames.initialSelection,
@@ -180,10 +186,12 @@ class _InputDataPageState extends ConsumerState<InputDataPage> {
             children: <Widget>[
               Consumer(
                 builder: (BuildContext context, WidgetRef ref, _) {
-                  final String type = ref.watch(patientTypeProvider)?.type ?? "";
+                  final String type =
+                      ref.watch(patientTypeProvider)?.type ?? "";
                   final Map<String, String> calculatorMetadata =
                       ref.watch(calculatorMetadataProvider);
-                  final String calculatorName = calculatorMetadata['name'] ?? '';
+                  final String calculatorName =
+                      calculatorMetadata['name'] ?? '';
 
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -222,7 +230,8 @@ class _InputDataPageState extends ConsumerState<InputDataPage> {
               Padding(
                 padding: kDefaultPagePadding,
                 child: Consumer(
-                  builder: (BuildContext context, WidgetRef ref, _) => ProgressBarWithTitle(
+                  builder: (BuildContext context, WidgetRef ref, _) =>
+                      ProgressBarWithTitle(
                     step: ref.watch(stepStateProvider),
                   ),
                 ),
