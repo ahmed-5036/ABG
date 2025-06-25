@@ -4,24 +4,7 @@
             "outputFile": "com.abg.app-mergeDebugResources-37:/values-or/values-or.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\DellG3\\.gradle\\caches\\transforms-3\\f39e87a724b0a5e996ed789c123aaf26\\transformed\\browser-1.8.0\\res\\values-or\\values-or.xml",
-                    "from": {
-                        "startLines": "2,3,4,5",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "55,165,270,383",
-                        "endColumns": "109,104,112,108",
-                        "endOffsets": "160,265,378,487"
-                    },
-                    "to": {
-                        "startLines": "44,47,48,49",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "4176,4440,4545,4658",
-                        "endColumns": "109,104,112,108",
-                        "endOffsets": "4281,4540,4653,4762"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\DellG3\\.gradle\\caches\\transforms-3\\99c25d6388a9ff694458d9bac4586990\\transformed\\material-1.7.0\\res\\values-or\\values-or.xml",
+                    "source": "C:\\Users\\DellG3\\.gradle\\caches\\transforms-3\\3d00eeca35c1d689cfe6f840f9b2ae11\\transformed\\material-1.7.0\\res\\values-or\\values-or.xml",
                     "from": {
                         "startLines": "2,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -40,7 +23,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\DellG3\\.gradle\\caches\\transforms-3\\5c4db2c6eff7532f407e112d7b5f1a00\\transformed\\appcompat-1.5.0\\res\\values-or\\values-or.xml",
+                    "source": "C:\\Users\\DellG3\\.gradle\\caches\\transforms-3\\19838793a858f52cc507f61b837c4ba6\\transformed\\appcompat-1.5.0\\res\\values-or\\values-or.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -57,7 +40,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\DellG3\\.gradle\\caches\\transforms-3\\e8231fcf7a5b2c969688c792e7c39d4e\\transformed\\core-1.13.1\\res\\values-or\\values-or.xml",
+                    "source": "C:\\Users\\DellG3\\.gradle\\caches\\transforms-3\\acd13ecaa8dae5896fce42d31c4bceda\\transformed\\core-1.13.1\\res\\values-or\\values-or.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -71,6 +54,23 @@
                         "startOffsets": "3163,3266,3368,3471,3576,3677,3779,8745",
                         "endColumns": "102,101,102,104,100,101,118,100",
                         "endOffsets": "3261,3363,3466,3571,3672,3774,3893,8841"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\DellG3\\.gradle\\caches\\transforms-3\\0fa71de775fb40e1831e6ecf35fc1432\\transformed\\browser-1.8.0\\res\\values-or\\values-or.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,165,270,383",
+                        "endColumns": "109,104,112,108",
+                        "endOffsets": "160,265,378,487"
+                    },
+                    "to": {
+                        "startLines": "44,47,48,49",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "4176,4440,4545,4658",
+                        "endColumns": "109,104,112,108",
+                        "endOffsets": "4281,4540,4653,4762"
                     }
                 }
             ]

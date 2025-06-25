@@ -13,6 +13,7 @@ import '../organism/adaptive_input_dialog.dart';
 import '../organism/first_sections_fields.dart';
 import '../organism/second_sections_fields.dart';
 import '../organism/third_sections_fields.dart';
+import '../organism/app_drawer.dart';
 
 // Provider for Follow Up ABG selection
 final StateProvider<String?> followUpAbgOptionProvider = StateProvider<String?>((StateProviderRef<String?> ref) => null);
@@ -38,6 +39,7 @@ class FollowUpAbgOptionsView extends ConsumerWidget {
           ),
         ),
       ),
+      drawer: const AppDrawer(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[

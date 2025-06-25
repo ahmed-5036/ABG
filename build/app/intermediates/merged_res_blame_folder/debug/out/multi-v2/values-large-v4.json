@@ -4,7 +4,7 @@
             "outputFile": "com.abg.app-mergeDebugResources-37:/values-large-v4/values-large-v4.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\DellG3\\.gradle\\caches\\transforms-3\\5c4db2c6eff7532f407e112d7b5f1a00\\transformed\\appcompat-1.5.0\\res\\values-large-v4\\values-large-v4.xml",
+                    "source": "C:\\Users\\DellG3\\.gradle\\caches\\transforms-3\\19838793a858f52cc507f61b837c4ba6\\transformed\\appcompat-1.5.0\\res\\values-large-v4\\values-large-v4.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10",
                         "startColumns": "4,4,4,4,4,4,4,4,4",
@@ -14,7 +14,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\DellG3\\.gradle\\caches\\transforms-3\\99c25d6388a9ff694458d9bac4586990\\transformed\\material-1.7.0\\res\\values-large-v4\\values-large-v4.xml",
+                    "source": "C:\\Users\\DellG3\\.gradle\\caches\\transforms-3\\3d00eeca35c1d689cfe6f840f9b2ae11\\transformed\\material-1.7.0\\res\\values-large-v4\\values-large-v4.xml",
                     "from": {
                         "startLines": "2,3,4,10",
                         "startColumns": "4,4,4,4",

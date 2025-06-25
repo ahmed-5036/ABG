@@ -14,6 +14,7 @@ import '../organism/adaptive_input_dialog.dart';
 import '../organism/first_sections_fields.dart';
 import '../organism/second_sections_fields.dart';
 import '../organism/third_sections_fields.dart';
+import '../organism/app_drawer.dart';
 
 class PatientTypeSelectionPage extends ConsumerWidget {
   const PatientTypeSelectionPage({super.key});
@@ -36,6 +37,7 @@ class PatientTypeSelectionPage extends ConsumerWidget {
           ),
         ),
       ),
+      drawer: const AppDrawer(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[

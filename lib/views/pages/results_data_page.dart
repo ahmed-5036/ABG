@@ -14,6 +14,8 @@ import '../../services/extension.dart';
 import '../atoms/primary_button.dart';
 import '../molecules/progress_bar_with_title.dart';
 import '../../providers/reset/reset_providers.dart';
+import '../organism/diagnosis_result_table.dart';
+import '../organism/app_drawer.dart';
 
 class ResultsDataPage extends ConsumerWidget {
   const ResultsDataPage({super.key});
@@ -37,6 +39,7 @@ class ResultsDataPage extends ConsumerWidget {
         appBar: AppBar(
           title: const Text(StringConstants.resutls),
         ),
+        drawer: const AppDrawer(),
         body: SingleChildScrollView(
           child: Padding(
             padding: kDefaultPagePadding,
@@ -98,15 +101,16 @@ class ResultsDataPage extends ConsumerWidget {
                       Alert(
                         context: context,
                         type: AlertType.none,
-                        title: StringConstants.finalDiagnosis,
+                        title: '', // Title handled by the widget
                         desc: "",
-                        content: Text(
-                          ref.watch(finalDiagnosisProvider),
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        content: DiagnosisResultTable(
+                          title: "Low AG, Hypochloremic, Metabolic Alkalosis", // Example title
+                          rows: [
+                            {"item": "CL/NA", "value": "9", "definition": "Hypochlorimic or Hypernatremic"},
+                            {"item": "SID mEq/L", "value": "90.0", "definition": "Metabolic Alkalosis"},
+                            {"item": "Corrected HCO3", "value": "78.0", "definition": "Metabolic Alkalosis"},
+                            {"item": "Corrected AG Start", "value": "9.5", "definition": "Low AG"},
+                          ],
                         ),
                         buttons: <DialogButton>[
                           DialogButton(

@@ -46,6 +46,17 @@ class AppDrawer extends StatelessWidget {
             ],
           ),
         ),
+        ListTile(
+          title: const Text('Home'),
+          hoverColor: AppColors.blue.withOpacity(0.3),
+          leading: const Icon(Icons.home),
+          onTap: () {
+            context.navigator.pushNamedAndRemoveUntil(
+              RouteNames.initialSelection,
+              (Route route) => false,
+            );
+          },
+        ),
         Visibility(
           visible: !isLandScape,
           child: const SizedBox(
