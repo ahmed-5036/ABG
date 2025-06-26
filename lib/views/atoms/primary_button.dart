@@ -12,7 +12,8 @@ class BorderedButton extends StatelessWidget {
       this.color,
       this.verticalPadding,
       this.customWidgetLabel,
-      this.customHeight = 50});
+      this.customHeight = 50,
+      this.width = 0.8});
 
   final VoidCallback? action;
   final String label;
@@ -22,6 +23,7 @@ class BorderedButton extends StatelessWidget {
   final Color? color;
   final double? verticalPadding;
   final double customHeight;
+  final double width;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,7 @@ class BorderedButton extends StatelessWidget {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           fixedSize:
-              Size(size.width * 0.8, customHeight + (verticalPadding ?? 0) * 2),
+              Size(size.width * width, customHeight + (verticalPadding ?? 0) * 2),
           backgroundColor: color ?? AppColors.deepRed),
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: verticalPadding ?? 0),

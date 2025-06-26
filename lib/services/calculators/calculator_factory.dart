@@ -15,6 +15,7 @@ enum CalculatorType {
   followUpABGRespiratory,
   copdCalculationNormal,
   copdCalculationHigh,
+  followUpABG,
 }
 
 class ABGCalculatorFactory {
@@ -154,23 +155,27 @@ class ABGCalculatorFactory {
 
 // Riverpod Providers
 
-final StateProvider<CalculatorType> calculatorTypeProvider = StateProvider<CalculatorType>((StateProviderRef<CalculatorType> ref) {
+final StateProvider<CalculatorType> calculatorTypeProvider =
+    StateProvider<CalculatorType>((StateProviderRef<CalculatorType> ref) {
   return CalculatorType.followUpABGMetabolic; // default calculator
 });
 
-final Provider<ABGCalculator> calculatorProvider = Provider<ABGCalculator>((ProviderRef<ABGCalculator> ref) {
+final Provider<ABGCalculator> calculatorProvider =
+    Provider<ABGCalculator>((ProviderRef<ABGCalculator> ref) {
   final CalculatorType type = ref.watch(calculatorTypeProvider);
   final PatientType? patientType = ref.watch(patientTypeProvider);
   return ABGCalculatorFactory.getCalculator(type, patientType);
 });
 
 final ProviderFamily<bool, Map<String, double?>> inputValidationProvider =
-    Provider.family<bool, Map<String, double?>>((ProviderRef<bool> ref, Map<String, double?> inputs) {
+    Provider.family<bool, Map<String, double?>>(
+        (ProviderRef<bool> ref, Map<String, double?> inputs) {
   final CalculatorType type = ref.watch(calculatorTypeProvider);
   return ABGCalculatorFactory.validateInputs(type, inputs);
 });
 
-final Provider<Map<String, String>> calculatorMetadataProvider = Provider<Map<String, String>>((ProviderRef<Map<String, String>> ref) {
+final Provider<Map<String, String>> calculatorMetadataProvider =
+    Provider<Map<String, String>>((ProviderRef<Map<String, String>> ref) {
   final CalculatorType type = ref.watch(calculatorTypeProvider);
   return <String, String>{
     'name': ABGCalculatorFactory.getCalculatorName(type),
@@ -182,7 +187,8 @@ final Provider<Map<String, String>> calculatorMetadataProvider = Provider<Map<St
 
 // Helper provider to group calculators by type
 final Provider<Map<String, List<CalculatorType>>> calculatorGroupsProvider =
-    Provider<Map<String, List<CalculatorType>>>((ProviderRef<Map<String, List<CalculatorType>>> ref) {
+    Provider<Map<String, List<CalculatorType>>>(
+        (ProviderRef<Map<String, List<CalculatorType>>> ref) {
   return <String, List<CalculatorType>>{
     'Admission ABG': <CalculatorType>[
       CalculatorType.admissionABGNormal,

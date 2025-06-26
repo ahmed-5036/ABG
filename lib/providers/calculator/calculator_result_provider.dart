@@ -94,7 +94,7 @@ final Provider<Map<String, dynamic>> copdCalculationResultProvider =
 });
 
 final Provider<ABGResult> calculatorResultProvider =
-    Provider<ABGResult>((ProviderRef<ABGResult> ref) {
+    Provider<ABGResult>((Ref ref) {
   final ABGCalculator calculator = ref.watch(calculatorProvider);
   final InputState inputs = ref.watch(inputStateProvider);
 
@@ -169,7 +169,7 @@ final Provider<ABGResult> calculatorResultProvider =
 // Add helper providers for individual calculations
 final Provider<FinalResult<MetabolicLevel>> metabolicCalculationProvider =
     Provider<FinalResult<MetabolicLevel>>(
-        (ProviderRef<FinalResult<MetabolicLevel>> ref) {
+        (Ref ref) {
   final ABGCalculator calculator = ref.watch(calculatorProvider);
   final InputState inputs = ref.watch(inputStateProvider);
 
@@ -190,7 +190,7 @@ final Provider<FinalResult<MetabolicLevel>> metabolicCalculationProvider =
 
 final Provider<FinalResult<RespiratoryLevel>> respiratoryCalculationProvider =
     Provider<FinalResult<RespiratoryLevel>>(
-        (ProviderRef<FinalResult<RespiratoryLevel>> ref) {
+        (Ref ref) {
   final ABGCalculator calculator = ref.watch(calculatorProvider);
   final InputState inputs = ref.watch(inputStateProvider);
 
@@ -210,7 +210,7 @@ final Provider<FinalResult<RespiratoryLevel>> respiratoryCalculationProvider =
 
 final Provider<FinalResult<OxygenWaterLevel>> oxygenationCalculationProvider =
     Provider<FinalResult<OxygenWaterLevel>>(
-        (ProviderRef<FinalResult<OxygenWaterLevel>> ref) {
+        (Ref ref) {
   final ABGCalculator calculator = ref.watch(calculatorProvider);
   final InputState inputs = ref.watch(inputStateProvider);
 
@@ -230,7 +230,7 @@ final Provider<FinalResult<OxygenWaterLevel>> oxygenationCalculationProvider =
 });
 
 final Provider<double> expectedPCO2Provider =
-    Provider<double>((ProviderRef<double> ref) {
+    Provider<double>((Ref ref) {
   final double? hco3 = ref.watch(inputStateProvider).values['hco3'];
   if (hco3 == null) return 0;
 
@@ -240,7 +240,7 @@ final Provider<double> expectedPCO2Provider =
 
 // Provider for final diagnosis
 final Provider<String> finalCalculationProvider =
-    Provider<String>((ProviderRef<String> ref) {
+    Provider<String>((Ref ref) {
   final FinalResult<MetabolicLevel> metabolic =
       ref.watch(metabolicCalculationProvider);
   final FinalResult<RespiratoryLevel> respiratory =

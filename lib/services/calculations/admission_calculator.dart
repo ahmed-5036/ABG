@@ -22,19 +22,15 @@ class AdmissionABGNormalCalculator extends AdmissionABGCalculator {
     required double hco3,
     required double albumin,
   }) {
-    // Calculate Corrected AG
     double correctedAG = (sodium - chlorine - hco3) + ((4 - albumin) * 2.5);
-
-    // Calculate Expected HCO3
     double expectedHCO3 = hco3 + (correctedAG - 12);
-
-    // Calculate Expected PCO2
     double expectedPCO2 = 40 + ((expectedHCO3 - hco3) / 0.35);
-
-    // Calculate Expected pH
     double expectedPH = 7.4 -
         ((expectedPCO2 - 40) / 10 * 0.08) +
         ((expectedHCO3 - 24) / 10 * 0.15);
+
+    double sid = sodium - chlorine;
+    double clNa = chlorine / sodium;
 
     MetabolicLevel metabolicState;
     if (hco3 == 24) {
@@ -49,8 +45,10 @@ class AdmissionABGNormalCalculator extends AdmissionABGCalculator {
       findingLevel: metabolicState,
       findingNumber: hco3,
       additionalData: <String, dynamic>{
-        'correctedAG': correctedAG,
-        'expectedHCO3': expectedHCO3,
+        'clNa': clNa,
+        'sid': sid,
+        'correctedHCO3': expectedHCO3,
+        'correctedAGStart': correctedAG,
         'expectedPCO2': expectedPCO2,
         'expectedPH': expectedPH,
       },
@@ -88,7 +86,6 @@ class AdmissionABGNormalCalculator extends AdmissionABGCalculator {
     required double pao2,
     required double age,
   }) {
-    // Same implementation as Follow-up calculator
     double pAO2 = (fio2 * 7) - (pco2 / 0.8);
     double aA = pAO2 - pao2;
     double expectedAa = ((fio2 / 100) * age + 2.5);
@@ -114,16 +111,12 @@ class AdmissionABGHighCalculator extends AdmissionABGCalculator {
     required double hco3,
     required double albumin,
   }) {
-    // Calculate SID
     double sid = sodium - chlorine;
+    double clNa = chlorine / sodium;
 
-    // Calculate Expected HCO3
-    double expectedHCO3 = hco3 + (36 - sid);
-
-    // Calculate Expected PCO2
+    double correctedAG = (sodium - chlorine - hco3) + ((4 - albumin) * 2.5);
+    double expectedHCO3 = hco3 + (correctedAG - 12);
     double expectedPCO2 = 40 + ((expectedHCO3 - hco3) / 0.35);
-
-    // Calculate Expected pH
     double expectedPH = 7.4 -
         ((expectedPCO2 - 40) / 10 * 0.08) +
         ((expectedHCO3 - 24) / 10 * 0.15);
@@ -141,8 +134,10 @@ class AdmissionABGHighCalculator extends AdmissionABGCalculator {
       findingLevel: metabolicState,
       findingNumber: hco3,
       additionalData: <String, dynamic>{
+        'clNa': clNa,
         'sid': sid,
-        'expectedHCO3': expectedHCO3,
+        'correctedHCO3': expectedHCO3,
+        'correctedAGStart': correctedAG,
         'expectedPCO2': expectedPCO2,
         'expectedPH': expectedPH,
       },
@@ -180,7 +175,6 @@ class AdmissionABGHighCalculator extends AdmissionABGCalculator {
     required double pao2,
     required double age,
   }) {
-    // Same implementation as other calculators
     double pAO2 = (fio2 * 7) - (pco2 / 0.8);
     double aA = pAO2 - pao2;
     double expectedAa = ((fio2 / 100) * age + 2.5);

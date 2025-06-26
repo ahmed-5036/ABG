@@ -39,8 +39,8 @@ class TableOneDiagnosis extends ConsumerWidget {
           if (patientType == PatientType.patientTypeTwo)
             _buildDataRow(
               label: StringConstants.correctedCl,
-              value: result.chlorineResult.findingNumber?.toString() ?? 'N/A',
-              definition: result.chlorineResult.findingLevel.level.$1,
+              value: ref.watch(correctedCLProvider).toStringAsFixed(1),
+              definition: ref.watch(correctedCLProviderResult).level.$1,
             ),
 
           // CL/NA Row

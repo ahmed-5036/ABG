@@ -18,6 +18,57 @@ export 'result/metabolic_result_provider.dart';
 export 'result/respiratory_result_provider.dart';
 export 'result/oxygenation_result_provider.dart';
 
+// Present Metabolic Change Providers
+export 'result/metabolic_result_provider.dart' show 
+  bbCalculationProvider,
+  bbResultProvider,
+  correctedAGPresentProvider,
+  correctedAGPresentResultProvider,
+  sigProvider,
+  sigResultProvider,
+  correctedHCO3ForCorrelationProvider,
+  correctedHCO3TwoCorrelationProvider,
+  correlationHCO3Provider,
+  diagnosisSecondResultProvider;
+
+// Start Metabolic State Providers
+export 'result/metabolic_result_provider.dart' show 
+  clNaCalculationProvider,
+  clNaResultProvider,
+  sidCalculationProvider,
+  sidCalculationTypeTwoPatientProvider,
+  sidGeneralProvider,
+  sidResultProvider,
+  correctedHCO3Provider,
+  correctedHCO3TypeOneProvider,
+  correctedHCO3TypeTwoProvider,
+  correctedHCO3ResultProvider,
+  correctedAGStartProvider,
+  correctedAGStartResultProvider,
+  diagnosisOneResultProvider,
+  finalDiagnosisResultProvider,
+  correctedCLProvider,
+  correctedCLProviderResult,
+  aG2CalculationProvider,
+  sidHighABGProvider,
+  clNaHighABGProvider,
+  correctedAGHighABGProvider,
+  followUpABGFinalDiagnosisResultProvider;
+
+// Ventilatory State Providers
+export 'result/respiratory_result_provider.dart' show 
+  expectedPCo2CalculationProvider,
+  expectedPCo2ResultProvider,
+  diagnosisThirdResultProvider;
+
+// Oxygenation State Providers
+export 'result/oxygenation_result_provider.dart' show 
+  pAOutputO2Provider,
+  paInputO2Provider,
+  aAProvider,
+  expectedAaProvider,
+  diagnosisFourthResultProvider;
+
 // Convenience providers
 final Provider<String> finalDiagnosisProvider =
     Provider<String>((ProviderRef<String> ref) {
