@@ -160,7 +160,7 @@ class ResultsDataPage extends ConsumerWidget {
                                     ),
                                     onPressed: () =>
                                         Navigator.of(context).pop(),
-                                    child: const Text('Close'),
+                              child: const Text('Close'),
                                   ),
                                 ),
                               ],
@@ -214,7 +214,7 @@ class ResultsDataPage extends ConsumerWidget {
                                     ),
                                     onPressed: () =>
                                         Navigator.of(context).pop(),
-                                    child: const Text('Close'),
+                              child: const Text('Close'),
                                   ),
                                 ),
                               ],
@@ -271,7 +271,7 @@ class ResultsDataPage extends ConsumerWidget {
                                     ),
                                     onPressed: () =>
                                         Navigator.of(context).pop(),
-                                    child: const Text('Close'),
+                              child: const Text('Close'),
                                   ),
                                 ),
                               ],
@@ -395,56 +395,15 @@ class ResultsDataPage extends ConsumerWidget {
 
     return Column(
       children: <Widget>[
-        // Title for the COPD Results
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
-          child: Text(
-            isNormalCopd ? "COPD Normal Calculation" : "COPD High Calculation",
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-        ),
-
-        // Display input values for reference
-        Card(
-          elevation: 2,
-          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const Text(
-                  "Input Values",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                _buildInputRow(context, "Sodium (Na)",
-                    "${sodium.toStringAsFixed(1)} mEq/L"),
-                _buildInputRow(context, "Chlorine (Cl)",
-                    "${chlorine.toStringAsFixed(1)} mEq/L"),
-                _buildInputRow(context, "Bicarbonate (HCO3)",
-                    "${hco3.toStringAsFixed(1)} mEq/L"),
-                _buildInputRow(
-                    context, "Albumin", "${albumin.toStringAsFixed(1)} g%"),
-                _buildInputRow(
-                    context, "PCO2", "${pco2.toStringAsFixed(1)} mmHg"),
-              ],
-            ),
-          ),
-        ),
-
-        // Display calculated values
-        const SizedBox(height: 16),
-        Text(
-          "Calculated Values",
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-        const SizedBox(height: 8),
+        // Display calculated values (input values section and titles removed)
+        // const SizedBox(height: 16),
+        // Text(
+        //   "Calculated Values",
+        //   style: Theme.of(context).textTheme.titleMedium?.copyWith(
+        //         fontWeight: FontWeight.bold,
+        //       ),
+        // ),
+        // const SizedBox(height: 8),
 
         // Display COPD specific results
         _buildResultCard(
@@ -562,17 +521,6 @@ class ResultsDataPage extends ConsumerWidget {
 
     return Column(
       children: <Widget>[
-        // Title for the Follow-up ABG Results
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
-          child: Text(
-            isPrimaryMetabolic
-                ? "Follow-up ABG\nPrimary Metabolic Insult"
-                : "Follow-up ABG\nPrimary Respiratory Insult",
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-        ),
-
         // Present Metabolic Change (First Button for Primary Metabolic)
         BorderedButton(
           label: 'Present Metabolic Change',
