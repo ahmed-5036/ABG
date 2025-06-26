@@ -129,7 +129,7 @@ class OxygenationStateTable extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
-                ref.watch(expectedAaProvider).toStringAsFixed(2),
+                ref.watch(expectedAaProvider).toStringAsFixed(3),
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 14),
               ),
@@ -147,4 +147,4 @@ class OxygenationStateTable extends ConsumerWidget {
       ),
     );
   }
-} 
+}

@@ -19,14 +19,16 @@ final Provider<Map<String, dynamic>> oxygenationDetailsProvider =
 
 // Oxygenation State Providers
 
-final Provider<double> pAOutputO2Provider = Provider<double>((ProviderRef<double> ref) {
+final Provider<double> pAOutputO2Provider =
+    Provider<double>((ProviderRef<double> ref) {
   final Map<String, double> values = ref.watch(inputStateProvider).values;
   final double fio2 = values['fio2'] ?? 0;
   final double pco2 = values['pco2'] ?? 0;
   return (fio2 * 7) - (pco2 / 0.8);
 });
 
-final Provider<double> paInputO2Provider = Provider<double>((ProviderRef<double> ref) {
+final Provider<double> paInputO2Provider =
+    Provider<double>((ProviderRef<double> ref) {
   final Map<String, double> values = ref.watch(inputStateProvider).values;
   return values['pao2'] ?? 0;
 });
@@ -35,17 +37,21 @@ final Provider<double> aAProvider = Provider<double>((ProviderRef<double> ref) {
   return ref.watch(pAOutputO2Provider) - ref.watch(paInputO2Provider);
 });
 
-final Provider<double> expectedAaProvider = Provider<double>((ProviderRef<double> ref) {
+final Provider<double> expectedAaProvider =
+    Provider<double>((ProviderRef<double> ref) {
   final Map<String, double> values = ref.watch(inputStateProvider).values;
   final double hco3 = values['hco3'] ?? 0;
   final double ph = values['ph'] ?? 0;
   final double fio2 = values['fio2'] ?? 0;
   final double age = values['age'] ?? 0;
   if (hco3 == 0 || ph == 0) return 0;
-  return (((fio2 / 100) * age) + 2.5).roundToDouble();
+  double calculatedValue = (((fio2 / 100) * age) + 2.5);
+  double roundedValue = (calculatedValue * 10).round() / 10.0;
+  return roundedValue;
 });
 
-final Provider<OxygenWaterLevel> diagnosisFourthResultProvider = Provider<OxygenWaterLevel>((ProviderRef<OxygenWaterLevel> ref) {
+final Provider<OxygenWaterLevel> diagnosisFourthResultProvider =
+    Provider<OxygenWaterLevel>((ProviderRef<OxygenWaterLevel> ref) {
   final Map<String, double> values = ref.watch(inputStateProvider).values;
   final double fio2 = values['fio2'] ?? 0;
   final double age = values['age'] ?? 0;
