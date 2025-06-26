@@ -10,7 +10,7 @@ class DiagnosisResultTable extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: [
+      children: <Widget>[
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 16.0),
           child: Text(
@@ -31,19 +31,19 @@ class DiagnosisResultTable extends StatelessWidget {
             2: FlexColumnWidth(4),
           },
           defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-          children: [
+          children: <TableRow>[
             TableRow(
               decoration: BoxDecoration(
                 color: Colors.blueGrey.withOpacity(0.15),
               ),
-              children: [
+              children: <Widget>[
                 _tableHeader('Items'),
                 _tableHeader('Value'),
                 _tableHeader('Definition'),
               ],
             ),
-            ...rows.map((row) => TableRow(
-              children: [
+            ...rows.map((Map<String, String> row) => TableRow(
+              children: <Widget>[
                 _tableCell(row['item'] ?? ''),
                 _tableCell(row['value'] ?? ''),
                 _tableCell(row['definition'] ?? ''),

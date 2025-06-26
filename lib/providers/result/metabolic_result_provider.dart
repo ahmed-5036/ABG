@@ -71,12 +71,15 @@ final Provider<AGLevel> correctedAGPresentResultProvider =
 
   if (hco3 == 0 || ph == 0) return AGLevel.na;
 
-  if (correctedAG == CalculationConstants.agNormalThreshold)
+  if (correctedAG == CalculationConstants.agNormalThreshold) {
     return AGLevel.normalAG;
-  if (correctedAG > CalculationConstants.agNormalThreshold)
+  }
+  if (correctedAG > CalculationConstants.agNormalThreshold) {
     return AGLevel.highAG;
-  if (correctedAG < CalculationConstants.agNormalThreshold)
+  }
+  if (correctedAG < CalculationConstants.agNormalThreshold) {
     return AGLevel.lowAG;
+  }
 
   return AGLevel.na;
 });
@@ -202,7 +205,7 @@ final Provider<int> clNaCalculationProvider = Provider<int>((Ref ref) {
 
 // CL/NA Result Provider
 final Provider<CLNaLevel> clNaResultProvider = Provider<CLNaLevel>((Ref ref) {
-  final calculatorType = ref.watch(calculatorTypeProvider);
+  final CalculatorType calculatorType = ref.watch(calculatorTypeProvider);
 
   // For High ABG, use the percentage value for result determination
   if (calculatorType == CalculatorType.admissionABGHigh) {
@@ -210,12 +213,15 @@ final Provider<CLNaLevel> clNaResultProvider = Provider<CLNaLevel>((Ref ref) {
         ref.watch(clNaCalculationProvider); // Percentage value
 
     if (clNaPercentage == 0) return CLNaLevel.na;
-    if (clNaPercentage == CalculationConstants.normalClNaThreshold)
+    if (clNaPercentage == CalculationConstants.normalClNaThreshold) {
       return CLNaLevel.normalOrHemo;
-    if (clNaPercentage > CalculationConstants.normalClNaThreshold)
+    }
+    if (clNaPercentage > CalculationConstants.normalClNaThreshold) {
       return CLNaLevel.hyperTwoCases;
-    if (clNaPercentage < CalculationConstants.normalClNaThreshold)
+    }
+    if (clNaPercentage < CalculationConstants.normalClNaThreshold) {
       return CLNaLevel.hypoTwoCases;
+    }
 
     return CLNaLevel.na;
   }
@@ -224,12 +230,15 @@ final Provider<CLNaLevel> clNaResultProvider = Provider<CLNaLevel>((Ref ref) {
   final int clNa = ref.watch(clNaCalculationProvider);
 
   if (clNa == 0) return CLNaLevel.na;
-  if (clNa == CalculationConstants.normalClNaThreshold)
+  if (clNa == CalculationConstants.normalClNaThreshold) {
     return CLNaLevel.normalOrHemo;
-  if (clNa > CalculationConstants.normalClNaThreshold)
+  }
+  if (clNa > CalculationConstants.normalClNaThreshold) {
     return CLNaLevel.hyperTwoCases;
-  if (clNa < CalculationConstants.normalClNaThreshold)
+  }
+  if (clNa < CalculationConstants.normalClNaThreshold) {
     return CLNaLevel.hypoTwoCases;
+  }
 
   return CLNaLevel.na;
 });
@@ -243,7 +252,7 @@ final Provider<double> sidCalculationTypeTwoPatientProvider =
 
 // General SID Provider (returns data according to patient type and calculator type)
 final Provider<double> sidGeneralProvider = Provider<double>((Ref ref) {
-  final calculatorType = ref.watch(calculatorTypeProvider);
+  final CalculatorType calculatorType = ref.watch(calculatorTypeProvider);
 
   // For High ABG, use the patient type two SID calculation (same as High ABG)
   if (calculatorType == CalculatorType.admissionABGHigh) {
@@ -264,7 +273,7 @@ final Provider<double> sidGeneralProvider = Provider<double>((Ref ref) {
 // SID Result Provider
 final Provider<MetabolicLevel> sidResultProvider =
     Provider<MetabolicLevel>((Ref ref) {
-  final calculatorType = ref.watch(calculatorTypeProvider);
+  final CalculatorType calculatorType = ref.watch(calculatorTypeProvider);
 
   double normalThreshold;
 
@@ -350,7 +359,7 @@ final Provider<MetabolicLevel> correctedHCO3ResultProvider =
 
 // Corrected AG Start Provider
 final Provider<double> correctedAGStartProvider = Provider<double>((Ref ref) {
-  final calculatorType = ref.watch(calculatorTypeProvider);
+  final CalculatorType calculatorType = ref.watch(calculatorTypeProvider);
 
   // For High ABG, use the specific High ABG corrected AG calculation
   if (calculatorType == CalculatorType.admissionABGHigh) {
@@ -418,7 +427,7 @@ final Provider<String> finalDiagnosisResultProvider =
 // Follow-up ABG Final Diagnosis Result Provider
 final Provider<String> followUpABGFinalDiagnosisResultProvider =
     Provider<String>((Ref ref) {
-  final calculatorType = ref.watch(calculatorTypeProvider);
+  final CalculatorType calculatorType = ref.watch(calculatorTypeProvider);
 
   // Only for Follow-up ABG calculations
   if (calculatorType != CalculatorType.followUpABGMetabolic &&

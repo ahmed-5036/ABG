@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../providers/index.dart';
-import '../../providers/patient_type_provider.dart';
 import '../../resources/constants/app_colors.dart';
 import '../../services/calculators/calculator_factory.dart';
 
@@ -67,7 +66,7 @@ class StartMetabolicStateTable extends ConsumerWidget {
           if (ref.watch(calculatorTypeProvider) ==
               CalculatorType.admissionABGHigh)
             TableRow(children: <Widget>[
-              Padding(
+              const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text(
                   "Corrected CL",

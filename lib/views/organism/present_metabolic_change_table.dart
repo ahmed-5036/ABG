@@ -198,7 +198,7 @@ class PresentMetabolicChangeTable extends ConsumerWidget {
                     ),
                   ),
                   Text(
-                    "${ref.watch(correctedHCO3ForCorrelationProvider)!.toStringAsFixed(1)}->${ref.watch(inputStateProvider).values['hco3']?.toStringAsFixed(1) ?? '0.0'}",
+                    "${ref.watch(correctedHCO3ForCorrelationProvider).toStringAsFixed(1)}->${ref.watch(inputStateProvider).values['hco3']?.toStringAsFixed(1) ?? '0.0'}",
                     style: const TextStyle(fontSize: 10),
                   )
                 ],

@@ -15,7 +15,6 @@ import '../../services/extension.dart';
 import '../atoms/primary_button.dart';
 import '../molecules/progress_bar_with_title.dart';
 import '../../providers/reset/reset_providers.dart';
-import '../organism/diagnosis_result_table.dart';
 import '../organism/app_drawer.dart';
 import '../organism/present_metabolic_change_table.dart';
 import '../organism/start_metabolic_state_table.dart';
@@ -62,7 +61,7 @@ class ResultsDataPage extends ConsumerWidget {
                   _buildCopdResults(context, ref, calculatorType)
                 else if (isFollowUpABGCalculator)
                   _buildFollowUpABGResults(context, ref, calculatorType)
-                else ...[
+                else ...<Widget>[
                   // Start Metabolic State
                   BorderedButton(
                     label: 'Start Metabolic State',
@@ -71,7 +70,7 @@ class ResultsDataPage extends ConsumerWidget {
                     action: () {
                       showDialog(
                         context: context,
-                        builder: (context) => Dialog(
+                        builder: (BuildContext context) => Dialog(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
@@ -81,7 +80,7 @@ class ResultsDataPage extends ConsumerWidget {
                             padding: const EdgeInsets.all(16.0),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
-                              children: [
+                              children: <Widget>[
                                 Text(
                                   ref.watch(diagnosisOneResultProvider),
                                   textAlign: TextAlign.center,
@@ -125,7 +124,7 @@ class ResultsDataPage extends ConsumerWidget {
                     action: () {
                       showDialog(
                         context: context,
-                        builder: (context) => Dialog(
+                        builder: (BuildContext context) => Dialog(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
@@ -135,7 +134,7 @@ class ResultsDataPage extends ConsumerWidget {
                             padding: const EdgeInsets.all(16.0),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
-                              children: [
+                              children: <Widget>[
                                 Text(
                                   ref.watch(diagnosisSecondResultProvider),
                                   textAlign: TextAlign.center,
@@ -179,7 +178,7 @@ class ResultsDataPage extends ConsumerWidget {
                     action: () {
                       showDialog(
                         context: context,
-                        builder: (context) => Dialog(
+                        builder: (BuildContext context) => Dialog(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
@@ -189,7 +188,7 @@ class ResultsDataPage extends ConsumerWidget {
                             padding: const EdgeInsets.all(16.0),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
-                              children: [
+                              children: <Widget>[
                                 Text(
                                   ref.watch(diagnosisThirdResultProvider),
                                   textAlign: TextAlign.center,
@@ -233,7 +232,7 @@ class ResultsDataPage extends ConsumerWidget {
                     action: () {
                       showDialog(
                         context: context,
-                        builder: (context) => Dialog(
+                        builder: (BuildContext context) => Dialog(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
@@ -243,7 +242,7 @@ class ResultsDataPage extends ConsumerWidget {
                             padding: const EdgeInsets.all(16.0),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
-                              children: [
+                              children: <Widget>[
                                 Text(
                                   ref
                                       .watch(diagnosisFourthResultProvider)
@@ -529,7 +528,7 @@ class ResultsDataPage extends ConsumerWidget {
           action: () {
             showDialog(
               context: context,
-              builder: (context) => Dialog(
+              builder: (BuildContext context) => Dialog(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
@@ -539,7 +538,7 @@ class ResultsDataPage extends ConsumerWidget {
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: [
+                    children: <Widget>[
                       Text(
                         ref.watch(diagnosisSecondResultProvider),
                         textAlign: TextAlign.center,
@@ -583,7 +582,7 @@ class ResultsDataPage extends ConsumerWidget {
           action: () {
             showDialog(
               context: context,
-              builder: (context) => Dialog(
+              builder: (BuildContext context) => Dialog(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
@@ -593,7 +592,7 @@ class ResultsDataPage extends ConsumerWidget {
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: [
+                    children: <Widget>[
                       Text(
                         ref.watch(diagnosisThirdResultProvider),
                         textAlign: TextAlign.center,
@@ -637,7 +636,7 @@ class ResultsDataPage extends ConsumerWidget {
           action: () {
             showDialog(
               context: context,
-              builder: (context) => Dialog(
+              builder: (BuildContext context) => Dialog(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
@@ -647,7 +646,7 @@ class ResultsDataPage extends ConsumerWidget {
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: [
+                    children: <Widget>[
                       Text(
                         ref.watch(diagnosisFourthResultProvider).level.$1,
                         textAlign: TextAlign.center,
@@ -771,7 +770,7 @@ class ResultsDataPage extends ConsumerWidget {
 class MetabolicStateDialog extends StatelessWidget {
   final List<Map<String, String>> items;
 
-  const MetabolicStateDialog({Key? key, required this.items}) : super(key: key);
+  const MetabolicStateDialog({required this.items, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -783,7 +782,7 @@ class MetabolicStateDialog extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: [
+          children: <Widget>[
             const Text(
               'Low AG,\nHyperchloremic,\nMetabolic Acidosis',
               textAlign: TextAlign.center,
@@ -805,19 +804,19 @@ class MetabolicStateDialog extends StatelessWidget {
                 2: FlexColumnWidth(4),
               },
               defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-              children: [
+              children: <TableRow>[
                 TableRow(
                   decoration: BoxDecoration(
                     color: Colors.blueGrey.withOpacity(0.15),
                   ),
-                  children: [
+                  children: <Widget>[
                     _tableHeader('Items'),
                     _tableHeader('Value'),
                     _tableHeader('Definition'),
                   ],
                 ),
-                ...items.map((row) => TableRow(
-                      children: [
+                ...items.map((Map<String, String> row) => TableRow(
+                      children: <Widget>[
                         _tableCell(row['label'] ?? ''),
                         _tableCell(row['value'] ?? ''),
                         _tableCell(row['definition'] ?? ''),

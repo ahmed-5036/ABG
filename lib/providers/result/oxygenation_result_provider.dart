@@ -4,7 +4,6 @@ import '../../models/abg_result.dart';
 import '../../services/enum.dart';
 import '../calculator/calculator_result_provider.dart';
 import '../input/input_state_provider.dart';
-import '../../resources/constants/calculation_constants.dart';
 
 final Provider<OxygenWaterLevel> oxygenationResultProvider =
     Provider<OxygenWaterLevel>((ProviderRef<OxygenWaterLevel> ref) {
