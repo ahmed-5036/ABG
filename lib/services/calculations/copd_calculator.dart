@@ -21,6 +21,7 @@ class COPDNormalCalculator extends COPDCalculator {
     required double chlorine,
     required double hco3,
     required double albumin,
+    required double pco2,
   }) {
     // Calculate corrected AG
     double correctedAG = (sodium - chlorine - hco3) + ((4 - albumin) * 2.5);
@@ -114,6 +115,7 @@ class COPDHighCalculator extends COPDCalculator {
     required double chlorine,
     required double hco3,
     required double albumin,
+    required double pco2,
   }) {
     // Calculate measured SID
     double measuredSID = sodium - chlorine;

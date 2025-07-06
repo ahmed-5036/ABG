@@ -13,6 +13,7 @@ void main() {
         chlorine: 104,
         hco3: 24,
         albumin: 4,
+        pco2: 40,
       );
       expect(result.findingLevel, MetabolicLevel.normal);
       expect(result.findingNumber, 24);
@@ -27,6 +28,7 @@ void main() {
         chlorine: 100,
         hco3: 20,
         albumin: 4,
+        pco2: 40,
       );
       expect(result.findingLevel, MetabolicLevel.simpleMetabolicAcidosis);
     });
@@ -40,6 +42,7 @@ void main() {
         chlorine: 110,
         hco3: 28,
         albumin: 4,
+        pco2: 40,
       );
       expect(result.findingLevel, MetabolicLevel.mixedMetabolicAlkalosis);
     });

@@ -8,6 +8,7 @@ abstract class ABGCalculator {
     required double chlorine,
     required double hco3,
     required double albumin,
+    required double pco2,
   });
 
   FinalResult<RespiratoryLevel> calculateRespiratoryState({

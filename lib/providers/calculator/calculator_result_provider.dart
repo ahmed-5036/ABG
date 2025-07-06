@@ -106,6 +106,7 @@ final Provider<ABGResult> calculatorResultProvider =
     chlorine: inputs.values['chlorine'] ?? 0,
     hco3: inputs.values['hco3'] ?? 0,
     albumin: inputs.values['albumin'] ?? 0,
+    pco2: inputs.values['pco2'] ?? 0,
   );
 
   final FinalResult<RespiratoryLevel> respiratoryResult =
@@ -185,6 +186,7 @@ final Provider<FinalResult<MetabolicLevel>> metabolicCalculationProvider =
     chlorine: inputs.values['chlorine'] ?? 0,
     hco3: inputs.values['hco3'] ?? 0,
     albumin: inputs.values['albumin'] ?? 0,
+    pco2: inputs.values['pco2'] ?? 0,
   );
 });
 

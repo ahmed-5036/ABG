@@ -21,6 +21,7 @@ class AdmissionABGNormalCalculator extends AdmissionABGCalculator {
     required double chlorine,
     required double hco3,
     required double albumin,
+    required double pco2,
   }) {
     double correctedAG = (sodium - chlorine - hco3) + ((4 - albumin) * 2.5);
     double expectedHCO3 = hco3 + (correctedAG - 12);
@@ -110,6 +111,7 @@ class AdmissionABGHighCalculator extends AdmissionABGCalculator {
     required double chlorine,
     required double hco3,
     required double albumin,
+    required double pco2,
   }) {
     double sid = sodium - chlorine;
     double clNa = chlorine / sodium;

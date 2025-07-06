@@ -22,6 +22,7 @@ class MetabolicPrimaryCalculator extends FollowUpABGCalculator {
     required double chlorine,
     required double hco3,
     required double albumin,
+    required double pco2,
   }) {
     // Calculate SID2 (Strong Ion Difference)
     double sid2 = sodium - chlorine;
@@ -123,13 +124,14 @@ class RespiratoryPrimaryCalculator extends FollowUpABGCalculator {
     required double chlorine,
     required double hco3,
     required double albumin,
+    required double pco2,
   }) {
     // Calculate Expected HCO3 for respiratory cases
     double expectedHCO3;
-    if (hco3 < 40) {
-      expectedHCO3 = 24 - ((40 - hco3) * 0.1);
+    if (pco2 < 40) {
+      expectedHCO3 = 24 - ((40 - pco2) * 0.1);
     } else {
-      expectedHCO3 = 24 - ((40 - hco3) * 0.2);
+      expectedHCO3 = 24 - ((40 - pco2) * 0.2);
     }
 
     MetabolicLevel metabolicState;
