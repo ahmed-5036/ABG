@@ -10,210 +10,195 @@ class PresentMetabolicChangeTable extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final Size size = MediaQuery.sizeOf(context);
+    final values = ref.watch(inputStateProvider).values;
+    final double hco3 = values['hco3'] ?? 0;
+    final double pco2 = values['pco2'] ?? 0;
+    final double sodium = values['sodium'] ?? 0;
+    final double chlorine = values['chlorine'] ?? 0;
+    final double albumin = values['albumin'] ?? 0;
 
-    return SizedBox(
-      width: size.width * 0.95,
-      child: Table(
-        columnWidths: const <int, TableColumnWidth>{
-          0: FlexColumnWidth(3),
-          1: FlexColumnWidth(2),
-          2: FlexColumnWidth(3),
-        },
-        border: TableBorder.all(
-            color: AppColors.blue,
-            borderRadius: BorderRadius.circular(5),
-            width: 2),
-        children: <TableRow>[
-          TableRow(
-              decoration: BoxDecoration(color: AppColors.blue.withOpacity(0.3)),
-              children: const <Widget>[
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                  child: Text(
-                    "Items",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                  child: Text(
-                    "Value",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                  child: Text(
-                    "Definition",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-              ]),
-          // BB mEq/L
-          TableRow(children: <Widget>[
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                "BB mEq/L",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                ref.watch(bbCalculationProvider).toStringAsFixed(1),
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 12),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Text(
-                ref.watch(bbResultProvider).level.$1,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 12),
-              ),
-            ),
-          ]),
+    // 1. Measured HCO3
+    final String measuredHCO3 = hco3.toStringAsFixed(2);
 
-          // A-G
-          TableRow(children: <Widget>[
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                "A-G",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                ref.watch(aG2CalculationProvider).toStringAsFixed(1),
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 12),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Text(
-                ref.watch(correctedAGPresentProvider).toStringAsFixed(1),
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 12),
-              ),
-            ),
-          ]),
+    // 2. Expected HCO3
+    double expectedHCO3 =
+        pco2 < 40 ? 24 - ((40 - pco2) * 0.1) : 24 - ((40 - pco2) * 0.2);
+    final String expectedHCO3Str = expectedHCO3.toStringAsFixed(2);
+    final String expectedHCO3Formula = pco2 < 40
+        ? 'Expected HCO3 = 24 - [(40 - PCO2) x 0.1]'
+        : 'Expected HCO3 = 24 - [(40 - PCO2) x 0.2]';
 
-          // Corrected A-G Present
-          TableRow(children: <Widget>[
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                "Corrected A-G Present",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Text(
-                ref.watch(correctedAGPresentProvider).toStringAsFixed(1),
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 12),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                ref.watch(correctedAGPresentResultProvider).level.$1,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 12),
-              ),
-            ),
-          ]),
+    // 3. Expected to Measured HCO3 (compensation logic)
+    String compensation = '';
+    if (expectedHCO3 == hco3) {
+      if (hco3 == 24) {
+        compensation = 'Expected = Measured = 24: Normal compensation';
+      } else if (hco3 > 24) {
+        compensation =
+            'Expected = Measured > 24: Compensatory metabolic alkalosis';
+      } else {
+        compensation =
+            'Expected = Measured < 24: Compensatory metabolic acidosis';
+      }
+    } else if (expectedHCO3 > hco3) {
+      compensation = 'Expected > Measured: Non-compensatory metabolic acidosis';
+    } else {
+      compensation =
+          'Expected < Measured: Non-compensatory metabolic alkalosis';
+    }
 
-          // SIG mEq/L
-          TableRow(children: <Widget>[
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                "SIG mEq/L",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Text(
-                ref.watch(sigProvider).toStringAsFixed(1),
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 12),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                ref.watch(sigResultProvider).level.$1,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 12),
-              ),
-            ),
-          ]),
+    // 4. Measured Chloride
+    String clStatus = '';
+    if (chlorine > 107) {
+      clStatus = 'Hyperchloremia (>107)';
+    } else if (chlorine < 97) {
+      clStatus = 'Hypochloremia (<97)';
+    } else {
+      clStatus = 'Normochloremia (97-107)';
+    }
 
-          // Correlation(Correct-HCO3/HCO3)
-          TableRow(children: <Widget>[
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                "Correlation\n(Correct-HCO3/HCO3)",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 16),
-              child: Column(
-                children: <Widget>[
-                  Visibility(
-                    visible: false,
+    // 5. Corrected AG
+    double correctedAG = (sodium - chlorine - hco3) + ((4 - albumin) * 2.5);
+    String agStatus = '';
+    if (correctedAG > 12) {
+      agStatus = 'High AG (>12)';
+    } else if (correctedAG < 12) {
+      agStatus = 'Low AG (<12)';
+    } else {
+      agStatus = 'Normal AG (=12)';
+    }
+    final String agFormula =
+        '(Na - Cl - measured HCO3) + [(4 - albumin) x 2.5]';
+
+    // Diagnosis 1 (present metabolic change)
+    final String diagnosis = ref.watch(diagnosisSecondResultProvider);
+
+    return SingleChildScrollView(
+      child: SizedBox(
+        width: size.width * 0.99,
+        child: Table(
+          columnWidths: const <int, TableColumnWidth>{
+            0: FlexColumnWidth(3),
+            1: FlexColumnWidth(3),
+            2: FlexColumnWidth(6),
+          },
+          border: TableBorder.all(
+              color: AppColors.blue,
+              borderRadius: BorderRadius.circular(5),
+              width: 2),
+          children: <TableRow>[
+            TableRow(
+                decoration:
+                    BoxDecoration(color: AppColors.blue.withOpacity(0.3)),
+                children: const <Widget>[
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
                     child: Text(
-                      ref
-                          .watch(correctedHCO3TwoCorrelationProvider)
-                          .toStringAsFixed(1),
+                      "Item",
                       textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 12),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 11,
+                      ),
+                      softWrap: true,
+                      overflow: TextOverflow.visible,
+                      maxLines: null,
                     ),
                   ),
-                  Text(
-                    "${ref.watch(correctedHCO3ForCorrelationProvider).toStringAsFixed(1)}->${ref.watch(inputStateProvider).values['hco3']?.toStringAsFixed(1) ?? '0.0'}",
-                    style: const TextStyle(fontSize: 10),
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                "(${ref.watch(correlationHCO3Provider).level.$1})",
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 12),
-              ),
-            ),
-          ]),
-        ],
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+                    child: Text(
+                      "Value",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 11,
+                      ),
+                      softWrap: true,
+                      overflow: TextOverflow.visible,
+                      maxLines: null,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+                    child: Text(
+                      "Result",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 11,
+                      ),
+                      softWrap: true,
+                      overflow: TextOverflow.visible,
+                      maxLines: null,
+                    ),
+                  ),
+                ]),
+            ...[
+              [
+                "Measured HCO3",
+                measuredHCO3,
+                "-",
+              ],
+              [
+                "Expected HCO3",
+                expectedHCO3Str,
+                "-",
+              ],
+              [
+                "Expected vs Measured HCO3",
+                "${expectedHCO3.toStringAsFixed(1)}/${hco3.toStringAsFixed(1)}",
+                compensation,
+              ],
+              [
+                "Measured Chloride",
+                chlorine.toStringAsFixed(2),
+                clStatus,
+              ],
+              [
+                "Corrected AG",
+                correctedAG.toStringAsFixed(2),
+                agStatus,
+              ],
+            ]
+                .map((row) => TableRow(children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          row[0],
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 11),
+                          softWrap: true,
+                          overflow: TextOverflow.visible,
+                          maxLines: null,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          row[1],
+                          textAlign: TextAlign.left,
+                          style: const TextStyle(fontSize: 11),
+                          softWrap: true,
+                          overflow: TextOverflow.visible,
+                          maxLines: null,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          row[2],
+                          textAlign: TextAlign.left,
+                          style: const TextStyle(fontSize: 11),
+                          softWrap: true,
+                          overflow: TextOverflow.visible,
+                          maxLines: null,
+                        ),
+                      ),
+                    ]))
+                .toList(),
+          ],
+        ),
       ),
     );
   }

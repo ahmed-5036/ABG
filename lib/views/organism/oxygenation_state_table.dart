@@ -11,139 +11,108 @@ class OxygenationStateTable extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final Size size = MediaQuery.sizeOf(context);
+    final values = ref.watch(inputStateProvider).values;
+    final double fio2 = values['fio2'] ?? 0;
+    final double pco2 = values['pco2'] ?? 0;
+    final double pao2 = values['pao2'] ?? 0;
+    final double age = values['age'] ?? 0;
 
-    return SizedBox(
-      width: size.width * 0.95,
-      child: Table(
-        columnWidths: const <int, TableColumnWidth>{
-          0: FlexColumnWidth(3),
-          1: FlexColumnWidth(2),
-          2: FlexColumnWidth(2),
-        },
-        border: TableBorder.all(
-            color: AppColors.blue,
-            borderRadius: BorderRadius.circular(5),
-            width: 2),
-        children: <TableRow>[
-          TableRow(
-              decoration: BoxDecoration(color: AppColors.blue.withOpacity(0.3)),
-              children: const <Widget>[
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                  child: Text(
-                    StringConstants.items,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
+    // PAO2 calculation
+    final double pAO2 = (fio2 * 7) - (pco2 / 0.8);
+    final String pAO2Str = pAO2.toStringAsFixed(1);
+
+    // Measured A-a calculation
+    final double measuredAa = pAO2 - pao2;
+    final String measuredAaStr = measuredAa.toStringAsFixed(1);
+
+    // Expected A-a calculation
+    final double expectedAa = (fio2 / 100) * age + 2.5;
+    final String expectedAaStr = expectedAa.toStringAsFixed(1);
+
+    return SingleChildScrollView(
+      child: SizedBox(
+        width: size.width * 0.95,
+        child: Table(
+          columnWidths: const <int, TableColumnWidth>{
+            0: FlexColumnWidth(4),
+            1: FlexColumnWidth(6),
+          },
+          border: TableBorder.all(
+              color: AppColors.blue,
+              borderRadius: BorderRadius.circular(5),
+              width: 2),
+          children: <TableRow>[
+            TableRow(
+                decoration: BoxDecoration(color: AppColors.blue.withOpacity(0.3)),
+                children: const <Widget>[
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+                    child: Text(
+                      "Item",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 11,
+                      ),
+                      softWrap: true,
+                      overflow: TextOverflow.visible,
+                      maxLines: null,
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                  child: Text(
-                    StringConstants.value,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+                    child: Text(
+                      "Value",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 11,
+                      ),
+                      softWrap: true,
+                      overflow: TextOverflow.visible,
+                      maxLines: null,
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                  child: Text(
-                    "Definition",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-              ]),
-          // PAO2 mmHg
-          TableRow(children: <Widget>[
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                "PAO2 mmHg",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                ref.watch(pAOutputO2Provider).round().toString(),
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 14),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                "---",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14),
-              ),
-            ),
-          ]),
-          // A-a
-          TableRow(children: <Widget>[
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                "A-a",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                ref.watch(aAProvider).round().toString(),
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 14),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                "---",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14),
-              ),
-            ),
-          ]),
-          // Expected A-a
-          TableRow(children: <Widget>[
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
+                ]),
+            ...[
+              [
+                "PAO2",
+                pAO2Str,
+              ],
+              [
+                "Measured A-a",
+                measuredAaStr,
+              ],
+              [
                 "Expected A-a",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14),
+                expectedAaStr,
+              ],
+            ].map((row) => TableRow(children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  row[0],
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 11),
+                  softWrap: true,
+                  overflow: TextOverflow.visible,
+                  maxLines: null,
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                ref.watch(expectedAaProvider).toStringAsFixed(3),
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 14),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  row[1],
+                  textAlign: TextAlign.left,
+                  style: const TextStyle(fontSize: 11),
+                  softWrap: true,
+                  overflow: TextOverflow.visible,
+                  maxLines: null,
+                ),
               ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                "---",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14),
-              ),
-            ),
-          ]),
-        ],
+            ])).toList(),
+          ],
+        ),
       ),
     );
   }

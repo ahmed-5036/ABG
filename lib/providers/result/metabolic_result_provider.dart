@@ -442,7 +442,7 @@ final Provider<String> followUpABGFinalDiagnosisResultProvider =
           (ref.watch(diagnosisFourthResultProvider).level.$1 ==
               CalculationConstants.noData)
       ? "INCOMPLETE MEASURED ITEMS, PLEASE FILL THE INPUT FIELDS IN ANALYSIS PAGE"
-      : "Patient has ${ref.watch(diagnosisSecondResultProvider)} with ${ref.watch(diagnosisThirdResultProvider)} with ${ref.watch(diagnosisFourthResultProvider).level.$1}";
+      : "Patient has ${ref.watch(diagnosisThirdResultProvider)} with ${ref.watch(diagnosisSecondResultProvider)} and ${ref.watch(diagnosisFourthResultProvider).level.$1}";
 });
 
 // Corrected CL Provider
