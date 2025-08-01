@@ -133,37 +133,37 @@ class ResultsDataPage extends ConsumerWidget {
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: SingleChildScrollView(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Text(
-                                    ref.watch(diagnosisSecondResultProvider),
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                    ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Text(
+                                  ref.watch(diagnosisSecondResultProvider),
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
                                   ),
-                                  const SizedBox(height: 16),
-                                  const PresentMetabolicChangeTable(),
-                                  const SizedBox(height: 16),
-                                  SizedBox(
-                                    width: double.infinity,
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.red[900],
-                                        foregroundColor: Colors.white,
-                                        minimumSize: const Size.fromHeight(48),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(8),
-                                        ),
+                                ),
+                                const SizedBox(height: 16),
+                                const PresentMetabolicChangeTable(),
+                                const SizedBox(height: 16),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red[900],
+                                      foregroundColor: Colors.white,
+                                      minimumSize: const Size.fromHeight(48),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
                                       ),
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(),
-                                      child: const Text('Close'),
                                     ),
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                              child: const Text('Close'),
                                   ),
-                                ],
+                                ),
+                              ],
                               ),
                             ),
                           ),

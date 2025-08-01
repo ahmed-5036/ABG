@@ -434,15 +434,26 @@ final Provider<String> followUpABGFinalDiagnosisResultProvider =
       calculatorType != CalculatorType.followUpABGRespiratory) {
     return ref.watch(finalDiagnosisResultProvider);
   }
-
-  return (ref.watch(diagnosisSecondResultProvider) ==
-              CalculationConstants.noData) ||
-          (ref.watch(diagnosisThirdResultProvider) ==
-              CalculationConstants.noData) ||
-          (ref.watch(diagnosisFourthResultProvider).level.$1 ==
-              CalculationConstants.noData)
-      ? "INCOMPLETE MEASURED ITEMS, PLEASE FILL THE INPUT FIELDS IN ANALYSIS PAGE"
-      : "Patient has ${ref.watch(diagnosisThirdResultProvider)} with ${ref.watch(diagnosisSecondResultProvider)} and ${ref.watch(diagnosisFourthResultProvider).level.$1}";
+  if (calculatorType == CalculatorType.followUpABGRespiratory) {
+    return (ref.watch(diagnosisSecondResultProvider) ==
+                CalculationConstants.noData) ||
+            (ref.watch(diagnosisThirdResultProvider) ==
+                CalculationConstants.noData) ||
+            (ref.watch(diagnosisFourthResultProvider).level.$1 ==
+                CalculationConstants.noData)
+        ? "INCOMPLETE MEASURED ITEMS, PLEASE FILL THE INPUT FIELDS IN ANALYSIS PAGE"
+        : "Patient has ${ref.watch(diagnosisThirdResultProvider)} with ${ref.watch(diagnosisSecondResultProvider)} and ${ref.watch(diagnosisFourthResultProvider).level.$1}";
+  } else if (calculatorType == CalculatorType.followUpABGMetabolic) {
+    return (ref.watch(diagnosisSecondResultProvider) ==
+                CalculationConstants.noData) ||
+            (ref.watch(diagnosisThirdResultProvider) ==
+                CalculationConstants.noData) ||
+            (ref.watch(diagnosisFourthResultProvider).level.$1 ==
+                CalculationConstants.noData)
+        ? "INCOMPLETE MEASURED ITEMS, PLEASE FILL THE INPUT FIELDS IN ANALYSIS PAGE"
+        : "Patient has ${ref.watch(diagnosisSecondResultProvider)} with ${ref.watch(diagnosisThirdResultProvider)} and ${ref.watch(diagnosisFourthResultProvider).level.$1}";
+  }
+  return "INCOMPLETE MEASURED ITEMS, PLEASE FILL THE INPUT FIELDS IN ANALYSIS PAGE";
 });
 
 // Corrected CL Provider
