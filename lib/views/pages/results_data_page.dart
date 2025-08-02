@@ -334,7 +334,7 @@ class ResultsDataPage extends ConsumerWidget {
                         actions: <SheetAction<String>>[
                           const SheetAction<String>(
                             label: StringConstants.newPatient,
-                            key: RouteNames.patientTypeSelection,
+                            key: RouteNames.initialSelection,
                           ),
                           const SheetAction<String>(
                             label: StringConstants.goBack,
@@ -598,7 +598,9 @@ class ResultsDataPage extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Text(
-                        ref.watch(diagnosisThirdResultProvider),
+                        calculatorType == CalculatorType.followUpABGMetabolic
+                            ? ref.watch(diagnosisThirdResultProvider)
+                            : ref.watch(ventilatoryStateDiagnosisProvider),
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
@@ -735,7 +737,7 @@ class ResultsDataPage extends ConsumerWidget {
               actions: <SheetAction<String>>[
                 const SheetAction<String>(
                   label: StringConstants.newPatient,
-                  key: RouteNames.patientTypeSelection,
+                  key: RouteNames.initialSelection,
                 ),
                 const SheetAction<String>(
                   label: StringConstants.goBack,

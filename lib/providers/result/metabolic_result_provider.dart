@@ -444,7 +444,7 @@ final Provider<String> followUpABGFinalDiagnosisResultProvider =
       ? "INCOMPLETE MEASURED ITEMS, PLEASE FILL THE INPUT FIELDS IN ANALYSIS PAGE"
       : calculatorType == CalculatorType.followUpABGMetabolic
           ? "Patient has ${ref.watch(metabolicStateDiagnosisProvider)} with ${ref.watch(diagnosisThirdResultProvider)} and ${ref.watch(diagnosisFourthResultProvider).level.$1}"
-          : "Patient has ${ref.watch(diagnosisThirdResultProvider)} with ${ref.watch(respiratoryMetabolicStateDiagnosisProvider)} and ${ref.watch(diagnosisFourthResultProvider).level.$1}";
+          : "Patient has ${ref.watch(ventilatoryStateDiagnosisProvider)} with ${ref.watch(respiratoryMetabolicStateDiagnosisProvider)} and ${ref.watch(diagnosisFourthResultProvider).level.$1}";
 });
 
 // Corrected CL Provider
@@ -618,4 +618,29 @@ final Provider<String> respiratoryMetabolicStateDiagnosisProvider = Provider<Str
 
   // Concatenate the results in a readable format
   return " $compensationStatus with $clStatus and $agStatus";
+});
+
+// Ventilatory State Diagnosis Provider for Primary Respiratory Insult
+final Provider<String> ventilatoryStateDiagnosisProvider = Provider<String>((Ref ref) {
+  final CalculatorType calculatorType = ref.watch(calculatorTypeProvider);
+  
+  // Only for primary respiratory insult
+  if (calculatorType != CalculatorType.followUpABGRespiratory) {
+    return ref.watch(diagnosisThirdResultProvider);
+  }
+
+  final Map<String, double> values = ref.watch(inputStateProvider).values;
+  final double pco2 = values['pco2'] ?? 0;
+
+  // Determine ventilatory state based on PCO2
+  String ventilatoryStatus = '';
+  if (pco2 > 40) {
+    ventilatoryStatus = 'Respiratory Acidosis';
+  } else if (pco2 < 40) {
+    ventilatoryStatus = 'Respiratory Alkalosis';
+  } else {
+    ventilatoryStatus = 'Normocarbia';
+  }
+
+  return ventilatoryStatus;
 });

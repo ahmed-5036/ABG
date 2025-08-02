@@ -125,11 +125,11 @@ class VentilatoryStateTable extends ConsumerWidget {
         ),
       );
     } else {
-      // Primary Respiratory Insult Logic (existing code)
+      // Primary Respiratory Insult Logic
       // Measured PCO2
       final String measuredPCO2 = pco2.toStringAsFixed(1);
 
-      // PCO2 Status
+      // PCO2 Status - Only basic 3 states for primary respiratory insult
       String pco2Status = '';
       if (pco2 > 40) {
         pco2Status = 'Respiratory Acidosis';
@@ -140,7 +140,7 @@ class VentilatoryStateTable extends ConsumerWidget {
       }
 
       // Diagnosis 2 (ventilatory)
-      final String diagnosis = ref.watch(diagnosisThirdResultProvider);
+      final String diagnosis = ref.watch(ventilatoryStateDiagnosisProvider);
 
       return SingleChildScrollView(
         child: SizedBox(
@@ -212,43 +212,41 @@ class VentilatoryStateTable extends ConsumerWidget {
                   measuredPCO2,
                   pco2Status,
                 ],
-              ]
-                  .map((row) => TableRow(children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            row[0],
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 11),
-                            softWrap: true,
-                            overflow: TextOverflow.visible,
-                            maxLines: null,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            row[1],
-                            textAlign: TextAlign.left,
-                            style: const TextStyle(fontSize: 11),
-                            softWrap: true,
-                            overflow: TextOverflow.visible,
-                            maxLines: null,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            row[2],
-                            textAlign: TextAlign.left,
-                            style: const TextStyle(fontSize: 11),
-                            softWrap: true,
-                            overflow: TextOverflow.visible,
-                            maxLines: null,
-                          ),
-                        ),
-                      ]))
-                  .toList(),
+              ].map((row) => TableRow(children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    row[0],
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 11),
+                    softWrap: true,
+                    overflow: TextOverflow.visible,
+                    maxLines: null,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    row[1],
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(fontSize: 11),
+                    softWrap: true,
+                    overflow: TextOverflow.visible,
+                    maxLines: null,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    row[2],
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(fontSize: 11),
+                    softWrap: true,
+                    overflow: TextOverflow.visible,
+                    maxLines: null,
+                  ),
+                ),
+              ])).toList(),
             ],
           ),
         ),

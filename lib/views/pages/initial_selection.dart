@@ -6,6 +6,7 @@ import '../../resources/constants/app_images.dart';
 import '../../resources/constants/route_names.dart';
 import '../../services/calculators/calculator_factory.dart';
 import '../atoms/primary_button.dart';
+import '../organism/app_drawer.dart';
 
 // Enum for initial options
 enum InitialOption { 
@@ -33,6 +34,7 @@ class InitialSelectionView extends ConsumerWidget {
           ),
         ),
       ),
+      drawer: const AppDrawer(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
