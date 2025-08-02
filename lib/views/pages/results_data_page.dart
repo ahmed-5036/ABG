@@ -542,7 +542,9 @@ class ResultsDataPage extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Text(
-                        ref.watch(diagnosisSecondResultProvider),
+                        calculatorType == CalculatorType.followUpABGMetabolic
+                            ? ref.watch(metabolicStateDiagnosisProvider)
+                            : ref.watch(respiratoryMetabolicStateDiagnosisProvider),
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,

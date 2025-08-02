@@ -234,7 +234,9 @@ class PresentMetabolicChangeTable extends ConsumerWidget {
           '(Na - Cl - measured HCO3) + [(4 - albumin) x 2.5]';
 
       // Diagnosis 1 (present metabolic change)
-      final String diagnosis = ref.watch(diagnosisSecondResultProvider);
+      final String diagnosis = isPrimaryMetabolic 
+          ? ref.watch(metabolicStateDiagnosisProvider)
+          : ref.watch(respiratoryMetabolicStateDiagnosisProvider);
 
       return SingleChildScrollView(
         child: SizedBox(

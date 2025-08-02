@@ -434,26 +434,17 @@ final Provider<String> followUpABGFinalDiagnosisResultProvider =
       calculatorType != CalculatorType.followUpABGRespiratory) {
     return ref.watch(finalDiagnosisResultProvider);
   }
-  if (calculatorType == CalculatorType.followUpABGRespiratory) {
-    return (ref.watch(diagnosisSecondResultProvider) ==
-                CalculationConstants.noData) ||
-            (ref.watch(diagnosisThirdResultProvider) ==
-                CalculationConstants.noData) ||
-            (ref.watch(diagnosisFourthResultProvider).level.$1 ==
-                CalculationConstants.noData)
-        ? "INCOMPLETE MEASURED ITEMS, PLEASE FILL THE INPUT FIELDS IN ANALYSIS PAGE"
-        : "Patient has ${ref.watch(diagnosisThirdResultProvider)} with ${ref.watch(diagnosisSecondResultProvider)} and ${ref.watch(diagnosisFourthResultProvider).level.$1}";
-  } else if (calculatorType == CalculatorType.followUpABGMetabolic) {
-    return (ref.watch(diagnosisSecondResultProvider) ==
-                CalculationConstants.noData) ||
-            (ref.watch(diagnosisThirdResultProvider) ==
-                CalculationConstants.noData) ||
-            (ref.watch(diagnosisFourthResultProvider).level.$1 ==
-                CalculationConstants.noData)
-        ? "INCOMPLETE MEASURED ITEMS, PLEASE FILL THE INPUT FIELDS IN ANALYSIS PAGE"
-        : "Patient has ${ref.watch(diagnosisSecondResultProvider)} with ${ref.watch(diagnosisThirdResultProvider)} and ${ref.watch(diagnosisFourthResultProvider).level.$1}";
-  }
-  return "INCOMPLETE MEASURED ITEMS, PLEASE FILL THE INPUT FIELDS IN ANALYSIS PAGE";
+
+  return (ref.watch(diagnosisSecondResultProvider) ==
+              CalculationConstants.noData) ||
+          (ref.watch(diagnosisThirdResultProvider) ==
+              CalculationConstants.noData) ||
+          (ref.watch(diagnosisFourthResultProvider).level.$1 ==
+              CalculationConstants.noData)
+      ? "INCOMPLETE MEASURED ITEMS, PLEASE FILL THE INPUT FIELDS IN ANALYSIS PAGE"
+      : calculatorType == CalculatorType.followUpABGMetabolic
+          ? "Patient has ${ref.watch(diagnosisSecondResultProvider)} with ${ref.watch(diagnosisThirdResultProvider)} and ${ref.watch(diagnosisFourthResultProvider).level.$1}"
+          : "Patient has ${ref.watch(diagnosisThirdResultProvider)} with ${ref.watch(diagnosisSecondResultProvider)} and ${ref.watch(diagnosisFourthResultProvider).level.$1}";
 });
 
 // Corrected CL Provider
@@ -506,4 +497,125 @@ final Provider<double> correctedAGHighABGProvider = Provider<double>((Ref ref) {
   final double albumin = values['albumin'] ?? 0;
 
   return (sodium - chlorine - hco3) + ((4 - albumin) * 2.5);
+});
+
+// Metabolic State Diagnosis Provider for Primary Metabolic Insult
+final Provider<String> metabolicStateDiagnosisProvider = Provider<String>((Ref ref) {
+  final CalculatorType calculatorType = ref.watch(calculatorTypeProvider);
+  
+  // Only for primary metabolic insult
+  if (calculatorType != CalculatorType.followUpABGMetabolic) {
+    return ref.watch(diagnosisSecondResultProvider);
+  }
+
+  final Map<String, double> values = ref.watch(inputStateProvider).values;
+  final double hco3 = values['hco3'] ?? 0;
+  final double sodium = values['sodium'] ?? 0;
+  final double chlorine = values['chlorine'] ?? 0;
+  final double albumin = values['albumin'] ?? 0;
+
+  // Determine HCO3 status
+  String hco3Status = '';
+  if (hco3 == 24) {
+    hco3Status = 'Normal Metabolic';
+  } else if (hco3 < 24) {
+    hco3Status = 'Metabolic Acidosis';
+  } else {
+    hco3Status = 'Metabolic Alkalosis';
+  }
+
+  // Determine CL status
+  String clStatus = '';
+  if (chlorine > 107) {
+    clStatus = 'Hyperchloremic';
+  } else if (chlorine < 97) {
+    clStatus = 'Hypochloremic';
+  } else {
+    clStatus = 'Normo-chloremic';
+  }
+
+  // Determine Corrected AG status
+  double correctedAG = (sodium - chlorine - hco3) + ((4 - albumin) * 2.5);
+  String agStatus = '';
+  if (correctedAG > 12) {
+    agStatus = 'High AG';
+  } else if (correctedAG < 12) {
+    agStatus = 'Low AG';
+  } else {
+    agStatus = 'Normal AG';
+  }
+
+  // Concatenate the results in a readable format
+  return "$hco3Status with $clStatus and $agStatus";
+});
+
+// Respiratory Metabolic State Diagnosis Provider for Primary Respiratory Insult
+final Provider<String> respiratoryMetabolicStateDiagnosisProvider = Provider<String>((Ref ref) {
+  final CalculatorType calculatorType = ref.watch(calculatorTypeProvider);
+  
+  // Only for primary respiratory insult
+  if (calculatorType != CalculatorType.followUpABGRespiratory) {
+    return ref.watch(diagnosisSecondResultProvider);
+  }
+
+  final Map<String, double> values = ref.watch(inputStateProvider).values;
+  final double hco3 = values['hco3'] ?? 0;
+  final double pco2 = values['pco2'] ?? 0;
+  final double sodium = values['sodium'] ?? 0;
+  final double chlorine = values['chlorine'] ?? 0;
+  final double albumin = values['albumin'] ?? 0;
+
+  // 1. Measured HCO3 status
+  String measuredHCO3Status = '';
+  if (hco3 == 24) {
+    measuredHCO3Status = 'Normal HCO3';
+  } else if (hco3 < 24) {
+    measuredHCO3Status = 'Low HCO3';
+  } else {
+    measuredHCO3Status = 'High HCO3';
+  }
+
+  // 2. Expected HCO3 (just show the value, no status needed)
+  double expectedHCO3 = pco2 < 40 ? 24 - ((40 - pco2) * 0.1) : 24 - ((40 - pco2) * 0.2);
+  String expectedHCO3Status = 'Expected HCO3 ${expectedHCO3.toStringAsFixed(1)}';
+
+  // 3. Expected vs Measured HCO3 (compensation logic)
+  String compensationStatus = '';
+  if (expectedHCO3 == hco3) {
+    if (hco3 == 24) {
+      compensationStatus = 'Normal compensation';
+    } else if (hco3 > 24) {
+      compensationStatus = 'Compensatory metabolic alkalosis';
+    } else {
+      compensationStatus = 'Compensatory metabolic acidosis';
+    }
+  } else if (expectedHCO3 > hco3) {
+    compensationStatus = 'Non-compensatory metabolic acidosis';
+  } else {
+    compensationStatus = 'Non-compensatory metabolic alkalosis';
+  }
+
+  // 4. Measured Chloride status
+  String clStatus = '';
+  if (chlorine > 107) {
+    clStatus = 'Hyperchloremia';
+  } else if (chlorine < 97) {
+    clStatus = 'Hypochloremia';
+  } else {
+    clStatus = 'Normochloremia';
+  }
+
+  // 5. Corrected AG status
+  double correctedAG = (sodium - chlorine - hco3) + ((4 - albumin) * 2.5);
+  String agStatus = '';
+  if (correctedAG > 12) {
+    agStatus = 'High AG';
+  } else if (correctedAG < 12) {
+    agStatus = 'Low AG';
+  } else {
+    agStatus = 'Normal AG';
+  }
+
+  // Concatenate the results in a readable format
+  return " $compensationStatus with $clStatus and $agStatus";
 });
