@@ -443,8 +443,8 @@ final Provider<String> followUpABGFinalDiagnosisResultProvider =
               CalculationConstants.noData)
       ? "INCOMPLETE MEASURED ITEMS, PLEASE FILL THE INPUT FIELDS IN ANALYSIS PAGE"
       : calculatorType == CalculatorType.followUpABGMetabolic
-          ? "Patient has ${ref.watch(diagnosisSecondResultProvider)} with ${ref.watch(diagnosisThirdResultProvider)} and ${ref.watch(diagnosisFourthResultProvider).level.$1}"
-          : "Patient has ${ref.watch(diagnosisThirdResultProvider)} with ${ref.watch(diagnosisSecondResultProvider)} and ${ref.watch(diagnosisFourthResultProvider).level.$1}";
+          ? "Patient has ${ref.watch(metabolicStateDiagnosisProvider)} with ${ref.watch(diagnosisThirdResultProvider)} and ${ref.watch(diagnosisFourthResultProvider).level.$1}"
+          : "Patient has ${ref.watch(diagnosisThirdResultProvider)} with ${ref.watch(respiratoryMetabolicStateDiagnosisProvider)} and ${ref.watch(diagnosisFourthResultProvider).level.$1}";
 });
 
 // Corrected CL Provider
