@@ -443,7 +443,7 @@ final Provider<String> followUpABGFinalDiagnosisResultProvider =
               CalculationConstants.noData)
       ? "INCOMPLETE MEASURED ITEMS, PLEASE FILL THE INPUT FIELDS IN ANALYSIS PAGE"
       : calculatorType == CalculatorType.followUpABGMetabolic
-          ? "Patient has ${ref.watch(metabolicStateDiagnosisProvider)} with ${ref.watch(diagnosisThirdResultProvider)} and ${ref.watch(diagnosisFourthResultProvider).level.$1}"
+          ? "Patient has ${ref.watch(metabolicStateDiagnosisProvider)} with ${ref.watch(metabolicVentilatoryStateDiagnosisProvider)} and ${ref.watch(diagnosisFourthResultProvider).level.$1}"
           : "Patient has ${ref.watch(ventilatoryStateDiagnosisProvider)} with ${ref.watch(respiratoryMetabolicStateDiagnosisProvider)} and ${ref.watch(diagnosisFourthResultProvider).level.$1}";
 });
 
@@ -643,4 +643,46 @@ final Provider<String> ventilatoryStateDiagnosisProvider = Provider<String>((Ref
   }
 
   return ventilatoryStatus;
+});
+
+// Metabolic Ventilatory State Diagnosis Provider for Primary Metabolic Insult
+final Provider<String> metabolicVentilatoryStateDiagnosisProvider = Provider<String>((Ref ref) {
+  final CalculatorType calculatorType = ref.watch(calculatorTypeProvider);
+  
+  // Only for primary metabolic insult
+  if (calculatorType != CalculatorType.followUpABGMetabolic) {
+    return ref.watch(diagnosisThirdResultProvider);
+  }
+
+  final Map<String, double> values = ref.watch(inputStateProvider).values;
+  final double pco2 = values['pco2'] ?? 0;
+  final double hco3 = values['hco3'] ?? 0;
+
+  // Calculate Expected PCO2
+  double expectedPCO2;
+  if (hco3 < 24) {
+    expectedPCO2 = 40 - ((24 - hco3) * 1.2);
+  } else {
+    expectedPCO2 = 40 - ((24 - hco3) * 0.6);
+  }
+
+  // Determine ventilatory state diagnosis (only the diagnosis part, no ranges)
+  String ventilatoryDiagnosis = '';
+  if (expectedPCO2 < pco2) {
+    ventilatoryDiagnosis = 'Non-compensatory hypo ventilatory respiratory acidosis';
+  } else if (expectedPCO2 > pco2) {
+    ventilatoryDiagnosis = 'Non-compensatory hyper ventilatory respiratory alkalosis';
+  } else if (expectedPCO2 == pco2) {
+    if (pco2 < 40) {
+      ventilatoryDiagnosis = 'Compensatory respiratory alkalosis';
+    } else if (pco2 > 40) {
+      ventilatoryDiagnosis = 'Compensatory respiratory acidosis';
+    } else {
+      ventilatoryDiagnosis = 'Respiratory compensation';
+    }
+  } else if ((expectedPCO2 - pco2).abs() <= 3) {
+    ventilatoryDiagnosis = 'Respiratory compensation';
+  }
+
+  return ventilatoryDiagnosis;
 });

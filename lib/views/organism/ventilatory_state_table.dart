@@ -37,13 +37,32 @@ class VentilatoryStateTable extends ConsumerWidget {
       }
       final String expectedPCO2Str = expectedPCO2.toStringAsFixed(1);
 
+      // 3. Expected PCO2 to measured PCO2 (compensation logic)
+      String compensationResult = 'No compensation';
+      if (expectedPCO2 < pco2) {
+        compensationResult = 'non-compensatory hypo ventilatory respiratory acidosis';
+      } else if (expectedPCO2 > pco2) {
+        compensationResult = 'non-compensatory hyper ventilatory respiratory alkalosis';
+      } else if (expectedPCO2 == pco2) {
+        if (pco2 < 40) {
+          compensationResult = ' <40 = compensatory respiratory alkalosis';
+        } else if (pco2 > 40) {
+          compensationResult = 'compensatory respiratory acidosis';
+        } else {
+          compensationResult = 'respiratory compensation';
+        }
+      } else if ((expectedPCO2 - pco2).abs() <= 3) {
+        compensationResult = 'respiratory compensation';
+      }
+
       return SingleChildScrollView(
         child: SizedBox(
-          width: size.width * 0.95,
+          width: size.width * 0.99,
           child: Table(
             columnWidths: const <int, TableColumnWidth>{
-              0: FlexColumnWidth(4),
-              1: FlexColumnWidth(6),
+              0: FlexColumnWidth(3.5),
+              1: FlexColumnWidth(2.5),
+              2: FlexColumnWidth(4),
             },
             border: TableBorder.all(
                 color: AppColors.blue,
@@ -51,12 +70,10 @@ class VentilatoryStateTable extends ConsumerWidget {
                 width: 2),
             children: <TableRow>[
               TableRow(
-                  decoration:
-                      BoxDecoration(color: AppColors.blue.withOpacity(0.3)),
+                  decoration: BoxDecoration(color: AppColors.blue.withOpacity(0.3)),
                   children: const <Widget>[
                     Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
                       child: Text(
                         "Item",
                         textAlign: TextAlign.center,
@@ -70,10 +87,23 @@ class VentilatoryStateTable extends ConsumerWidget {
                       ),
                     ),
                     Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
                       child: Text(
                         "Value",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 11,
+                        ),
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
+                        maxLines: null,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+                      child: Text(
+                        "Result",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -89,37 +119,53 @@ class VentilatoryStateTable extends ConsumerWidget {
                 [
                   "Measured PCO2",
                   measuredPCO2,
+                  "-",
                 ],
                 [
                   "Expected PCO2",
-                  "$expectedPCO2Str\n$expectedPCO2Formula",
+                  "$expectedPCO2Str",
+                  "-",
                 ],
-              ]
-                  .map((row) => TableRow(children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            row[0],
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 11),
-                            softWrap: true,
-                            overflow: TextOverflow.visible,
-                            maxLines: null,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            row[1],
-                            textAlign: TextAlign.left,
-                            style: const TextStyle(fontSize: 11),
-                            softWrap: true,
-                            overflow: TextOverflow.visible,
-                            maxLines: null,
-                          ),
-                        ),
-                      ]))
-                  .toList(),
+                [
+                  "Expected PCO2 to measured PCO2",
+                  "${expectedPCO2.toStringAsFixed(1)}/${pco2.toStringAsFixed(1)}",
+                  compensationResult,
+                ],
+              ].map((row) => TableRow(children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    row[0],
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 11),
+                    softWrap: true,
+                    overflow: TextOverflow.visible,
+                    maxLines: null,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    row[1],
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(fontSize: 11),
+                    softWrap: true,
+                    overflow: TextOverflow.visible,
+                    maxLines: null,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    row[2],
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(fontSize: 11),
+                    softWrap: true,
+                    overflow: TextOverflow.visible,
+                    maxLines: null,
+                  ),
+                ),
+              ])).toList(),
             ],
           ),
         ),
@@ -140,7 +186,9 @@ class VentilatoryStateTable extends ConsumerWidget {
       }
 
       // Diagnosis 2 (ventilatory)
-      final String diagnosis = ref.watch(ventilatoryStateDiagnosisProvider);
+      final String diagnosis = isPrimaryMetabolic 
+          ? ref.watch(metabolicVentilatoryStateDiagnosisProvider)
+          : ref.watch(ventilatoryStateDiagnosisProvider);
 
       return SingleChildScrollView(
         child: SizedBox(

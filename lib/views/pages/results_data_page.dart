@@ -599,7 +599,7 @@ class ResultsDataPage extends ConsumerWidget {
                     children: <Widget>[
                       Text(
                         calculatorType == CalculatorType.followUpABGMetabolic
-                            ? ref.watch(diagnosisThirdResultProvider)
+                            ? ref.watch(metabolicVentilatoryStateDiagnosisProvider)
                             : ref.watch(ventilatoryStateDiagnosisProvider),
                         textAlign: TextAlign.center,
                         style: const TextStyle(
