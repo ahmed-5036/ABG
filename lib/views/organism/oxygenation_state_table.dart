@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../providers/index.dart';
 import '../../resources/constants/app_colors.dart';
-import '../../resources/constants/string_constants.dart';
 
 class OxygenationStateTable extends ConsumerWidget {
   const OxygenationStateTable({super.key});
@@ -11,7 +10,7 @@ class OxygenationStateTable extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final Size size = MediaQuery.sizeOf(context);
-    final values = ref.watch(inputStateProvider).values;
+    final Map<String, double> values = ref.watch(inputStateProvider).values;
     final double fio2 = values['fio2'] ?? 0;
     final double pco2 = values['pco2'] ?? 0;
     final double pao2 = values['pao2'] ?? 0;
@@ -74,20 +73,20 @@ class OxygenationStateTable extends ConsumerWidget {
                     ),
                   ),
                 ]),
-            ...[
-              [
+            ...<List<String>>[
+              <String>[
                 "PAO2",
                 pAO2Str,
               ],
-              [
+              <String>[
                 "Measured A-a",
                 measuredAaStr,
               ],
-              [
+              <String>[
                 "Expected A-a",
                 expectedAaStr,
               ],
-            ].map((row) => TableRow(children: [
+            ].map((List<String> row) => TableRow(children: <Widget>[
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
@@ -110,7 +109,7 @@ class OxygenationStateTable extends ConsumerWidget {
                   maxLines: null,
                 ),
               ),
-            ])).toList(),
+            ])),
           ],
         ),
       ),

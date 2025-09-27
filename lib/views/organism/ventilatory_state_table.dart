@@ -3,9 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../providers/index.dart';
 import '../../resources/constants/app_colors.dart';
-import '../../resources/constants/string_constants.dart';
 import '../../services/calculators/calculator_factory.dart';
-import '../../services/enum.dart';
 
 class VentilatoryStateTable extends ConsumerWidget {
   const VentilatoryStateTable({super.key});
@@ -13,7 +11,7 @@ class VentilatoryStateTable extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final Size size = MediaQuery.sizeOf(context);
-    final values = ref.watch(inputStateProvider).values;
+    final Map<String, double> values = ref.watch(inputStateProvider).values;
     final double pco2 = values['pco2'] ?? 0;
     final double hco3 = values['hco3'] ?? 0;
     final CalculatorType calculatorType = ref.watch(calculatorTypeProvider);
@@ -115,23 +113,23 @@ class VentilatoryStateTable extends ConsumerWidget {
                       ),
                     ),
                   ]),
-              ...[
-                [
+              ...<List<String>>[
+                <String>[
                   "Measured PCO2",
                   measuredPCO2,
                   "-",
                 ],
-                [
+                <String>[
                   "Expected PCO2",
-                  "$expectedPCO2Str",
+                  expectedPCO2Str,
                   "-",
                 ],
-                [
+                <String>[
                   "Expected PCO2 to measured PCO2",
                   "${expectedPCO2.toStringAsFixed(1)}/${pco2.toStringAsFixed(1)}",
                   compensationResult,
                 ],
-              ].map((row) => TableRow(children: [
+              ].map((List<String> row) => TableRow(children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
@@ -165,7 +163,7 @@ class VentilatoryStateTable extends ConsumerWidget {
                     maxLines: null,
                   ),
                 ),
-              ])).toList(),
+              ])),
             ],
           ),
         ),
@@ -254,13 +252,13 @@ class VentilatoryStateTable extends ConsumerWidget {
                       ),
                     ),
                   ]),
-              ...[
-                [
+              ...<List<String>>[
+                <String>[
                   "Measured PCO2",
                   measuredPCO2,
                   pco2Status,
                 ],
-              ].map((row) => TableRow(children: [
+              ].map((List<String> row) => TableRow(children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
@@ -294,7 +292,7 @@ class VentilatoryStateTable extends ConsumerWidget {
                     maxLines: null,
                   ),
                 ),
-              ])).toList(),
+              ])),
             ],
           ),
         ),

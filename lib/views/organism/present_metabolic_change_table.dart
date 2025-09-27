@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/index.dart';
 import '../../resources/constants/app_colors.dart';
 import '../../services/calculators/calculator_factory.dart';
-import '../../services/enum.dart';
 
 class PresentMetabolicChangeTable extends ConsumerWidget {
   const PresentMetabolicChangeTable({super.key});
@@ -12,7 +11,7 @@ class PresentMetabolicChangeTable extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final Size size = MediaQuery.sizeOf(context);
-    final values = ref.watch(inputStateProvider).values;
+    final Map<String, double> values = ref.watch(inputStateProvider).values;
     final double hco3 = values['hco3'] ?? 0;
     final double pco2 = values['pco2'] ?? 0;
     final double sodium = values['sodium'] ?? 0;
@@ -120,24 +119,24 @@ class PresentMetabolicChangeTable extends ConsumerWidget {
                       ),
                     ),
                   ]),
-              ...[
-                [
+              ...<List<String>>[
+                <String>[
                   "Measured HCO3",
                   measuredHCO3,
                   hco3Status,
                 ],
-                [
+                <String>[
                   "CL",
                   chlorine.toStringAsFixed(2),
                   clStatus,
                 ],
-                [
+                <String>[
                   "Corrected AG",
                   correctedAG.toStringAsFixed(2),
                   agStatus,
                 ],
               ]
-                  .map((row) => TableRow(children: [
+                  .map((List<String> row) => TableRow(children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
@@ -172,7 +171,7 @@ class PresentMetabolicChangeTable extends ConsumerWidget {
                           ),
                         ),
                       ]))
-                  .toList(),
+                  ,
             ],
           ),
         ),
@@ -230,7 +229,7 @@ class PresentMetabolicChangeTable extends ConsumerWidget {
       } else {
         agStatus = 'Normal AG (=12)';
       }
-      final String agFormula =
+      const String agFormula =
           '(Na - Cl - measured HCO3) + [(4 - albumin) x 2.5]';
 
       // Diagnosis 1 (present metabolic change)
@@ -302,34 +301,34 @@ class PresentMetabolicChangeTable extends ConsumerWidget {
                       ),
                     ),
                   ]),
-              ...[
-                [
+              ...<List<String>>[
+                <String>[
                   "Measured HCO3",
                   measuredHCO3,
                   "-",
                 ],
-                [
+                <String>[
                   "Expected HCO3",
                   expectedHCO3Str,
                   "-",
                 ],
-                [
+                <String>[
                   "Expected vs Measured HCO3",
                   "${expectedHCO3.toStringAsFixed(1)}/${hco3.toStringAsFixed(1)}",
                   compensation,
                 ],
-                [
+                <String>[
                   "Measured Chloride",
                   chlorine.toStringAsFixed(2),
                   clStatus,
                 ],
-                [
+                <String>[
                   "Corrected AG",
                   correctedAG.toStringAsFixed(2),
                   agStatus,
                 ],
               ]
-                  .map((row) => TableRow(children: [
+                  .map((List<String> row) => TableRow(children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
@@ -364,7 +363,7 @@ class PresentMetabolicChangeTable extends ConsumerWidget {
                           ),
                         ),
                       ]))
-                  .toList(),
+                  ,
             ],
           ),
         ),
