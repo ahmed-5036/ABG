@@ -20,6 +20,7 @@ import '../organism/present_metabolic_change_table.dart';
 import '../organism/start_metabolic_state_table.dart';
 import '../organism/ventilatory_state_table.dart';
 import '../organism/oxygenation_state_table.dart';
+import '../../services/pdf_service.dart';
 
 class ResultsDataPage extends ConsumerWidget {
   const ResultsDataPage({super.key});
@@ -133,37 +134,38 @@ class ResultsDataPage extends ConsumerWidget {
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: SingleChildScrollView(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Text(
-                                  ref.watch(diagnosisSecondResultProvider),
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                                const PresentMetabolicChangeTable(),
-                                const SizedBox(height: 16),
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.red[900],
-                                      foregroundColor: Colors.white,
-                                      minimumSize: const Size.fromHeight(48),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Text(
+                                    ref.watch(diagnosisSecondResultProvider),
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
                                     ),
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                              child: const Text('Close'),
                                   ),
-                                ),
-                              ],
+                                  const SizedBox(height: 16),
+                                  const PresentMetabolicChangeTable(),
+                                  const SizedBox(height: 16),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.red[900],
+                                        foregroundColor: Colors.white,
+                                        minimumSize: const Size.fromHeight(48),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                      child: const Text('Close'),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -215,7 +217,7 @@ class ResultsDataPage extends ConsumerWidget {
                                     ),
                                     onPressed: () =>
                                         Navigator.of(context).pop(),
-                              child: const Text('Close'),
+                                    child: const Text('Close'),
                                   ),
                                 ),
                               ],
@@ -272,7 +274,7 @@ class ResultsDataPage extends ConsumerWidget {
                                     ),
                                     onPressed: () =>
                                         Navigator.of(context).pop(),
-                              child: const Text('Close'),
+                                    child: const Text('Close'),
                                   ),
                                 ),
                               ],
@@ -317,6 +319,16 @@ class ResultsDataPage extends ConsumerWidget {
                         ],
                       ).show();
                     },
+                  ),
+                  const SizedBox(height: 24),
+                  // Export to PDF
+                  BorderedButton(
+                    label: StringConstants.exportToPdf,
+                    color: AppColors.blue,
+                    verticalPadding: 24,
+                    customHeight: 20,
+                    width: 0.75,
+                    action: () => _exportToPDF(context, ref),
                   ),
                   const SizedBox(height: 24),
                   // New Patient
@@ -396,15 +408,6 @@ class ResultsDataPage extends ConsumerWidget {
 
     return Column(
       children: <Widget>[
-        // Display calculated values (input values section and titles removed)
-        // const SizedBox(height: 16),
-        // Text(
-        //   "Calculated Values",
-        //   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-        //         fontWeight: FontWeight.bold,
-        //       ),
-        // ),
-        // const SizedBox(height: 8),
 
         // Display COPD specific results
         _buildResultCard(
@@ -440,6 +443,67 @@ class ResultsDataPage extends ConsumerWidget {
           value: (copdResults['expectedPH']?.toStringAsFixed(2) ?? "N/A")
               .toString(),
           units: "",
+        ),
+        
+        const SizedBox(height: 24),
+        
+        // Export to PDF for COPD
+        BorderedButton(
+          label: StringConstants.exportToPdf,
+          color: AppColors.blue,
+          verticalPadding: 24,
+          customHeight: 20,
+          width: 0.75,
+          action: () => _exportToPDF(context, ref),
+        ),
+        
+        const SizedBox(height: 24),
+        
+        // New Patient for COPD
+        BorderedButton(
+          label: StringConstants.newPatient,
+          color: AppColors.appbarBackground,
+          verticalPadding: 24,
+          customHeight: 20,
+          width: 0.75,
+          action: () async {
+            final String? choice = await showModalActionSheet<String>(
+              context: context,
+              title: StringConstants.newPatient,
+              message: StringConstants.startAnalysisForNewPatient,
+              actions: <SheetAction<String>>[
+                const SheetAction<String>(
+                  label: StringConstants.newPatient,
+                  key: RouteNames.initialSelection,
+                ),
+                const SheetAction<String>(
+                  label: StringConstants.goBack,
+                  key: null,
+                ),
+              ].nonNulls.toList(),
+            );
+
+            if (!context.mounted) return;
+            if (choice == null) {
+              if (context.navigator.canPop()) {
+                context.navigator.pop();
+              }
+              return;
+            }
+
+            // Reset all used providers
+            for (final ProviderOrFamily provider in <ProviderOrFamily>[
+              ...inputResetProviders,
+              ...resultResetProviders,
+            ]) {
+              ref.invalidate(provider);
+            }
+
+            context.navigator.pushNamedAndRemoveUntil(
+              choice,
+              (Route route) => false,
+            );
+          },
         ),
       ],
     );
@@ -544,7 +608,8 @@ class ResultsDataPage extends ConsumerWidget {
                       Text(
                         calculatorType == CalculatorType.followUpABGMetabolic
                             ? ref.watch(metabolicStateDiagnosisProvider)
-                            : ref.watch(respiratoryMetabolicStateDiagnosisProvider),
+                            : ref.watch(
+                                respiratoryMetabolicStateDiagnosisProvider),
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
@@ -599,7 +664,8 @@ class ResultsDataPage extends ConsumerWidget {
                     children: <Widget>[
                       Text(
                         calculatorType == CalculatorType.followUpABGMetabolic
-                            ? ref.watch(metabolicVentilatoryStateDiagnosisProvider)
+                            ? ref.watch(
+                                metabolicVentilatoryStateDiagnosisProvider)
                             : ref.watch(ventilatoryStateDiagnosisProvider),
                         textAlign: TextAlign.center,
                         style: const TextStyle(
@@ -722,6 +788,17 @@ class ResultsDataPage extends ConsumerWidget {
         ),
         const SizedBox(height: 24),
 
+        // Export to PDF
+        BorderedButton(
+          label: StringConstants.exportToPdf,
+          color: AppColors.blue,
+          verticalPadding: 24,
+          customHeight: 20,
+          width: 0.75,
+          action: () => _exportToPDF(context, ref),
+        ),
+        const SizedBox(height: 24),
+
         // New Patient
         BorderedButton(
           label: StringConstants.newPatient,
@@ -770,6 +847,82 @@ class ResultsDataPage extends ConsumerWidget {
         ),
       ],
     );
+  }
+
+  Future<void> _exportToPDF(BuildContext context, WidgetRef ref) async {
+    try {
+      // Show loading indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => AlertDialog(
+          content: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(width: 16),
+              Text(StringConstants.generatingPdf),
+            ],
+          ),
+        ),
+      );
+
+      // Get necessary data from providers
+      final calculatorType = ref.read(calculatorTypeProvider);
+      final inputValues = ref.read(inputStateProvider).values;
+      final results = ref.read(calculatorResultProvider);
+
+      // Get additional data based on calculator type
+      Map<String, dynamic>? additionalData;
+      String finalDiagnosis;
+
+      if (_isCopdCalculator(calculatorType)) {
+        additionalData = ref.read(copdCalculationResultProvider);
+        finalDiagnosis = "COPD Analysis Results"; // You can customize this
+      } else if (_isFollowUpABGCalculator(calculatorType)) {
+        finalDiagnosis = ref.read(followUpABGFinalDiagnosisResultProvider);
+      } else {
+        finalDiagnosis = ref.read(finalDiagnosisResultProvider);
+      }
+
+      // Generate PDF
+      await PDFService.generateAndSavePDF(
+        inputValues: inputValues,
+        results: results,
+        calculatorType: calculatorType,
+        additionalData: additionalData,
+        finalDiagnosis: finalDiagnosis,
+        ref: ref,
+      );
+
+      // Dismiss loading dialog
+      if (context.mounted) {
+        Navigator.of(context).pop();
+
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(StringConstants.pdfSaved),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    } catch (e) {
+      // Dismiss loading dialog if still showing
+      if (context.mounted) {
+        Navigator.of(context).pop();
+
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${StringConstants.pdfError}: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    }
   }
 }
 

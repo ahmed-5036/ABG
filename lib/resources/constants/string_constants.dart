@@ -123,4 +123,19 @@ class StringConstants {
   static const String sid = "SID mEq/L";
   static const String correctedAgStart = "Corrected AG Start";
   static const String correctedHCO3 = "Corrected HCO3";
+  
+  // PDF Export Constants
+  static const String exportToPdf = "Export to PDF";
+  static const String generatingPdf = "Generating PDF...";
+  static const String pdfReport = "ABG Analysis Report";
+  static const String pdfSaved = "PDF report saved successfully";
+  static const String pdfError = "Failed to generate PDF report";
+  static const String patientReport = "Patient ABG Analysis Report";
+  static const String generatedOn = "Generated on";
+  static const String inputValues = "Input Values";
+  static const String calculatedValues = "Calculated Values";
+  static const String analysisResults = "Analysis Results";
+  static const String metabolicState = "Metabolic State";
+  static const String respiratoryState = "Respiratory State";
+  static const String oxygenationState = "Oxygenation State";
 }

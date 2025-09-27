@@ -17,6 +17,9 @@ dependencies:
   mailer: ^6.0.1
   desktop_window: ^0.4.0
   universal_platform: ^1.0.0+1
+  pdf: ^3.9.0
+  printing: ^5.9.3
+  path_provider: ^2.0.15
   
   # disable html
   # universal_html: ^2.2.3
